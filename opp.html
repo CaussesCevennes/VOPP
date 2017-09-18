@@ -12,12 +12,14 @@
         <script src="lib/L.Map.Sync.js" type="text/javascript"></script>
         <script src="lib/leaflet-side-by-side.js"></script>
         <script src="lib/jquery-resizable.js"></script>
+        <link rel="stylesheet" href="lib/leaflet.magnifyingglass.css" />
+        <script src="lib/leaflet.magnifyingglass.js"></script>
     </head>
 
 
     <body>
         <div id="head">
-            <span style="position:absolute; top:10px; left:20px;">
+            <span style="position:absolute; top:25%; left:20px; width:75%">
                 Observatoire Photographique du Paysage des Causses et Cévennes</span>
             <img src="icons/header_logo.png" style="position:absolute; height:100%; top:4px; right:0;" />
         </div>
@@ -39,6 +41,8 @@
                     <option>2014</option>
                     <option selected>2017</option>
                 </select>
+
+                <button id="_toggleSpotViewBt" class='bt2' onclick="toggleSpotView()"></button>
 
                 <div id="photo1"></div>
                 <div id="photo2"></div>
@@ -72,7 +76,8 @@
             <div id="toolbar">
                 <button id="toggleInfosBt" class="bt"></button>
                 <button id="toggleSplitViewBt" class="bt" onclick="toggleVSplitView()"></button>
-                <button onclick="toggleSbsView()" id="toggleSbsViewBt" class="bt"></button>
+                <button id="toggleSbsViewBt" class="bt" onclick="toggleSbsView()"></button>
+                <button id="toggleSpotViewBt" class="bt" onclick="toggleSpotView()"></button>
             </div>
 
         </div>
@@ -80,10 +85,10 @@
 
 
     <style type="text/css">
-         html, body { width:100%; height:100%; margin:0; padding:0; font-family:Tahoma, Geneva, sans-serif; }
+         html, body { width:100%; height:100%; margin:0; padding:0; font-size:100%; font-family:Tahoma, Geneva, sans-serif; }
          #head {
              position:relative; width:100%; height:5%;
-             color:#404040; letter-spacing:5px; font-size:x-large; font-weight:500;
+             color:#404040; letter-spacing:5px; font-size:1.25vw; font-weight:500;
              background:linear-gradient(to left, #618BCD, white); overflow:hidden; }
          #container { width:100%; height:95%; display:flex; flex-direction:row; overflow:hidden; }
              #map { width:35%; height:100%; flex:0 0 auto; }
@@ -93,7 +98,7 @@
              #infosPanel { width:25%; height:100%; display:none; flex:0 0 auto; }
                 #infos { height:100%; padding:20px; overflow:scroll; background:linear-gradient(to bottom, white, Gray); }
                 #infos h2 { text-align:center; }
-             #toolbar { width:2%; height:100%; flex:0 0 auto; background:linear-gradient(to bottom, white, Gray); }
+             #toolbar { width:2vw; height:100%; flex:0 0 auto; background:linear-gradient(to bottom, white, Gray); }
 
          br {line-height:2;}
 
@@ -102,7 +107,7 @@
            float: left;
            width: 14px;
            height: 100%;
-           background: url(icons/vsizegrip.png) center center no-repeat #535353;
+           background: url(icons/vsizegrip.png) center center no-repeat dimgray;
            cursor: col-resize;
          }
 
@@ -139,6 +144,19 @@
              display: block;
          }
 
+         .bt2 {
+             position:absolute; top:75px; left:20px; right:auto;
+             border: none;
+             cursor: pointer;
+             height: 32px;
+             width: 32px;
+             margin: auto;
+             z-index: 9000;
+             background: url("icons/toggle_glass.svg") no-repeat;
+             background-size: contain;
+             display: none;
+         }
+
          #toggleSplitViewBt {
              background: url("icons/toggle_split.svg") no-repeat;
              background-size: contain;
@@ -149,13 +167,18 @@
              background-size: contain;
          }
 
+         #toggleSpotViewBt {
+             background: url("icons/toggle_glass.svg") no-repeat;
+             background-size: contain;
+         }
+
          #toggleInfosBt {
              background: url("icons/toggle_infos.svg") no-repeat;
              background-size: contain;
          }
 
          .legend {
-            width: 125px;
+            width: 150px;
             line-height: 18px;
             color: #333333;
             font-family: 'Open Sans', Helvetica, sans-serif;
@@ -170,7 +193,7 @@
          }
 
          .legend.up {
-            height: 60px;
+            height: 175px;
          }
 
          .legend i {
@@ -206,31 +229,18 @@
 
     <script>
 
-        //Populate dropdown list
-        var years = [2014, 2017, 2020];
-
-        function populateYears(years, dropDownId, selectLast) {
-            var dropDown = document.getElementById(dropDownId);
-            years.forEach(function(year, idx) {
-                var opt = document.createElement('option');
-                opt.innerHTML = year;
-                opt.value = year;
-                if(selectLast == true){
-                    if(year == years[years.length-1]){
-                        opt.selected = true;
-                    }
-                }
-                dropDown.appendChild(opt);
-            });
+        var TILES = false
+        if (TILES) {
+          var photoCRS = L.CRS.EPSG3857
+        } else {
+          var photoCRS = L.CRS.Simple
         }
-
-        //populateYears(years, 'dropDown1');
-        //populateYears(years, 'dropDown2', true);
 
         var viewMode = 'SINGLE';
         var selectedFeat;//geojson feature
         var selectedMark;//leaflet marker
         var sbsCtrl;//side by side addon control
+        var magnifyingGlass;//addon control
         var infos = false;
 
         function _setDefaultIcons(){
@@ -238,6 +248,8 @@
             $('#toggleSplitViewBt').css('background-size', 'contain');
             $('#toggleSbsViewBt').css('background', 'url("icons/toggle_sbs.svg") no-repeat');
             $('#toggleSbsViewBt').css('background-size', 'contain');
+            $('#toggleSpotViewBt').css('background', 'url("icons/toggle_glass.svg") no-repeat');
+            $('#toggleSpotViewBt').css('background-size', 'contain');
         }
 
         function toggleSingleView() {
@@ -246,6 +258,22 @@
             $('#photo1').css('height', '100%');
             $('#photo2').css('display', 'none');
             $('#dropDown2').css('display', 'none');
+            updatePhotos(selectedFeat);
+        }
+
+        function toggleSpotView() {
+            if (viewMode == 'SPOT'){
+                toggleSingleView();
+            } else {
+                _setDefaultIcons();
+                viewMode = 'SPOT';
+                $('#toggleSpotViewBt').css('background', 'url("icons/toggle_glass_active.svg") no-repeat');
+                $('#toggleSpotViewBt').css('background-size', 'contain');
+                $('#photo1').css('height', '100%');
+                $('#photo2').css('display', 'none');
+                $('#dropDown2').css('display', 'block');
+                $("#dropDown2").attr('class', 'topRight');
+            }
             updatePhotos(selectedFeat);
         }
 
@@ -299,10 +327,10 @@
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: 'OpenStreetMap'}).addTo(map);
 
         //Create photos maps
-        var ph1 = L.map('photo1', {zoomControl:false, crs: L.CRS.Simple, center: [0, 0], zoom: 0});
-        var ph2 = L.map('photo2', {zoomControl:false, crs: L.CRS.Simple, center: [0, 0], zoom: 0});
-        //Simple crs produce a coordinate system of 1000 x 1000 units
-        var bounds = [[0,0], [400,600]]; // ratio 2/3
+        var ph1 = L.map('photo1', {zoomControl:false, crs: photoCRS, center: [0, 0], zoom: 1});
+        var ph2 = L.map('photo2', {zoomControl:false, crs: photoCRS, center: [0, 0], zoom: 1});
+        ph1.attributionControl.setPrefix('');
+        ph2.attributionControl.setPrefix('');
 
         //Setup maps sync addon
         ph1.sync(ph2);
@@ -318,19 +346,39 @@
         map.createPane('up');
         map.getPane('up').style.zIndex = 300; //geojson idx=300, markers=600
 
-        $.getJSON("data/up.geojson", function(data){
+
+        var UPColors = {
+            'Causses': "darkorange",
+            'Cévennes': "darkgreen",
+            'Monts': "darkred",
+            'Gorges': "dodgerblue",
+            'Vallées interieures': "mediumseagreen",
+            'Avant-causses': "gold",
+            'Avant-monts': "salmon",
+            'Hauts plateaux': "darkorange",
+            'Vallée du Lot': "skyblue",
+            'Autres': "black"
+        }
+
+
+        $.getJSON("data/UP_CC.geojson", function(data){
             var up = L.geoJson(data, {
                 style: function (feature) {
-                    switch (feature.properties.REGION) {
-                        case 'GRANDS CAUSSES': return {stroke:false, fillColor: "darkorange", fillOpacity:0.4};
-                        case 'BASSES CEVENNES': return {stroke:false, fillColor: "darkgreen", fillOpacity:0.4};
-                        case 'HAUTES CEVENNES': return {stroke:false, fillColor: "darkred", fillOpacity:0.4};
-                        default: return {stroke:false, fill:true, fillColor: "black", fillOpacity:0.4};
-                    }
+                    return {stroke:true, color:"white", weight:1, dashArray:"4, 4", fill:true, fillColor:UPColors[feature.properties.UP1], fillOpacity:0.5};
+                },
+                onEachFeature: function (feature, layer) {
+                    layer.on('mouseover', function (e){
+                        layer.setStyle({weight:3, fillOpacity:0.7});
+                        upInfo.update(layer.feature.properties);
+                    });
+                    layer.on('mouseout', function (e){
+                        up.resetStyle(e.target);
+                        upInfo.update();
+                    });
                 },
                 pane: 'up'
             }).addTo(map);
-            tocLayers.addOverlay(up, "Grandes unités paysagères");
+            tocLayers.addOverlay(up, "Unités paysagères");
         });
 
 
@@ -342,31 +390,13 @@
         upInfo.update = function (props) {
             if (props){
                 $('.info').css('display', 'block')
-                this._div.innerHTML = '<h4>'+ props.Nom + '</h4>';
+                this._div.innerHTML = '<h4>'+ props.UP2 + '</h4>';
             } else {
                 this._div.innerHTML = '';
                 $('.info').css('display', 'none')
             }
         };
         upInfo.addTo(map);
-
-        $.getJSON("data/up2.geojson", function(data){
-            var up2 = L.geoJson(data, {
-                style: {stroke:true, weight:1, dashArray:"4, 4", fill:true, color: "black", opacity:0.25, fillOpacity:0},
-                onEachFeature: function (feature, layer) {
-                    layer.on('mouseover', function (e){
-                        layer.setStyle({weight:3, opacity:0.5, fillOpacity:0.25});
-                        upInfo.update(layer.feature.properties);
-                    });
-                    layer.on('mouseout', function (e){
-                        up2.resetStyle(e.target);
-                        upInfo.update();
-                    });
-                }
-            }).addTo(map);
-            tocLayers.addOverlay(up2, "Petites unités paysagères");
-        });
-
 
 
         $.getJSON("data/cc.geojson", function(data){
@@ -382,36 +412,6 @@
         });
 
 
-        /*
-        var legend = L.control({position: 'bottomright'});
-        var divLeg = L.DomUtil.create('div', 'legend');
-
-        var ccLeg = L.DomUtil.create('div');
-        ccLeg.innerHTML += '<i style="border:2px dashed black; background:transparent;"></i><p>Zone inscrite</p>';
-        ccLeg.innerHTML += '<i style="border:2px dashed red; background:transparent;"></i><p>Zone tampon</p>';
-        divLeg.appendChild(ccLeg);
-
-        var upLeg = L.DomUtil.create('div');
-        upLeg.innerHTML += '<i style="background:gold;"></i><p>Grands Causses</p>';
-        upLeg.innerHTML += '<i style="background:darkgreen;"></i><p>Basses Cévennes</p>';
-        upLeg.innerHTML += '<i style="background:crimson;"></i><p>Hautes Cévennes</p>';
-        divLeg.appendChild(upLeg);
-
-        legend.onAdd = function (map) {return divLeg;};
-        legend.addTo(map);
-
-        var layerLegendMap = {
-          "Zonage UNESCO": ccLeg,
-          "Unités paysagères": upLeg
-        }
-        map.on('overlayadd', function (event){
-            divLeg.appendChild(layerLegendMap[event.name]);
-        });
-        map.on('overlayremove',function (event){
-            divLeg.removeChild(layerLegendMap[event.name]);
-        });
-        */
-
 
         var ccLeg = L.control({position: 'bottomright'});
         ccLeg.onAdd = function (map) {
@@ -425,16 +425,18 @@
         var upLeg = L.control({position: 'bottomright'});
         upLeg.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend up');
-            div.innerHTML += '<i style="background:darkorange;"></i><p>Grands Causses</p>';
-            div.innerHTML += '<i style="background:darkgreen;"></i><p>Basses Cévennes</p>';
-            div.innerHTML += '<i style="background:darkred;"></i><p>Hautes Cévennes</p>';
+            for (cat in UPColors) {
+                if (cat != 'Hauts plateaux'){
+                    div.innerHTML += '<i style="background:'+UPColors[cat]+';"></i><p>'+cat+'</p>';
+                }
+            }
             return div;
         };
         upLeg.addTo(map);
 
         var layerLegendMap = {
           "Zonage UNESCO": ccLeg,
-          "Grandes unités paysagères": upLeg
+          "Unités paysagères": upLeg
         }
         map.on('overlayadd', function (event){
             map.addControl(layerLegendMap[event.name]);
@@ -481,19 +483,6 @@
           tocLayers.addOverlay(opp, "Points de vue");
 
           //select the first one feature
-          /*
-          opp.eachLayer(function (layer) {
-              if (layer.feature.properties.NUM == 2){
-                  selectedMark = layer;
-                  selectedFeat = layer.feature;
-                  updatePhotos(selectedFeat);
-                  layer.setIcon(activeLocIcon);
-              }
-              if (layer instanceof L.Marker){
-                  coords = layer.getLatLng();
-              }
-          });
-          */
           selectedMark = opp.getLayers()[0];
           selectedFeat = selectedMark.feature;
           updatePhotos(selectedFeat);
@@ -562,6 +551,16 @@
             clearLayers(ph1);
             clearLayers(ph2);
 
+            //clear custom controls
+            if (sbsCtrl){
+              ph1.removeControl(sbsCtrl);
+              sbsCtrl = false
+            }
+            if (magnifyingGlass){
+              ph1.removeControl(magnifyingGlass);
+              magnifyingGlass = false
+            }
+
             //Fill #infosPanel
             $('#nom').text(feature.properties.NOM);
             $('#num').text(feature.properties.NUM);
@@ -570,52 +569,63 @@
             $('#sect').text(feature.properties.UP + " " + feature.properties.SECTEUR);
             $('#theme').text(feature.properties.THEME);
 
-            year1 = $('#dropDown1').val();
-            year2 = $('#dropDown2').val();
+            var year1 = $('#dropDown1').val();
+            var year2 = $('#dropDown2').val();
+
+            var url1 = "photos/" + year1 + "/" + feature.properties['FILE' + year1];
+            var url2 = "photos/" + year2 + "/" + feature.properties['FILE' + year2];
+
+            if (TILES){
+              url1 = url1.slice(0, -4) + "/{z}/{x}/{y}.jpg";
+              url2 = url2.slice(0, -4) + "/{z}/{x}/{y}.jpg";
+              var phLay1 = L.tileLayer(url1, {tms: true, continuousWorld: false, noWrap: true});
+              var phLay2 = L.tileLayer(url2, {tms: true, continuousWorld: false, noWrap: true});
+            } else {
+              //Simple crs produce a coordinate system of 1000 x 1000 units
+              var bounds = [[0,0], [400,600]]; // ratio 2/3
+              var phLay1 = L.imageOverlay(url1, bounds, {attribution: '© Autheur'});
+              var phLay2 = L.imageOverlay(url2, bounds, {attribution: '© Autheur'});
+            }
 
             if (viewMode == 'SINGLE'){
-                var phLay1 = L.imageOverlay("photos/" + year1 + "/" + feature.properties['FILE' + year1], bounds).addTo(ph1);
-                if(fit == true){ph1.fitBounds(bounds);}
-                ph1.invalidateSize()
-
-                if (sbsCtrl){
-                  ph1.removeControl(sbsCtrl);
-                  sbsCtrl = false
-                }
+                phLay1.addTo(ph1);
             }
+
+            else if (viewMode == 'SPOT'){
+              phLay1.addTo(ph1);
+              var magnifyingGlass = L.magnifyingGlass({
+                radius : 150,
+                zoomOffset : 0,
+                layers: [ phLay2 ]
+              }).addTo(ph1);
+           }
+
             else if (viewMode == 'VSPLIT'){
-                var phLay1 = L.imageOverlay("photos/" + year1 + "/" + feature.properties['FILE' + year1], bounds).addTo(ph1);
-                var phLay2 = L.imageOverlay("photos/" + year2 + "/" + feature.properties['FILE' + year2], bounds).addTo(ph2);
-                if(fit == true){
-                    ph1.fitBounds(bounds);
-                    ph2.fitBounds(bounds);
-                }
-
-                //Checks if the map container size changed and updates the map if so
-                ph1.invalidateSize()
-                ph2.invalidateSize()
-
-                if (sbsCtrl){
-                  ph1.removeControl(sbsCtrl);
-                  sbsCtrl = false
-                }
+                phLay1.addTo(ph1);
+                phLay2.addTo(ph2);
             }
+
             else if (viewMode == 'SBS'){
-
-                var phLay1 = L.imageOverlay("photos/" + year1 + "/" + feature.properties['FILE' + year1], bounds, {pane: "left"}).addTo(ph1);
-                var phLay2 = L.imageOverlay("photos/" + year2 + "/" + feature.properties['FILE' + year2], bounds, {pane: "right"}).addTo(ph1);
-                if(fit == true){
-                    ph1.fitBounds(bounds);
-                }
-                if (sbsCtrl){
-                  ph1.removeControl(sbsCtrl);
-                  sbsCtrl = false
-                }
+                phLay1.options.pane = "left";
+                phLay2.options.pane = "right";
+                phLay1.addTo(ph1);
+                phLay2.addTo(ph1);
                 sbsCtrl = L.control.sideBySide(phLay1, phLay2).addTo(ph1);
-
-                ph1.invalidateSize()
-
           }
+
+          if(fit == true){
+              if (TILES) {
+                ph1.setView([0, 0], 1);
+                ph2.setView([0, 0], 1);
+              } else {
+                ph1.fitBounds(bounds);
+                ph2.fitBounds(bounds);
+              }
+          }
+
+          //Checks if the map container size changed and updates the map if so
+          ph1.invalidateSize()
+          ph2.invalidateSize()
     }
     </script>
 
