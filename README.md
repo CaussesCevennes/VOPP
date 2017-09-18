@@ -11,3 +11,5 @@ https://github.com/jieter/Leaflet.Sync
 https://github.com/digidem/leaflet-side-by-side
 
 https://github.com/RickStrahl/jquery-resizable
+
+https://github.com/bbecquet/Leaflet.MagnifyingGlass
