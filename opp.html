@@ -98,7 +98,7 @@
              #infosPanel { width:25%; height:100%; display:none; flex:0 0 auto; }
                 #infos { height:100%; padding:20px; overflow:scroll; background:linear-gradient(to bottom, white, Gray); }
                 #infos h2 { text-align:center; }
-             #toolbar { width:2vw; height:100%; flex:0 0 auto; background:linear-gradient(to bottom, white, Gray); }
+             #toolbar { width:35px; height:100%; flex:0 0 auto; background:linear-gradient(to bottom, white, Gray); }
 
          br {line-height:2;}
 
@@ -193,7 +193,7 @@
          }
 
          .legend.up {
-            height: 175px;
+            height: 100px;
          }
 
          .legend i {
@@ -353,15 +353,15 @@
             'Monts': "darkred",
             'Gorges': "dodgerblue",
             'Vallées interieures': "mediumseagreen",
-            'Avant-causses': "gold",
-            'Avant-monts': "salmon",
+            'Avant-causses': "black",//"gold",
+            'Avant-monts': "black",//"salmon",
             'Hauts plateaux': "darkorange",
-            'Vallée du Lot': "skyblue",
+            'Vallée du Lot': "black",//"skyblue",
             'Autres': "black"
         }
 
 
-        $.getJSON("data/UP_CC.geojson", function(data){
+        $.getJSON("data/up.geojson", function(data){
             var up = L.geoJson(data, {
                 style: function (feature) {
                     return {stroke:true, color:"white", weight:1, dashArray:"4, 4", fill:true, fillColor:UPColors[feature.properties.UP1], fillOpacity:0.5};
@@ -423,10 +423,11 @@
         ccLeg.addTo(map);
 
         var upLeg = L.control({position: 'bottomright'});
+        var incLeg = ['Causses', 'Cévennes', 'Monts', 'Gorges', 'Vallées interieures'];
         upLeg.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend up');
             for (cat in UPColors) {
-                if (cat != 'Hauts plateaux'){
+                if (incLeg.indexOf(cat) > -1) {
                     div.innerHTML += '<i style="background:'+UPColors[cat]+';"></i><p>'+cat+'</p>';
                 }
             }
@@ -575,6 +576,9 @@
             var url1 = "photos/" + year1 + "/" + feature.properties['FILE' + year1];
             var url2 = "photos/" + year2 + "/" + feature.properties['FILE' + year2];
 
+            var auteur1 = '©' + year1 + ' ' + feature.properties['AUTEUR' + year1];
+            var auteur2 = '©' + year2 + ' ' + feature.properties['AUTEUR' + year2];
+
             if (TILES){
               url1 = url1.slice(0, -4) + "/{z}/{x}/{y}.jpg";
               url2 = url2.slice(0, -4) + "/{z}/{x}/{y}.jpg";
@@ -583,15 +587,17 @@
             } else {
               //Simple crs produce a coordinate system of 1000 x 1000 units
               var bounds = [[0,0], [400,600]]; // ratio 2/3
-              var phLay1 = L.imageOverlay(url1, bounds, {attribution: '© Autheur'});
-              var phLay2 = L.imageOverlay(url2, bounds, {attribution: '© Autheur'});
+              var phLay1 = L.imageOverlay(url1, bounds);
+              var phLay2 = L.imageOverlay(url2, bounds);
             }
 
             if (viewMode == 'SINGLE'){
+                phLay1.options.attribution = auteur1;
                 phLay1.addTo(ph1);
             }
 
             else if (viewMode == 'SPOT'){
+              phLay1.options.attribution = auteur1 + ' / ' + auteur2;
               phLay1.addTo(ph1);
               var magnifyingGlass = L.magnifyingGlass({
                 radius : 150,
@@ -601,11 +607,14 @@
            }
 
             else if (viewMode == 'VSPLIT'){
+                phLay1.options.attribution = auteur1;
+                phLay2.options.attribution = auteur2;
                 phLay1.addTo(ph1);
                 phLay2.addTo(ph2);
             }
 
             else if (viewMode == 'SBS'){
+                phLay1.options.attribution = auteur1 + ' / ' + auteur2;
                 phLay1.options.pane = "left";
                 phLay2.options.pane = "right";
                 phLay1.addTo(ph1);
