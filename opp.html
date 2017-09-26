@@ -320,8 +320,6 @@
             });
         }
 
-
-
         //Create main map
         var map = L.map('map',{zoomControl:false, center: [44.1, 3.5], zoom: 10});
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', { attribution: 'OpenStreetMap'}).addTo(map);
@@ -459,6 +457,7 @@
             }
         });
 
+
         var locIcon = new BaseIcon({iconUrl: 'icons/marker.svg'});
         var activeLocIcon = new BaseIcon({iconUrl: 'icons/marker_active.svg'});
 
@@ -469,15 +468,27 @@
                   return marker;
               },
               onEachFeature: function (feature, layer) {
-                  layer.bindPopup(feature.properties.NOM);
+                  var popup = L.popup({autoClose: false});
+                  popup.setContent(feature.properties.NUM + ' - ' + feature.properties.NOM);
+                  layer.bindPopup(popup);
+                  layer.on('mouseover', function (e){
+                      layer.openPopup();
+                  });
+                  layer.on('mouseout', function (e){
+                    if(selectedMark != layer){
+                      layer.closePopup();
+                    };
+                  });
                   layer.on('click', function (e){
                     if(selectedMark){
                         selectedMark.setIcon(locIcon);
                     }
+                    selectedMark.closePopup();
                     selectedMark = layer;
                     selectedFeat = feature;
                     updatePhotos(selectedFeat);
                     layer.setIcon(activeLocIcon);
+                    selectedMark.openPopup();
                   })
               }
           }).addTo(map);
