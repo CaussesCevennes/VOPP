@@ -4,16 +4,23 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Observatoire Photographique du Paysage des Causses et Cévennes</title>
-        <!--link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" /-->
-        <!--script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script-->
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="lib/jquery-resizable.js"></script>
+
+        <!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" />-->
+        <!--<script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"></script>-->
         <link rel="stylesheet" href="lib/leaflet_1.0.3/leaflet.css" />
         <script src="lib/leaflet_1.0.3/leaflet.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <script src="lib/leaflet-search/leaflet-search.js"></script>
+        <link rel="stylesheet" href="lib/leaflet-search/leaflet-search.css" />
+
         <script src="lib/L.Map.Sync.js" type="text/javascript"></script>
         <script src="lib/leaflet-side-by-side.js"></script>
-        <script src="lib/jquery-resizable.js"></script>
         <link rel="stylesheet" href="lib/leaflet.magnifyingglass.css" />
         <script src="lib/leaflet.magnifyingglass.js"></script>
+
     </head>
 
 
@@ -211,13 +218,13 @@
         }
 
         .info {
-            padding: 6px 8px;
-            font: 14px/16px Arial, Helvetica, sans-serif;
-            background: white;
+            padding: 2px 6px;
+            font: 14px sans-serif;
             background: rgba(255,255,255,0.8);
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             border-radius: 5px;
             display: none;
+            float: none;
         }
         .info h4 {
             margin: 0 0 5px;
@@ -339,10 +346,29 @@
         ph1.createPane('right');
 
         //load GeoJSON files
-        var tocLayers = L.control.layers();
+        var tocLayers = L.control.layers(null, null, {position:'topright'});
+        tocLayers.addTo(map);
 
         map.createPane('up');
         map.getPane('up').style.zIndex = 300; //geojson idx=300, markers=600
+
+
+        map.addControl( new L.Control.Search({
+          position : 'topleft',
+          url: 'http://nominatim.openstreetmap.org/search?format=json&q={s}',
+          jsonpParam: 'json_callback',
+          propertyName: 'display_name',
+          propertyLoc: ['lat','lon'],
+          marker: false,
+          moveToLocation: function(latlng, title, map) {
+              var zoom = 13
+              map.setView(latlng, zoom); // access the zoom
+          },
+          autoCollapse: true,
+          autoType: false,
+          minLength: 2
+        }) );
+
 
 
         var UPColors = {
@@ -387,7 +413,7 @@
         };
         upInfo.update = function (props) {
             if (props){
-                $('.info').css('display', 'block')
+                $('.info').css('display', 'inline-block')
                 this._div.innerHTML = '<h4>'+ props.UP2 + '</h4>';
             } else {
                 this._div.innerHTML = '';
@@ -408,7 +434,6 @@
             }).addTo(map);
             tocLayers.addOverlay(cc, "Zonage UNESCO");
         });
-
 
 
         var ccLeg = L.control({position: 'bottomright'});
@@ -443,7 +468,6 @@
         map.on('overlayremove',function (event){
             map.removeControl(layerLegendMap[event.name]);
         });
-
 
 
 
@@ -502,7 +526,7 @@
 
         });
 
-        tocLayers.addTo(map);
+
 
         //setup jquery resizable addon
         $("#map").resizable({
