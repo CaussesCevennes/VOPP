@@ -1,0 +1,24 @@
+<p class="title">{{ANALYSE.TITRE}}</p>
+<div id="fields">
+  <div class="entry">
+    <span class='field'>Numéro :</span>
+    <span class='value'>{{NUM}}</span>
+  </div><div class="entry">
+      <span class='field'>Nom :</span>
+      <span class='value'>{{NOM}}</span>
+  </div><div class="entry">
+    <span class='field'>Thèmatique :</span>
+    <span class='value'>{{THEME}}</span>
+  </div><div class="entry">
+    <span class='field'>Département :</span>
+    <span class='value'>{{DPT}}</span>
+  </div><div class="entry">
+    <span class='field'>Secteur :</span>
+    <span class='value'>{{UP}} {{SECTEUR}}</span>
+  </div><div class="entry">
+    <span class='field'>Commune :</span>
+    <span class='value'>{{COMMUNE}}</span>
+  </div>
+</div>
+<div class='desc'>{{ANALYSE.ENJEUX}}</div>
+<div class='warn'>{{AVERTISSEMENT}}</div>

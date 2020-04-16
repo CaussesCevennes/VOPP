@@ -1,0 +1,19 @@
+<p class='title'> Parc National des Cévennes</p>
+<div id="fields">
+  <div class="entry">
+    <span class='field'>Numéro :</span>
+    <span class='value'>{{NUM}}</span>
+  </div><div class="entry">
+    <span class='field'>Thèmatique :</span>
+    <span class='value'>{{THEME}}</span>
+  </div><div class="entry">
+    <span class='field'>Département :</span>
+    <span class='value'>{{DPT}}</span>
+  </div><div class="entry">
+    <span class='field'>Commune :</span>
+    <span class='value'>{{COMMUNE}}</span>
+  </div><div class="entry">
+    <span class='field'>Lieu-dit :</span>
+    <span class='value'>{{LIEUDIT}}</span>
+  </div>
+</div>

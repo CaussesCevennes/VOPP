@@ -1,0 +1,17 @@
+<p class='title'> Observatoire de l'Hérault</p>
+<div id="fields">
+  <div class="entry">
+    <span class='field'>Numéro :</span>
+    <span class='value'>{{NUM}}</span>
+  </div><div class="entry">
+      <span class='field'>Nom :</span>
+      <span class='value'>{{NOM}}</span>
+  </div><div class="entry">
+    <span class='field'>Thèmatiques :</span>
+    <span class='value'>{{#THEME}}{{.}}, {{/THEME}}</span>
+  </div><div class="entry">
+    <span class='field'>Commune :</span>
+    <span class='value'>{{COMMUNE}}</span>
+  </div>
+</div>
+<div class='warn'>{{AVERTISSEMENT}}</div>

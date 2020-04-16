@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster+Two&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.1.0/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.6.1/fuse.min.js"></script!-->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery-resizable-dom@0.20.0/dist/jquery-resizable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.sync@0.2.4/L.Map.Sync.min.js"></script>
+
+    <script src="lib/leaflet-side-by-side-18.05.14.js"></script>
+    <script src="lib/leaflet.magnifyingglass.js"></script>
+    <link rel="stylesheet" href="lib/leaflet.magnifyingglass.css" />
+
+    <script src="opp.js?101"></script>
+    <script src="js/L.VoppTilesLayer.js?102"></script>
+    <link rel="stylesheet" href="opp.css?102" />
+
+  </head>
+
+
+  <body>
+    <div id="head">
+      <span id='title'></span>
+      <img id='logo' src=""></img>
+    </div>
+
+    <div id="container">
+
+      <div id="map"></div>
+
+      <div id="split1" class="vsplitter"></div>
+
+      <div id="photos">
+
+        <div id='widgets1' class='widgets topLeft'>
+          <div>
+            <select id='dropDownDate1' class='dropDownDate'></select><div id='sketchButton1' class='sketchButton uiIcon'></div>
+          </div>
+          <div id='chkBkgPhoto1' class='chkBkgPhoto'>
+            <input type="checkbox"></input>
+            <label>Arr. plan photo</label>
+          </div>
+          <div id='photoNav1' class='photoNav'>
+            <div id='photoPrev1' class='photoNavBt'>&#8249;</div>
+            <div id='photoNext1' class='photoNavBt'>&#8250;</div>
+          </div>
+        </div>
+
+        <div id='widgets2' class='widgets'>
+          <div>
+            <select id='dropDownDate2' class='dropDownDate'></select><div id='sketchButton2' class='sketchButton uiIcon'></div>
+          </div>
+          <div id='chkBkgPhoto2' class='chkBkgPhoto'>
+            <input type="checkbox"></input>
+            <label>Arr. plan photo</label>
+          </div>
+          <div id='photoNav2' class='photoNav'>
+            <div id='photoPrev2' class='photoNavBt'>&#8249;</div>
+            <div id='photoNext2' class='photoNavBt'>&#8250;</div>
+          </div>
+        </div>
+
+        <div id="photo1" class='photo'></div>
+
+        <div id="photo2" class='photo'></div>
+
+      </div>
+
+      <div id="sidePanel">
+        <div id="split2" class="vsplitter"></div>
+        <div id="infosPanel" class="panel"><!--template--></div>
+        <div id="searchPanel" class="panel">
+          <div id="searchBar">
+            <span>Rechercher :</span>
+            <input type="text" id="query"></input>
+            <button id="searchBt" class="searchBt uiIcon"></button>
+            <button id="clearSearchBt" class="searchBt uiIcon"></button>
+          </div>
+          <!--table id="results"></table-->
+          <ul id="results"></ul>
+        </div>
+        <div id="aboutPanel" class="panel"><!--template--></div>
+      </div>
+
+      <div id="toolbar">
+        <button id="toggleInfosBt" class="bt panelSwitch uiIcon"><span class="tooltip">Afficher les informations du point de vue</span></button>
+        <button id="toggleSplitViewBt" class="bt viewMode uiIcon"><span class="tooltip">Comparer avec deux vues synchronisées</span></button>
+        <button id="toggleSbsViewBt" class="bt viewMode uiIcon"><span class="tooltip">Comparer avec un séparateur glissant</span></button>
+        <button id="toggleSpotViewBt" class="bt viewMode uiIcon"><span class="tooltip">Comparer avec une loupe</span></button>
+        <!--button id="shareBt" class="bt uiIcon"><span class="tooltip">Générer un lien partageable</span></button!-->
+        <!--button id="toggleSearchBt" class="bt panelSwitch uiIcon"><span class="tooltip">Rechercher des points de vue</span></button-->
+        <button id="aboutBt" class="bt panelSwitch uiIcon"><span class="tooltip"><div>A propos</div></span></button>
+      </div>
+
+    </div>
+
+  </body>

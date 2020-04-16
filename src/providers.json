@@ -1,0 +1,49 @@
+[
+  {
+    "key" : "CC",
+    "enable" : true,
+    "name" : "Causses & Cévennes",
+    "shortName" : "C\u0026C",
+    "datafile" : "data/opp_cc.geojson",
+    "_photoUrl" : "http://observatoire.causses-et-cevennes.fr/opp/photos/CC/{{YEAR}}/{{FILENAME}}.jpg",
+    "photoUrl" : "photos/CC/{{YEAR}}/TILES/{{FILENAME}}/{z}_{x}_{y}.jpg",
+    "infosPanel" : "templates/infospanel_cc.mst",
+    "sketch": "croquis/{{SKETCH.FILENAME}}.jpg",
+    "tiled": true,
+    "svgMarker" : "icons/marker_blue.svg",
+    "clusterColor" : "#2981cbc8",
+    "popup" : "{{NUM}} - {{NOM}}",
+    "photoAttrib" : "© {{YEAR}} {{AUTEUR}}"
+  },
+  {
+    "key" : "PNC",
+    "enable" : true,
+    "name" : "Parc National des Cévennes",
+    "shortName" : "PNC",
+    "datafile" : "data/opp_pnc.geojson",
+    "photoUrl" : "photos/PNC/{{YEAR}}/TILES/{{FILENAME}}/{z}_{x}_{y}.jpg",
+    "infosPanel" : "templates/infospanel_pnc.mst",
+    "sketch": "",
+    "tiled": true,
+    "svgMarker" : "icons/marker_pnc.svg",
+    "clusterColor" : "#927e71c8",
+    "popup" : "{{NUM}} - {{COMMUNE}}",
+    "photoAttrib" : "© {{YEAR}} {{AUTEUR}}"
+  },
+  {
+    "key" : "34",
+    "enable" : true,
+    "name" : "Hérault",
+    "shortName" : "34",
+    "datafile" : "data/opp_34.geojson",
+    "_photoUrl" : "{{URL}}",
+    "photoUrl" : "photos/opp34/{{FILENAME}}",
+    "infosPanel" : "templates/infospanel_34.mst",
+    "sketch": "",
+    "tiled": false,
+    "svgMarker" : "icons/marker_green.svg",
+    "clusterColor" : "#04ab8ac8",
+    "popup" : "{{NUM}} - {{COMMUNE}}",
+    "photoAttrib" : "© {{YEAR}} {{AUTEUR}}"
+  }
+]

@@ -1,0 +1,69 @@
+[
+
+  {
+    "key" : "cc",
+    "default" : true,
+    "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
+    "headerLogo" : "icons/logos/cc_logo.png",
+    "headerTextColor" : "#404040",
+    "headerBkgColor" : "linear-gradient(to left, #618BCD, white)",
+    "toolbarColor" : "linear-gradient(to top, white, #778bad)",
+    "providers" : {"CC":{}, "PNC":{}, "34":{"enable":false}},
+    "layers": ["limits_cc", "up_cc"],
+    "about" : "templates/about.html",
+    "browserHistory": false
+  },
+
+  {
+    "key" : "caue34",
+    "title" : "Observatoire Photographique de l'Hérault",
+    "headerLogo" : "icons/logos/caue34_logo.png",
+    "headerTextColor" : "black",
+    "headerBkgColor" : "white",
+    "toolbarColor" : "lightslategrey",
+    "providers" : {"34":{}},
+    "layers": ["up_34"],
+    "about" : "templates/about_sample.html",
+    "browserHistory": false
+  },
+
+  {
+    "key" : "pnc",
+    "title" : "Observatoire Photographique du Parc National des Cévennes",
+    "headerLogo" : "icons/logos/pnc_logo.png",
+    "headerTextColor" : "black",
+    "headerBkgColor" : "linear-gradient(to left, #9497b2ff, white)",
+    "toolbarColor" : "linear-gradient(to top, white, #9497b2ff)",
+    "providers" : {"PNC":{}},
+    "layers": ["pnc"],
+    "about" : "templates/about_sample.html",
+    "browserHistory": false
+  },
+
+  {
+    "key" : "notile",
+    "default" : false,
+    "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
+    "headerLogo" : "icons/logos/cc_logo.png",
+    "headerTextColor" : "#404040",
+    "headerBkgColor" : "linear-gradient(to left, #618BCD, white)",
+    "toolbarColor" : "linear-gradient(to top, white, #778bad)",
+    "providers" : {
+      "CC" : {
+        "photoUrl" : "photos/CC/{{YEAR}}/{{FILENAME}}.jpg",
+        "tiled" : false
+      },
+      "PNC" : {
+        "photoUrl" : "photos/PNC/{{YEAR}}/{{FILENAME}}.jpg",
+        "tiled" : false
+      },
+      "34" : {
+        "enable" : true
+      }
+    },
+    "layers": ["limits_cc", "up_cc"],
+    "about" : "templates/about.html",
+    "browserHistory": false
+  }
+
+]
