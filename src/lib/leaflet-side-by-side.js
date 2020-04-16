@@ -1,4 +1,4 @@
-(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
 var L = (typeof window !== "undefined" ? window['L'] : typeof global !== "undefined" ? global['L'] : null)
 require('./layout.css')
@@ -47,7 +47,9 @@ function asArray (arg) {
   return (arg === 'undefined') ? [] : Array.isArray(arg) ? arg : [arg]
 }
 
-function noop () {}
+function noop () {
+  return
+}
 
 L.Control.SideBySide = L.Control.extend({
   options: {
@@ -69,7 +71,7 @@ L.Control.SideBySide = L.Control.extend({
 
   setPosition: noop,
 
-  includes: L.Evented.prototype || L.Mixin.Events,
+  includes: L.Mixin.Events,
 
   addTo: function (map) {
     this.remove()
@@ -95,10 +97,10 @@ L.Control.SideBySide = L.Control.extend({
       return this
     }
     if (this._leftLayer) {
-      this._leftLayer.getContainer().style.clip = ''
+      this._leftLayer.getContainer().style.clip = ""
     }
     if (this._rightLayer) {
-      this._rightLayer.getContainer().style.clip = ''
+      this._rightLayer.getContainer().style.clip = ""
     }
     this._removeEvents()
     L.DomUtil.remove(this._container)
@@ -132,10 +134,12 @@ L.Control.SideBySide = L.Control.extend({
     var clipLeft = 'rect(' + [nw.y, clipX, se.y, nw.x].join('px,') + 'px)'
     var clipRight = 'rect(' + [nw.y, se.x, se.y, clipX].join('px,') + 'px)'
     if (this._leftLayer) {
-      this._leftLayer.getContainer().style.clip = clipLeft
+      //this._leftLayer.getContainer().style.clip = clipLeft
+      map.getPane('left').style.clip = clipLeft
     }
     if (this._rightLayer) {
-      this._rightLayer.getContainer().style.clip = clipRight
+      //this._rightLayer.getContainer().style.clip = clipRight
+      map.getPane('right').style.clip = clipRight
     }
   },
 
@@ -201,70 +205,57 @@ module.exports = L.Control.SideBySide
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./layout.css":2,"./range.css":4}],2:[function(require,module,exports){
-var inject = require('./node_modules/cssify');
-var css = ".leaflet-sbs-range {\r\n    position: absolute;\r\n    top: 50%;\r\n    width: 100%;\r\n    z-index: 999;\r\n}\r\n.leaflet-sbs-divider {\r\n    position: absolute;\r\n    top: 0;\r\n    bottom: 0;\r\n    left: 50%;\r\n    margin-left: -2px;\r\n    width: 4px;\r\n    background-color: #fff;\r\n    pointer-events: none;\r\n    z-index: 999;\r\n}\r\n";
-inject(css, undefined, '_i6aomd');
-module.exports = css;
-
+var css = ".leaflet-sbs-range {\n    position: absolute;\n    top: 50%;\n    width: 100%;\n    z-index: 999;\n}\n.leaflet-sbs-divider {\n    position: absolute;\n    top: 0;\n    bottom: 0;\n    left: 50%;\n    margin-left: -2px;\n    width: 4px;\n    background-color: #fff;\n    pointer-events: none;\n    z-index: 999;\n}\n"; (require("./node_modules/cssify"))(css, undefined, '/data/github/leaflet-side-by-side/layout.css'); module.exports = css;
 },{"./node_modules/cssify":3}],3:[function(require,module,exports){
-'use strict'
-
-function injectStyleTag (document, fileName, cb) {
-  var style = document.getElementById(fileName)
+function injectStyleTag(document, fileName, cb) {
+  var style = document.getElementById(fileName);
 
   if (style) {
-    cb(style)
+    cb(style);
   } else {
-    var head = document.getElementsByTagName('head')[0]
+    var head = document.getElementsByTagName('head')[0];
 
-    style = document.createElement('style')
-    if (fileName != null) style.id = fileName
-    cb(style)
-    head.appendChild(style)
+    style = document.createElement('style');
+    style.id = fileName;
+    cb(style);
+    head.appendChild(style);
   }
 
-  return style
+  return style;
 }
 
 module.exports = function (css, customDocument, fileName) {
-  var doc = customDocument || document
-  /* istanbul ignore if: not supported by Electron */
+  var doc = customDocument || document;
   if (doc.createStyleSheet) {
     var sheet = doc.createStyleSheet()
-    sheet.cssText = css
-    return sheet.ownerNode
+    sheet.cssText = css;
+    return sheet.ownerNode;
   } else {
-    return injectStyleTag(doc, fileName, function (style) {
-      /* istanbul ignore if: not supported by Electron */
+    return injectStyleTag(doc, fileName, function(style) {
       if (style.styleSheet) {
-        style.styleSheet.cssText = css
+        style.styleSheet.cssText = css;
       } else {
-        style.innerHTML = css
+        style.innerHTML = css;
       }
-    })
+    });
   }
-}
+};
 
-module.exports.byUrl = function (url) {
-  /* istanbul ignore if: not supported by Electron */
+module.exports.byUrl = function(url) {
   if (document.createStyleSheet) {
-    return document.createStyleSheet(url).ownerNode
+    return document.createStyleSheet(url).ownerNode;
   } else {
-    var head = document.getElementsByTagName('head')[0]
-    var link = document.createElement('link')
+    var head = document.getElementsByTagName('head')[0],
+        link = document.createElement('link');
 
-    link.rel = 'stylesheet'
-    link.href = url
+    link.rel = 'stylesheet';
+    link.href = url;
 
-    head.appendChild(link)
-    return link
+    head.appendChild(link);
+    return link;
   }
-}
+};
 
 },{}],4:[function(require,module,exports){
-var inject = require('./node_modules/cssify');
-var css = ".leaflet-sbs-range {\r\n    -webkit-appearance: none;\r\n    display: inline-block!important;\r\n    vertical-align: middle;\r\n    height: 0;\r\n    padding: 0;\r\n    margin: 0;\r\n    border: 0;\r\n    background: rgba(0, 0, 0, 0.25);\r\n    min-width: 100px;\r\n    cursor: pointer;\r\n    pointer-events: none;\r\n    z-index: 999;\r\n}\r\n.leaflet-sbs-range::-ms-fill-upper {\r\n    background: transparent;\r\n}\r\n.leaflet-sbs-range::-ms-fill-lower {\r\n    background: rgba(255, 255, 255, 0.25);\r\n}\r\n/* Browser thingies */\r\n\r\n.leaflet-sbs-range::-moz-range-track {\r\n    opacity: 0;\r\n}\r\n.leaflet-sbs-range::-ms-track {\r\n    opacity: 0;\r\n}\r\n.leaflet-sbs-range::-ms-tooltip {\r\n    display: none;\r\n}\r\n/* For whatever reason, these need to be defined\r\n * on their own so dont group them */\r\n\r\n.leaflet-sbs-range::-webkit-slider-thumb {\r\n    -webkit-appearance: none;\r\n    margin: 0;\r\n    padding: 0;\r\n    background: #fff;\r\n    height: 40px;\r\n    width: 40px;\r\n    border-radius: 20px;\r\n    cursor: ew-resize;\r\n    pointer-events: auto;\r\n    border: 1px solid #ddd;\r\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABlBMVEV9fX3///+Kct39AAAAAnRSTlP/AOW3MEoAAAA9SURBVFjD7dehDQAwDANBZ/+l2wmKoiqR7pHRcaeaCxAIBAL/g7k9JxAIBAKBQCAQCAQC14H+MhAIBE4CD3fOFvGVBzhZAAAAAElFTkSuQmCC\");\r\n    background-position: 50% 50%;\r\n    background-repeat: no-repeat;\r\n    background-size: 40px 40px;\r\n}\r\n.leaflet-sbs-range::-ms-thumb {\r\n    margin: 0;\r\n    padding: 0;\r\n    background: #fff;\r\n    height: 40px;\r\n    width: 40px;\r\n    border-radius: 20px;\r\n    cursor: ew-resize;\r\n    pointer-events: auto;\r\n    border: 1px solid #ddd;\r\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABlBMVEV9fX3///+Kct39AAAAAnRSTlP/AOW3MEoAAAA9SURBVFjD7dehDQAwDANBZ/+l2wmKoiqR7pHRcaeaCxAIBAL/g7k9JxAIBAKBQCAQCAQC14H+MhAIBE4CD3fOFvGVBzhZAAAAAElFTkSuQmCC\");\r\n    background-position: 50% 50%;\r\n    background-repeat: no-repeat;\r\n    background-size: 40px 40px;\r\n}\r\n.leaflet-sbs-range::-moz-range-thumb {\r\n    padding: 0;\r\n    right: 0    ;\r\n    background: #fff;\r\n    height: 40px;\r\n    width: 40px;\r\n    border-radius: 20px;\r\n    cursor: ew-resize;\r\n    pointer-events: auto;\r\n    border: 1px solid #ddd;\r\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABlBMVEV9fX3///+Kct39AAAAAnRSTlP/AOW3MEoAAAA9SURBVFjD7dehDQAwDANBZ/+l2wmKoiqR7pHRcaeaCxAIBAL/g7k9JxAIBAKBQCAQCAQC14H+MhAIBE4CD3fOFvGVBzhZAAAAAElFTkSuQmCC\");\r\n    background-position: 50% 50%;\r\n    background-repeat: no-repeat;\r\n    background-size: 40px 40px;\r\n}\r\n.leaflet-sbs-range:disabled::-moz-range-thumb {\r\n    cursor: default;\r\n}\r\n.leaflet-sbs-range:disabled::-ms-thumb {\r\n    cursor: default;\r\n}\r\n.leaflet-sbs-range:disabled::-webkit-slider-thumb {\r\n    cursor: default;\r\n}\r\n.leaflet-sbs-range:disabled {\r\n    cursor: default;\r\n}\r\n.leaflet-sbs-range:focus {\r\n    outline: none!important;\r\n}\r\n.leaflet-sbs-range::-moz-focus-outer {\r\n    border: 0;\r\n}\r\n\r\n";
-inject(css, undefined, '_1tlt668');
-module.exports = css;
-
+var css = ".leaflet-sbs-range {\n    -webkit-appearance: none;\n    display: inline-block!important;\n    vertical-align: middle;\n    height: 0;\n    padding: 0;\n    margin: 0;\n    border: 0;\n    background: rgba(0, 0, 0, 0.25);\n    min-width: 100px;\n    cursor: pointer;\n    pointer-events: none;\n    z-index: 999;\n}\n.leaflet-sbs-range::-ms-fill-upper {\n    background: transparent;\n}\n.leaflet-sbs-range::-ms-fill-lower {\n    background: rgba(255, 255, 255, 0.25);\n}\n/* Browser thingies */\n\n.leaflet-sbs-range::-moz-range-track {\n    opacity: 0;\n}\n.leaflet-sbs-range::-ms-track {\n    opacity: 0;\n}\n.leaflet-sbs-range::-ms-tooltip {\n    display: none;\n}\n/* For whatever reason, these need to be defined\n * on their own so dont group them */\n\n.leaflet-sbs-range::-webkit-slider-thumb {\n    -webkit-appearance: none;\n    margin: 0;\n    padding: 0;\n    background: #fff;\n    height: 40px;\n    width: 40px;\n    border-radius: 20px;\n    cursor: ew-resize;\n    pointer-events: auto;\n    border: 1px solid #ddd;\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABlBMVEV9fX3///+Kct39AAAAAnRSTlP/AOW3MEoAAAA9SURBVFjD7dehDQAwDANBZ/+l2wmKoiqR7pHRcaeaCxAIBAL/g7k9JxAIBAKBQCAQCAQC14H+MhAIBE4CD3fOFvGVBzhZAAAAAElFTkSuQmCC\");\n    background-position: 50% 50%;\n    background-repeat: no-repeat;\n    background-size: 40px 40px;\n}\n.leaflet-sbs-range::-ms-thumb {\n    margin: 0;\n    padding: 0;\n    background: #fff;\n    height: 40px;\n    width: 40px;\n    border-radius: 20px;\n    cursor: ew-resize;\n    pointer-events: auto;\n    border: 1px solid #ddd;\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABlBMVEV9fX3///+Kct39AAAAAnRSTlP/AOW3MEoAAAA9SURBVFjD7dehDQAwDANBZ/+l2wmKoiqR7pHRcaeaCxAIBAL/g7k9JxAIBAKBQCAQCAQC14H+MhAIBE4CD3fOFvGVBzhZAAAAAElFTkSuQmCC\");\n    background-position: 50% 50%;\n    background-repeat: no-repeat;\n    background-size: 40px 40px;\n}\n.leaflet-sbs-range::-moz-range-thumb {\n    padding: 0;\n    right: 0    ;\n    background: #fff;\n    height: 40px;\n    width: 40px;\n    border-radius: 20px;\n    cursor: ew-resize;\n    pointer-events: auto;\n    border: 1px solid #ddd;\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAMAAAC5zwKfAAAABlBMVEV9fX3///+Kct39AAAAAnRSTlP/AOW3MEoAAAA9SURBVFjD7dehDQAwDANBZ/+l2wmKoiqR7pHRcaeaCxAIBAL/g7k9JxAIBAKBQCAQCAQC14H+MhAIBE4CD3fOFvGVBzhZAAAAAElFTkSuQmCC\");\n    background-position: 50% 50%;\n    background-repeat: no-repeat;\n    background-size: 40px 40px;\n}\n.leaflet-sbs-range:disabled::-moz-range-thumb {\n    cursor: default;\n}\n.leaflet-sbs-range:disabled::-ms-thumb {\n    cursor: default;\n}\n.leaflet-sbs-range:disabled::-webkit-slider-thumb {\n    cursor: default;\n}\n.leaflet-sbs-range:disabled {\n    cursor: default;\n}\n.leaflet-sbs-range:focus {\n    outline: none!important;\n}\n.leaflet-sbs-range::-moz-focus-outer {\n    border: 0;\n}\n\n"; (require("./node_modules/cssify"))(css, undefined, '/data/github/leaflet-side-by-side/range.css'); module.exports = css;
 },{"./node_modules/cssify":3}]},{},[1]);
