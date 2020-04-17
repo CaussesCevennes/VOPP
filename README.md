@@ -217,8 +217,7 @@ Un JSON est un fichier textuel balisé dans lequel les données sont présentée
     "features": [
         {
             "type": "Feature",
-            "properties" : {}
-            },
+            "properties" : {},
             "geometry": {
                 "type": "Point",
                 "coordinates": []
