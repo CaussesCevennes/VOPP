@@ -185,6 +185,8 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 
 - `-s` : taille des tuiles, par défaut 256px.
 
+- `-o` : nombre de pixels de recouvrement entre 2 tuiles, par défaut 0. Cette option étend la taille des tuiles de la valeur spécifiée sur la droite et vers le bas. Peut être utile pour résoudre des problèmes d'affichage où les tuiles n'apparaissent pas parfaitement jointive (cf. [rapport de bug Leaflet](https://github.com/Leaflet/Leaflet/issues/3575)), dans ce cas un pixel de recouvrement sera suffisant.
+
 - `-i` : taille initiale utilisée comme référence pour calculer le tuilage. Deux valeurs sont possibles :
   
   - `TILESIZE` : (valeur par défaut) au niveau de zoom minimum, l'image est représentée par une unique tuile de 256px. Le plus grand des côtés de l'image couvre l'intégralité des 256px. Les niveaux de zoom suivant sont calculés en respectant cette règle ainsi, quelque soit la résolution originale de l'image son plus grand côté couvre toujours l'intégralité de la grille. La pyramide de zoom est constante : 256, 512, 1024, 2048, 4096,  8192 ... Cette méthode facilite la comparaison d'images de résolution différentes mais en contrepartie la photo n'est jamais présentée directement dans sa résolution originale. Par exemple une image de 5616 pixels de large sera représentée au niveau de zoom 5 par 4096 pixels (sous-échantillonnage) puis 8192 pixels au niveau suivant (sur-échantillonnage). Du fait du sur-échantillonnage, le poids total des tuiles excède toujours le poids initial de l'image. Le sur-échantillonnage pourrait être réduit en choisissant un meilleur candidat pour la taille des tuiles, mais il ne sera pas possible d'aligner correctement 2 images dont le tuilage diffère ce qui limite la comparaison.
@@ -202,8 +204,6 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 - `-q` : qualité de la compression jpeg, par défaut 75
 
 - `-r` : algorithme de ré-échantillonnage, par défaut *lanczos*
-
-
 
 ## Création du fichier GeoJSON
 

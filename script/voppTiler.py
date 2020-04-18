@@ -125,7 +125,7 @@ RESIZE_FILTERS = {
 
 class VOPPTiler():
 
-    def __init__(self, inFile, outFolder, tileSize=256, initRes='TILESIZE', zFactor=2, cropTiles=False, tileFormat="jpg", jpgQuality=75, resizeFilter='lanczos', pathFormat = '{z}_{x}_{y}'):
+    def __init__(self, inFile, outFolder, tileSize=256, overlap=0, initRes='TILESIZE', zFactor=2, cropTiles=False, tileFormat="jpg", jpgQuality=75, resizeFilter='lanczos', pathFormat = '{z}_{x}_{y}'):
         self.src = inFile
         self.dst = outFolder
 
@@ -137,6 +137,7 @@ class VOPPTiler():
 
         self.profile = TilesProfile(w, h, tileSize, initRes, zFactor)
 
+        self.overlap = overlap
         self.cropTiles = cropTiles
         self.pathFormat = pathFormat + '.' + tileFormat
 
@@ -156,18 +157,31 @@ class VOPPTiler():
             for row in range(rows):
                 yield (col, row)
 
-    def getTileBounds(self, z, col, row):
-        """Bounding box of the tile (x1, y1, x2, y2)"""
+    def getTile(self, img, z, col, row):
         x = col * self.tileSize
-        y = row * self.profile.tileSize
-        if not self.cropTiles:
-            w = self.tileSize
-            h = self.tileSize
+        y = row * self.tileSize
+
+        ncols, nrows = self.profile.getTileMatrixSize(z)
+        imgWidth, imgHeight = self.profile.getImageSize(z)
+
+        if col == ncols-1:
+            if self.cropTiles:
+                w = min(self.tileSize, imgWidth - x)
+            else:
+                w = self.tileSize
         else:
-            imgWidth, imgHeight = self.profile.getImageSize(z)
-            w = min(self.tileSize, imgWidth - x)
-            h = min(self.tileSize, imgHeight - y)
-        return (x, y, x + w, y + h)
+            w = self.tileSize + self.overlap
+        if row == nrows-1:
+            if self.cropTiles:
+                h = min(self.tileSize, imgHeight - y)
+            else:
+                h = self.tileSize
+        else:
+            h = self.tileSize + self.overlap
+
+        tile = Image.new('RGB', (w, h), self.bkgColor)
+        tile.paste(img, (-x, -y))
+        return tile
 
     def getImage(self, z):
         """Returns the resized image at the given level"""
@@ -176,8 +190,6 @@ class VOPPTiler():
             return self.image
         logging.debug(' >> Create base image for level {} : redim. from {} to {}'.format(z, self.image.size, (w, h)))
         return self.image.resize((w, h), self.resizeFilter)
-
-
 
     def seed(self):
         """Creates tiles from source file and saves it to destination folder"""
@@ -195,15 +207,7 @@ class VOPPTiler():
 
             for (col, row) in self.iterTiles(level):
 
-                bounds = self.getTileBounds(level, col, row)
-                if self.cropTiles:
-                    tile = img.crop(bounds)
-                else:
-                    #when the tile matrix is larger than the image dims, then the last tiles will be not fullfilled
-                    #so if we decide to not crop them, then we need to set the background color beforehand
-                    tile = Image.new('RGB', (self.tileSize, self.tileSize), self.bkgColor)
-                    x1, y1, x2, y2 = bounds
-                    tile.paste(img, (-x1, -y1))
+                tile = self.getTile(img, level, col, row)
 
                 tilePath = os.path.join(self.dst, self.pathFormat.format(x=col, y=row, z=level))
                 if not os.path.exists(os.path.dirname(tilePath)):
@@ -262,6 +266,14 @@ def main():
         #type=int,
         default=256,
         help="Size of the tiles, can be set to 'auto' to let the tiler determine itself the best size",
+    )
+    parser.add_argument(
+        "-o",
+        "--overlap",
+        dest="overlap",
+        type=int,
+        default=0,
+        help="Number of overlaping pixels. Will increase the final tile size by expanding it by the overlap value on the right and bottom",
     )
     parser.add_argument(
         "-i",
@@ -347,10 +359,9 @@ def main():
         logging.error('Invalide path template. The template {} does not include {}'.format(args.pathFormat, ['{x}', '{y}', '{z}']))
         sys.exit(1)
 
-    #get dict of only optional args
-    kwargs = {k:v for k,v in vars(args).items() if k not in ['inFile']}
+    kwargs = dict(vars(args))
 
-    tiler = VOPPTiler(args.inFile, **kwargs)
+    tiler = VOPPTiler(**kwargs)
     tiler.seed()
 
 

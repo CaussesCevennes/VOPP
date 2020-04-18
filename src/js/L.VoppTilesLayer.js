@@ -4,7 +4,8 @@ L.TileLayer.VOPPTiles = L.TileLayer.extend({
     width: undefined,
     height: undefined,
     targetRatio: undefined, //may differ from width/height, it's a property of the POV
-    tileSize : 256
+    tileSize : 256,
+    overlap : 0
   },
 
   initialize: function (url, options) {
@@ -45,16 +46,17 @@ L.TileLayer.VOPPTiles = L.TileLayer.extend({
     //call original function
     L.TileLayer.prototype._addTile.call(this, coords, container);
     // Adjust sizes to handle non 256x256 tiles
-    var tileSize = this.options.tileSize;
+    var expectedSize = this.options.tileSize + this.options.overlap;
     this.on('tileload', function(tile, url) {
       // get tile size from DOM image element properties
       var height = tile.tile.naturalHeight,
           width = tile.tile.naturalWidth;
-      // No need to resize if tile is 256 x 256
-      if (height === tileSize && width === tileSize) return;
-      // update css style
-      tile.tile.style.width = width + 'px';
-      tile.tile.style.height = height + 'px';
+      // update css style if needed
+      if (height != expectedSize){
+        tile.tile.style.height = height + 'px';
+      } else if (width != expectedSize) {
+        tile.tile.style.width = width + 'px';
+      }
     });
   },
 
