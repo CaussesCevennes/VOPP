@@ -974,18 +974,16 @@ function OPP(providers, theme) {
       console.log("Coordinates: " + event.latlng.toString());
     });
 
+    //Checks if the map container size changed and updates the map if so
+    //we need to invalidate size before any fit bounds
+    self.photoMap1.invalidateSize()
+    self.photoMap2.invalidateSize()
 
     if (fit) {
       self.photoMap1.fitBounds(photoLay1.getBounds());
-      if (self.viewMode == 'SPLIT') {
-        self.photoMap2.fitBounds(photoLay2.getBounds());
-      }
-
+      //photoMa2 is synchronized...
     }
 
-    //Checks if the map container size changed and updates the map if so
-    self.photoMap1.invalidateSize()
-    self.photoMap2.invalidateSize()
   }
 
 
