@@ -149,7 +149,7 @@ D'autres options sont à considérer pour optimiser le poids des images :
   
   ![](https://raw.githubusercontent.com/wiki/CaussesCevennes/OPP/img/blur.jpg)
 
-- `-sampling-factor 4:2:0` : réduit le résolution chromatique de moitié ce qui permet un gain sensible de poids pour un impact très peu perceptible par l'oeil humain. Voir [Wikipedia]([Sous-échantillonnage de la chrominance — Wikipédia](https://fr.wikipedia.org/wiki/Sous-%C3%A9chantillonnage_de_la_chrominance)) pour plus d'explication sur ce paramètre. A noter qu'il semble que `4:2:0` soit déjà la valeur par défaut utilisée par ImageMagick (la documentation n'est pas explicite à ce sujet). Cette option peut être combinée avec l'option `-define jpeg:dct-method=float` qui permet un calcul plus précis mais sensiblement plus lent ([source](https://stackoverflow.com/a/7262050/8440810)).
+- `-sampling-factor 4:2:0` : réduit le résolution chromatique de moitié ce qui permet un gain sensible de poids pour un impact très peu perceptible par l'oeil humain. Voir [Wikipedia](https://fr.wikipedia.org/wiki/Sous-%C3%A9chantillonnage_de_la_chrominance) pour plus d'explication sur ce paramètre. A noter qu'il semble que `4:2:0` soit déjà la valeur par défaut utilisée par ImageMagick (la documentation n'est pas explicite à ce sujet). Cette option peut être combinée avec l'option `-define jpeg:dct-method=float` qui permet un calcul plus précis mais sensiblement plus lent ([source](https://stackoverflow.com/a/7262050/8440810)).
 
 Traiter un grand nombre de photos implique de choisir un taux de compression commun et donc de décider d'un compromis.  Des images comportant beaucoup de détails supportent plus facilement une forte compression (50 à 60%) alors qu'un gradient de bleu dans un ciel nécessitera une très faible compression (85 - 90%), la vision humaine étant très sensible aux variations de teinte dans les zones homogènes. L'efficacité d'une compression jpeg est en réalité très dépendante de la composition de l'image et ce qui rend le résultat final difficilement prédictible. Certaines stratégies peuvent être mise en place pour essayer de déterminer le facteur de compression optimal pour une image donnée :
 
@@ -183,9 +183,9 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 
 - `-d` : dossier de destination des tuiles. Les tuiles générées sont toujours placées dans un nouveau dossier du même nom que l'image. Par défaut ce dernier est placé dans le même dossier que l'image, ce paramètre permet de spécifier un autre dossier de destination. A noter qu'en complément des tuiles l'outil génère également un fichier json décrivant le tuilage.
 
-- `-s` : taille des tuiles, par défaut 256px.
+- `-s` : taille des tuiles, par défaut 256px. Doit être constant pour toutes les photos.
 
-- `-o` : nombre de pixels de recouvrement entre 2 tuiles, par défaut 0. Cette option étend la taille des tuiles de la valeur spécifiée sur la droite et vers le bas. Peut être utile pour résoudre des problèmes d'affichage où les tuiles n'apparaissent pas parfaitement jointive (cf. [rapport de bug Leaflet](https://github.com/Leaflet/Leaflet/issues/3575)), dans ce cas un pixel de recouvrement sera suffisant.
+- `-o` : nombre de pixels de recouvrement entre 2 tuiles, par défaut 0. Cette option étend la taille des tuiles de la valeur spécifiée sur la droite et vers le bas. Peut être utile pour résoudre des problèmes d'affichage où les tuiles n'apparaissent pas parfaitement jointive (cf. [rapport de bug Leaflet](https://github.com/Leaflet/Leaflet/issues/3575)), dans ce cas un pixel de recouvrement sera suffisant. Doit être constant pour toutes les photos.
 
 - `-i` : taille initiale utilisée comme référence pour calculer le tuilage. Deux valeurs sont possibles :
   
@@ -197,7 +197,7 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 
 - `-c` : précise si les tuiles incomplètes doivent être coupées ou bien maintenue dans leur taille initiale
 
-- `-z` : facteur de zoom, par défaut 2
+- `-z` : facteur de zoom, par défaut 2. Ne pas modifier.
 
 - `-f `: format des tuiles (jpg ou png), par défaut jpg
 
