@@ -1,4 +1,3 @@
-
 function OPP(providers, theme) {
 
   /* ########################################
@@ -138,7 +137,9 @@ function OPP(providers, theme) {
       var registerViewMode = false;
     }
 
-    $.when(...templates, setupMap()).then( function() {
+    self.loading = $.when(...templates, setupMap());
+
+    self.loading.then( function() {
 
       self.refresh(true);
       connectEvents();
@@ -815,7 +816,9 @@ function OPP(providers, theme) {
         targetRatio: self.selectedFeatProps['RATIO'],
         continuousWorld: false,
         noWrap: true,
-        attribution:auteur
+        attribution:auteur,
+        tileSize:256,
+        overlap:0
       });
     }
   }
@@ -1449,6 +1452,14 @@ $(document).ready(function() {
     themeKey = url.split("/").pop();
   }
 
+  loading = new Spinner({
+    top: '50%', left: '50%',
+    animation: 'spinner-line-shrink',
+    radius:20,
+    scale: 2,
+    length: 0
+  }).spin(document.getElementById('container'));
+
   var providers, settings;
   $.when(
     $.getJSON(`providers.json?v=${version}`, function (data) {
@@ -1464,6 +1475,10 @@ $(document).ready(function() {
     })
   ).then(function(){
     opp = new OPP(providers, settings);
+    opp.loading.then(function(){
+      loading.stop();
+      $('#loading').fadeOut(1000);
+    });
   });
 
   //history back/forward buttons
