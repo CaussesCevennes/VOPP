@@ -1016,6 +1016,11 @@ function OPP(providers, theme) {
   /* Update current url parameters and, if needed, push it into the browser history stack */
   var updateUrl = function(doNotRegister) {
     if (!registerHistory && hideParams){
+      //cleanup parameters if needed
+      if (window.location.href.includes('?')) {
+        let url = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.replaceState(null, null, url);
+      }
       return;
     }
     let url = generateUrl(registerDates, registerViewMode);
