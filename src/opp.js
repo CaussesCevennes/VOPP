@@ -1,3 +1,4 @@
+
 function OPP(providers, theme) {
 
   /* ########################################
@@ -108,10 +109,10 @@ function OPP(providers, theme) {
     $("#widgets1").show();
 
     //overide providers properties with options submited by the theme
-    for (k in self.theme['providers']){
-      options = self.theme['providers'][k];
-      provider = getProvider(k);
-      for (opt in options){
+    for (let k in self.theme['providers']){
+      let options = self.theme['providers'][k];
+      let provider = getProvider(k);
+      for (let opt in options){
         provider[opt] = options[opt];
       }
     }
@@ -258,7 +259,7 @@ function OPP(providers, theme) {
     oppLayersPromise.then(function(){
       //zoom to data extent
       let extent = L.latLngBounds();
-      for (k in self.oppLayers){
+      for (let k in self.oppLayers){
         let layer = self.oppLayers[k];
         if (self.providers.find(prov => prov.key === k).enable){
           extent.extend(layer.getBounds());
@@ -451,7 +452,7 @@ function OPP(providers, theme) {
 
     //keep toc and displayed legends in synch
     self.map.on('overlayadd', function (event){
-      for (layerId in self.bkgLayers) {
+      for (let layerId in self.bkgLayers) {
         let layer = self.bkgLayers[layerId];
         if (layer.title === event.name){
           self.map.addControl(layer.legend);
@@ -459,7 +460,7 @@ function OPP(providers, theme) {
       }
     });
     self.map.on('overlayremove',function (event){
-      for (layerId in self.bkgLayers) {
+      for (let layerId in self.bkgLayers) {
         let layer = self.bkgLayers[layerId];
         if (layer.title === event.name){
           self.map.removeControl(layer.legend);
@@ -469,7 +470,7 @@ function OPP(providers, theme) {
 
     //enable/disable layers depending on zoom level
     self.map.on('zoomend', function () {
-      for (layerId in self.bkgLayers){
+      for (let layerId in self.bkgLayers){
         let layer = self.bkgLayers[layerId];
         if (self.map.getZoom() > layer.maxZoom){
           self.map.removeLayer(layer.layer);
@@ -543,10 +544,10 @@ function OPP(providers, theme) {
     //return Mustache.render(url, {...featProps, ...photoProps}); //ECMAScript 2018
     return Mustache.render(url, $.extend({}, featProps, photoProps));
     /*
-    for (prop in featProps) {
+    for (let prop in featProps) {
       url = url.replace('{{'+prop+'}}', featProps[prop]);
     }
-    for (prop in photoProps) {
+    for (let prop in photoProps) {
       url = url.replace('{{'+prop+'}}', photoProps[prop]);
     }
     return url;
@@ -677,7 +678,7 @@ function OPP(providers, theme) {
     });
 
     photos.forEach(function(photo) {
-      dateKey = getDateKey(photo);
+      let dateKey = getDateKey(photo);
       $('.dropDownDate')
         .append($('<option></option>')
         .val(dateKey)
@@ -720,7 +721,7 @@ function OPP(providers, theme) {
   The ratio is a property of the point of view. A same point can have multiple photos
   with various resolutions but always the same ratio. */
   var getPhotoBoundsFromRatio = function (ratio){
-    baseCanvasSize = 256; //define the width of the photo in the canvas (or the height for vertical photo)
+    let baseCanvasSize = 256; //define the width of the photo in the canvas (or the height for vertical photo)
     if (ratio >= 1){ //width larger than height
       var w = baseCanvasSize;
       var h = w / ratio;
@@ -736,7 +737,7 @@ function OPP(providers, theme) {
   and allows to define specific margins. Margins can be useful to display for example a sketch which
   contains extra annotations outside the photo borders, while maintaining correct alignment */
   var getPhotoBoundsFromSize = function (imageSize, margins){
-    baseCanvasSize = 256;
+    let baseCanvasSize = 256;
     if (!margins){
       return getPhotoBoundsFromRatio(imageSize[0] / imageSize[1]);
     }
@@ -763,7 +764,7 @@ function OPP(providers, theme) {
     var margins = {'left':5.55, 'right':5.55, 'top':18.33, 'bottom':18.33}; //test with some percentages
     var wCanvas = 600;
     var hCanvas = 600 / ratio;
-    for (k in margins){
+    for (let k in margins){
       //compute the canvas offset from percentage
       if (k == 'left' || k == 'right'){
         margins[k] = margins[k] * wCanvas / 100;
@@ -861,7 +862,7 @@ function OPP(providers, theme) {
   }
 
 
-  spinner = new Spinner({top: '95%', left: '5%'});
+  var spinner = new Spinner({top: '95%', left: '5%'});
 
   /* Update photos containers according to the selected POV and dates */
   var updatePhotos = function (fit){
@@ -1158,7 +1159,7 @@ function OPP(providers, theme) {
       );
     });
     //spatial filter
-    for (provId in self.markersClusters){
+    for (let provId in self.markersClusters){
       let povIds = r.map(elem => {
         if (elem.PROVIDER == provId) {return elem.NUM;}
       });
@@ -1188,7 +1189,7 @@ function OPP(providers, theme) {
   /* Clear the result list and the spatial filter */
   var clearSearch = function() {
     $('#results').empty();
-    for (key in self.markersClusters){
+    for (let key in self.markersClusters){
       let cluster = self.markersClusters[key];
       cluster.clearLayers();
       cluster.addLayers(self.oppLayers[key].getLayers());
