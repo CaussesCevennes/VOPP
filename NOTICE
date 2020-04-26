@@ -1,0 +1,32 @@
+VOOP : Visionneur d'Observatoire Photographique du Paysage
+A JavaScript single page application to explore and compare timeline photos
+of a landscape observatory
+
+Copyright (c) 2017-2020, Entente Interdépartementale des Causses et des Cévennes
+www.causses-et-cevennes.fr, contact@causses-et-cevennes.fr
+
+Authors :
+  - 2017-2020, Dominique LYSZCZARZ, observatoire@causses-et-cevennes.fr, domlysz@gmail.com
+
+License : GPL3
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see https://www.gnu.org/licenses.
+
+Main dependencies:
+
+- Leaflet : an open source JavaScript library for interactive maps
+  Copyright (c) 2010-2019, Vladimir Agafonkin
+  Copyright (c) 2010-2011, CloudMade
+  All rights reserved.
+  License : BSD 2

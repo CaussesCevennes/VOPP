@@ -104,7 +104,7 @@ function OPP(providers, theme) {
     $('#logo').attr('src', self.theme['headerLogo']);
     $('#toolbar').css('background', self.theme['toolbarColor']);
 
-    $('#aboutPanel').load(`${self.theme['about']}?v=${version}`);
+    $('#about').load(`${self.theme['about']}?v=${version}`);
 
     $('.chkBkgPhoto').hide();
     $("#widgets1").show();
