@@ -99,6 +99,7 @@ function OPP(providers, theme) {
     $('#head').css('color', self.theme['headerTextColor']);
     $('#head').css('background', self.theme['headerBkgColor']);
     $('head title').html(self.theme['title']);
+    $('meta[name=description]').attr("content", self.theme['description']);
     $('#title').html(self.theme['title']);
     $('#logo').attr('src', self.theme['headerLogo']);
     $('#toolbar').css('background', self.theme['toolbarColor']);

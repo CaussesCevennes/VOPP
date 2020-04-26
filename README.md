@@ -455,6 +455,7 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
   "key" : "cc",
   "default" : true,
   "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
+  "description" : "Explorez et comparez les clichés de l'observatoire photographique du paysage culturel des Causses et des Cévennes",
   "headerLogo" : "icons/logos/cc_logo.png",
   "headerTextColor" : "#404040",
   "headerBkgColor" : "linear-gradient(to left, #618BCD, white)",
@@ -470,7 +471,9 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 
 - **default** : indique si le thème doit être chargé par défaut (c'est à dire en l'absence d'un paramètre dans l'url). Il ne peut y avoir qu'un seul thème par défaut.
 
-- **title** : le titre du thème, correspond au titre qui sera affiché dans la barre d'en-tête de la page web
+- **title** : le titre du thème, correspond au titre qui sera affiché dans la barre d'en-tête de la page web ainsi que dans la balise *title* du document HTML (utilisée pour l'indexation du site par les moteurs de recherche)
+
+- **description** : une présentation courte de la page à destination du référencement par les moteurs de recherche, sera intégré dans une balise meta du document HTML.
 
 - **headerLogo** : lien vers le fichier image qui sera utilisé comme logo
 
