@@ -4,7 +4,7 @@ Un observatoire photographique du paysage (OPP) est un outil de gestion territor
 
 Cette application a été développée par <a href="http://www.causses-et-cevennes.fr/">l'Entente Interdépartementale des Causses et des Cévennes</a> dans le but de valoriser de façon ludique nos clichés et ceux de nos partenaires. Le code source est publié ici afin de favoriser les réutilisations.
 
-Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCevennes/OPP/img/vopp_maj.png" alt="" width="61"> en action avec les données de notre OPP :  [observatoire.causses-et-cevennes.fr/opp](observatoire.causses-et-cevennes.fr/opp) 
+Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCevennes/OPP/img/vopp_maj.png" alt="" width="61"> en action avec les données de notre OPP :  [observatoire.causses-et-cevennes.fr/opp](http://observatoire.causses-et-cevennes.fr/opp) 
 
 # Guide de déploiement
 
