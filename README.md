@@ -503,7 +503,11 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 
 - **headerBkgColor** : valeur CSS définissant la couleur de fond pour la barre d'en-tête
 
-- **toolbarColor**: valeur CSS définissant la couleur de fond pour la barre d'outil verticale
+- **toolbarColor** : valeur CSS définissant la couleur de fond pour la barre d'outil verticale
+
+- **toolbarIconBaseColor** : valeur CSS définissant la couleur des icônes de la barre d'outil
+
+- **toolbarIconSelectColor** : valeur CSS définissant la couleur des icônes actifs
 
 - **providers** : la liste des fournisseurs d'OPP que l'on souhaite afficher. La configuration des fournisseurs est décrite plus bas. La liste est rédigée sous la forme d'un dictionnaire permettant si besoin de modifier des propriétés du fournisseur pour ce thème.
 

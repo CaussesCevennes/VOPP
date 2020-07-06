@@ -202,7 +202,7 @@ hr{
   toolbar
   ######################################## */
 
-.bt {
+.toolbarBt {
     border: none;
     cursor: pointer;
     height: 32px;
@@ -210,79 +210,12 @@ hr{
     margin: auto;
     display: block;
     position: relative;
-    padding: 0;
+    padding: 3px;
     background-color: transparent;
 }
 
-#toggleInfosBt {
-    background: url("icons/toggle_infos.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleInfosBt.active {
-    background: url("icons/toggle_infos_active.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleSplitViewBt {
-    background: url("icons/toggle_split.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleSplitViewBt.active  {
-    background: url("icons/toggle_split_active.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleSbsViewBt {
-    background: url("icons/toggle_sbs.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleSbsViewBt.active  {
-    background: url("icons/toggle_sbs_active.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleSpotViewBt {
-    background: url("icons/toggle_glass.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleSpotViewBt.active  {
-    background: url("icons/toggle_glass_active.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleSearchBt {
-    background: url("icons/toggle_search.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleSearchBt.filter {
-    background: url("icons/toggle_search_filter.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleSearchBt.active {
-    background: url("icons/toggle_search_active.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#toggleSearchBt.active.filter {
-    background: url("icons/toggle_search_active_filter.svg?v=102") no-repeat;
-    background-size: contain;
-}
-
-#shareBt {
-    background: url("icons/share.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#shareBt.active  {
-    background: url("icons/share_active.svg?v=102") no-repeat;
-    background-size: contain;
-}
-
-#aboutBt {
-    background: url("icons/toggle_about.svg?v=102") no-repeat;
-    background-size: contain;
-}
-#aboutBt.active  {
-    background: url("icons/toggle_about_active.svg?v=102") no-repeat;
-    background-size: contain;
-}
-
 /* Tooltip text */
-.bt .tooltip {
+.toolbarBt .tooltip {
  outline: none;
  cursor : default;
  visibility: hidden;
@@ -304,7 +237,7 @@ hr{
 }
 
 /* Tooltip arrow */
-.bt .tooltip::after {
+.toolbarBt .tooltip::after {
  content: "";
  position: absolute;
  top: 25%;
@@ -314,11 +247,42 @@ hr{
  border-color: transparent transparent transparent black;
 }
 
-/* Show the tooltip text when you mouse over the tooltip container */
-.bt:hover .tooltip {
+/* Show the tooltip text when the pointer is over the tooltip container */
+.toolbarBt:hover .tooltip {
  visibility: visible;
  opacity: 0.6;
  transition-delay:1s;
+}
+
+
+#toolbar {
+  --tb-icon-base-color: white;
+  --toolbar-select-color: #aa0000ff;
+}
+
+.toolbarBt svg {
+  width:100%;
+  height:100%;
+}
+
+.toolbarBt svg path{
+  fill:var(--tb-icon-base-color) !important;
+}
+
+.toolbarBt:hover svg path{
+  fill:var(--tb-icon-select-color) !important;
+}
+
+.toolbarBt svg path#ico-filter{
+  fill:transparent !important;
+}
+
+.toolbarBt.active svg path{
+  fill:var(--tb-icon-select-color) !important;
+}
+
+.toolbarBt.filter svg path#ico-filter{
+  fill:var(--tb-icon-select-color) !important;
 }
 
 /* ########################################
@@ -334,16 +298,18 @@ hr{
  display: inline;
 }
 
-.searchBt {
+.searchPanelBt {
     border: none;
     cursor: pointer;
     height: 28px;
     width: 28px;
     margin: auto;
+    background-color: transparent;
 }
 
+
 #searchBt {
-    background: url("icons/toggle_search_active.svg?v=102") no-repeat;
+    background: url("icons/search.svg?v=102") no-repeat;
     background-size: contain;
 }
 #clearSearchBt {

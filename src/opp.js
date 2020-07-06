@@ -104,6 +104,9 @@ function OPP(providers, theme) {
     $('#logo').attr('src', self.theme['headerLogo']);
     $('#toolbar').css('background', self.theme['toolbarColor']);
 
+    $("#toolbar").css('--tb-icon-base-color', self.theme['toolbarIconBaseColor']);
+    $("#toolbar").css('--tb-icon-select-color', self.theme['toolbarIconSelectColor']);
+
     $('#about').load(`${self.theme['about']}?v=${version}`);
 
     $('.chkBkgPhoto').hide();
@@ -1285,7 +1288,7 @@ function OPP(providers, theme) {
 
   var toggleSingleView = function () {
     self.viewMode = 'SINGLE';
-    $('.bt.active:not(.panelSwitch)').removeClass('active');
+    $('.toolbarBt.active:not(.panelSwitch)').removeClass('active');
     $('#photo1').css('height', '100%');
     $('#photo2').css('display', 'none');
     $('#widgets2').hide();
@@ -1297,7 +1300,7 @@ function OPP(providers, theme) {
         toggleSingleView();
     } else {
       self.viewMode = 'SPLIT';
-      $('.bt.active:not(.panelSwitch)').removeClass('active');
+      $('.toolbarBt.active:not(.panelSwitch)').removeClass('active');
       $('#toggleSplitViewBt').addClass('active');
       $('#photo1').css('height', '50%');
       $('#photo2').css('display', 'block');
@@ -1314,7 +1317,7 @@ function OPP(providers, theme) {
       toggleSingleView();
     } else {
       self.viewMode = 'SBS';
-      $('.bt.active:not(.panelSwitch)').removeClass('active');
+      $('.toolbarBt.active:not(.panelSwitch)').removeClass('active');
       $('#toggleSbsViewBt').addClass('active');
       $('#photo1').css('height', '100%');
       $('#photo2').css('display', 'none');
@@ -1331,7 +1334,7 @@ function OPP(providers, theme) {
       toggleSingleView();
     } else {
       self.viewMode = 'SPOT';
-      $('.bt.active:not(.panelSwitch)').removeClass('active');
+      $('.toolbarBt.active:not(.panelSwitch)').removeClass('active');
       $('#toggleSpotViewBt').addClass('active');
       $('#photo1').css('height', '100%');
       $('#photo2').css('display', 'none');
@@ -1349,8 +1352,8 @@ function OPP(providers, theme) {
   ######################################## */
 
   var toggleInfosPanel = function () {
-    if ($("#sidePanel").hasClass('active') && ($(".bt.panelSwitch.active").prop('id') != $("#toggleInfosBt").prop('id'))){
-      $("#sidePanel, .panel.active:not(#infosPanel), .bt.active:not(#toggleInfosBt, .viewMode)").toggleClass('active');
+    if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != $("#toggleInfosBt").prop('id'))){
+      $("#sidePanel, .panel.active:not(#infosPanel), .toolbarBt.active:not(#toggleInfosBt, .viewMode)").toggleClass('active');
     }
     $("#sidePanel, #infosPanel, #toggleInfosBt").toggleClass('active');
     self.photoMap1.invalidateSize();
@@ -1358,8 +1361,8 @@ function OPP(providers, theme) {
   }
 
   var toggleSearchPanel = function(){
-    if ($("#sidePanel").hasClass('active') && ($(".bt.panelSwitch.active").prop('id') != $("#toggleSearchBt").prop('id'))){
-      $("#sidePanel, .panel.active:not(#searchPanel), .bt.active:not(#toggleSearchBt, .viewMode)").toggleClass('active');
+    if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != $("#toggleSearchBt").prop('id'))){
+      $("#sidePanel, .panel.active:not(#searchPanel), .toolbarBt.active:not(#toggleSearchBt, .viewMode)").toggleClass('active');
     }
     $("#sidePanel, #searchPanel, #toggleSearchBt").toggleClass('active');
     self.photoMap1.invalidateSize();
@@ -1367,8 +1370,8 @@ function OPP(providers, theme) {
   }
 
   var toggleAboutPanel = function(){
-    if ($("#sidePanel").hasClass('active') && ($(".bt.panelSwitch.active").prop('id') != $("#aboutBt").prop('id'))){
-      $("#sidePanel, .panel.active:not(#aboutPanel), .bt.active:not(#aboutBt, .viewMode)").toggleClass('active');
+    if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != $("#aboutBt").prop('id'))){
+      $("#sidePanel, .panel.active:not(#aboutPanel), .toolbarBt.active:not(#aboutBt, .viewMode)").toggleClass('active');
     }
     $("#sidePanel, #aboutPanel, #aboutBt").toggleClass('active');
     self.photoMap1.invalidateSize();

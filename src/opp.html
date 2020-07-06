@@ -28,6 +28,7 @@
     <script src="lib/leaflet-side-by-side.js"></script>
     <script src="lib/leaflet.magnifyingglass.js"></script>
     <link rel="stylesheet" href="lib/leaflet.magnifyingglass.css" />
+    <script src="lib/svg-inject.min.js"></script>
 
     <script src="js/L.VoppTilesLayer.js?102"></script>
     <script src="opp.js?102"></script>
@@ -93,8 +94,9 @@
           <div id="searchBar">
             <span>Rechercher :</span>
             <input type="text" id="query"></input>
-            <button id="searchBt" class="searchBt uiIcon"></button>
-            <button id="clearSearchBt" class="searchBt uiIcon"></button>
+            <button id="searchBt" class="searchPanelBt"></button>
+            <!--button id="searchBt" class="searchPanelBt"><img src="icons/toolbar/search.svg" onload="SVGInject(this)"/></button-->
+            <button id="clearSearchBt" class="searchPanelBt"></button>
           </div>
           <!--table id="results"></table-->
           <ul id="results"></ul>
@@ -110,13 +112,13 @@
       </div>
 
       <div id="toolbar">
-        <button id="toggleInfosBt" class="bt panelSwitch uiIcon"><span class="tooltip">Afficher les informations du point de vue</span></button>
-        <button id="toggleSplitViewBt" class="bt viewMode uiIcon"><span class="tooltip">Comparer avec deux vues synchronisées</span></button>
-        <button id="toggleSbsViewBt" class="bt viewMode uiIcon"><span class="tooltip">Comparer avec un séparateur glissant</span></button>
-        <button id="toggleSpotViewBt" class="bt viewMode uiIcon"><span class="tooltip">Comparer avec une loupe</span></button>
-        <!--button id="shareBt" class="bt uiIcon"><span class="tooltip">Générer un lien partageable</span></button-->
-        <!--button id="toggleSearchBt" class="bt panelSwitch uiIcon"><span class="tooltip">Rechercher des points de vue</span></button-->
-        <button id="aboutBt" class="bt panelSwitch uiIcon"><span class="tooltip"><div>A propos</div></span></button>
+        <button id="toggleInfosBt" class="toolbarBt panelSwitch"><img src="icons/toolbar/infos.svg" onload="SVGInject(this)"/><span class="tooltip">Afficher les informations du point de vue</span></button>
+        <button id="toggleSplitViewBt" class="toolbarBt viewMode"><img src="icons/toolbar/split.svg" onload="SVGInject(this)"/><span class="tooltip">Comparer avec deux vues synchronisées</span></button>
+        <button id="toggleSbsViewBt" class="toolbarBt viewMode"><img src="icons/toolbar/sbs.svg" onload="SVGInject(this)"/><span class="tooltip">Comparer avec un séparateur glissant</span></button>
+        <button id="toggleSpotViewBt" class="toolbarBt viewMode"><img src="icons/toolbar/spot.svg" onload="SVGInject(this)"/><span class="tooltip">Comparer avec une loupe</span></button>
+        <!--button id="shareBt" class="toolbarBt"><img src="icons/toolbar/share.svg" onload="SVGInject(this)"/><span class="tooltip">Générer un lien partageable</span></button-->
+        <!--button id="toggleSearchBt" class="toolbarBt panelSwitch"><img src="icons/toolbar/search.svg" onload="SVGInject(this, {makeIdsUnique:false})"/><span class="tooltip">Rechercher des points de vue</span></button-->
+        <button id="aboutBt" class="toolbarBt panelSwitch"><img src="icons/toolbar/about.svg" onload="SVGInject(this)"/><span class="tooltip"><div>A propos</div></span></button>
       </div>
 
     </div>
