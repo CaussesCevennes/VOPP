@@ -195,7 +195,7 @@ function OPP(providers, theme) {
 
     //Create main map
     self.map = L.map('map',{zoomControl:false, center:[46.2, 2.35], zoom:5});
-    self.basemap = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    self.basemap = L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(self.map);
     self.tocLayers = L.control.layers(null, null, {position:'topright'});
@@ -204,7 +204,7 @@ function OPP(providers, theme) {
     //add search control
     self.map.addControl( new L.Control.Search({
       position : 'topleft',
-      url: 'http://nominatim.openstreetmap.org/search?format=json&q={s}',
+      url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
       jsonpParam: 'json_callback',
       propertyName: 'display_name',
       propertyLoc: ['lat','lon'],
