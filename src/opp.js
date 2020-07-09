@@ -150,13 +150,11 @@ function OPP(providers, theme) {
       connectEvents();
 
       //Setup Fuse engine TEST
-      /*
       fuse = new Fuse(self.oppData, {
         keys: [ 'NUM', 'NOM', 'COMMUNE', 'THEME', 'PHOTOS.AUTEUR', 'PHOTOS.DATE' ],
         threshold: 0.5,
         distance: 50
       });
-      */
 
       if (_initUpdatePhotoCpt > 1) {
         console.debug(`Warning, init sequence updates the photo ${_initUpdatePhotoCpt} times.`)
