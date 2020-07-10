@@ -317,6 +317,22 @@ hr{
   background-size: contain;
 }
 
+.dropDownFilter {
+  display : block;
+  width: 300px;
+  height: 30px;
+  margin: 10px 0 10px 0;
+  border-radius: 5px;
+  color: black;
+  background-color: rgba(255,255,255,0.5);
+  background-image: url(icons/br_down.png);
+  background-repeat: no-repeat;
+  background-position: 95%;
+  appearance: none;
+  -moz-appearance: none; /* Firefox */
+  -webkit-appearance: none; /* Safari and Chrome */
+}
+
 ul {
  list-style-type: none;
  text-align: left;

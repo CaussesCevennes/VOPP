@@ -35,7 +35,7 @@ function OPP(providers, theme) {
   self.bkgLayers = {}; //dictionnary of Leaflet geojson layergroups used as background layers, one entry for each custom layer key
   self.basemap; //Leaflet TileLayer object which provide by default the OpenStreetMap basemap
 
-  self.oppData = []; //array of objects containing properties of all point of view
+  self.oppData = []; //array of objects containing properties of all point of view (used only for fuzzy search)
 
   //the current selected provider (json properties)
   Object.defineProperty(self, 'activeProvider', {
@@ -112,7 +112,7 @@ function OPP(providers, theme) {
     $('.chkBkgPhoto').hide();
     $("#widgets1").show();
 
-    //overide providers properties with options submited by the theme
+    //override providers properties with options submited by the theme
     for (let k in self.theme['providers']){
       let options = self.theme['providers'][k];
       let provider = getProvider(k);
@@ -122,6 +122,15 @@ function OPP(providers, theme) {
     }
 
     self.providers = self.providers.filter(p => p['key'] in self.theme['providers']);
+
+    //Fill provider drowdown filter
+    self.providers.forEach(function(prov) {
+      $('#providerFilter')
+        .append($('<option></option>')
+        .val(prov.key)
+        .html(prov.name)
+      );
+    });
 
     //Fetch all required templates files
     var templates = [];
@@ -137,7 +146,7 @@ function OPP(providers, theme) {
 
 
     registerHistory = self.theme['browserHistory'];
-    if (self.theme['browserHistory']){
+    if (registerHistory){
       var registerDates = false;
       var registerViewMode = false;
     }
@@ -1037,7 +1046,7 @@ function OPP(providers, theme) {
 
 
   /* ########################################
-  dropDown handlers
+  Dates dropDown handlers
   ######################################## */
 
   /* Disable dropdowns change event */
@@ -1273,12 +1282,50 @@ function OPP(providers, theme) {
     $('#results').on('click', 'li, tr', function(){
       selectFromSearchList($(this).attr('id'));
     });
+    $('#providerFilter').on('change', function() {
+      updateFilters();
+    });
+
 
     $('.chkBkgPhoto>input').on('change', function() {
       updatePhotos(false);
     });
 
   }
+
+/*      let layGroup = self.oppLayers[provId];
+      let markers = layGroup.getLayers().filter(elem => povIds.includes(elem.feature.properties.NUM));*/
+
+      var updateFilters = function() {
+        $('.dropDownFilter:not(#providerFilter)').remove();
+        var selectedProvider = getProvider($('#providerFilter').val());
+        selectedProvider.filters.forEach(filter => {
+          $('#filters').append(
+            $('<select>').addClass('dropDownFilter').attr('id', filter)
+          );
+          //var uniqueItems = Array.from(new Set(self.oppData.filter(pov => pov['PROVIDER'] == selectedProvider.key).map(pov => pov[filter])));
+          var uniqueItems = [];
+          self.oppData.filter(pov => pov['PROVIDER'] == selectedProvider.key).forEach(pov => {
+            v = pov[filter];
+            if (!v) {return}; //skip blank values
+            if (Array.isArray(v)){
+              uniqueItems.push(...v); //extend
+            } else {
+              uniqueItems.push(v);
+            }
+          });
+          uniqueItems = Array.from(new Set(uniqueItems));
+          uniqueItems.sort();
+          uniqueItems.forEach(value => {
+            $('#'+filter).append(
+              $('<option></option>')
+              .val(value)
+              .html(value)
+            );
+          });
+        });
+      }
+
 
   /* ########################################
   view modes switch
