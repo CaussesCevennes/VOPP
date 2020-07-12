@@ -285,7 +285,7 @@ hr{
   fill:var(--tb-icon-select-color) !important;
 }
 
-.toolbarBt.filter svg path#ico-filter{
+.toolbarBt.activeFilter svg path#ico-filter{
   fill:var(--tb-icon-select-color) !important;
 }
 
@@ -335,7 +335,7 @@ hr{
   vertical-align: middle;
 }
 
-.filter{
+.searchFilter{
   display:flex;
   align-items: center;
   margin: 10px 0 10px 0;

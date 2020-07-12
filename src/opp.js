@@ -123,6 +123,7 @@ function OPP(providers, theme) {
 
     self.providers = self.providers.filter(p => p['key'] in self.theme['providers']);
     $('#clearSearchBt').hide();
+    $('#query').val('');
 
     //Fill provider drowdown filter
     self.providers.forEach(function(prov) {
@@ -161,7 +162,7 @@ function OPP(providers, theme) {
 
       //Setup Fuse engine TEST
       fuse = new Fuse(self.oppData, {
-        keys: [ 'NUM', 'NOM', 'COMMUNE', 'THEME', 'PHOTOS.AUTEUR', 'PHOTOS.DATE' ],
+        keys: [ 'NUM', 'NOM', 'COMMUNE', 'THEME', 'UP', 'SECTEUR', 'PHOTOS.AUTEUR', 'PHOTOS.DATE' ],
         threshold: 0.5,
         distance: 50
       });
@@ -1209,7 +1210,7 @@ function OPP(providers, theme) {
       let markers = layGroup.getLayers().filter(elem => povIds.includes(elem.feature.properties.NUM));
       cluster.addLayers(markers);
       self.isFiltered = true;
-      $('#toggleSearchBt').addClass('filter');
+      $('#toggleSearchBt').addClass('activeFilter');
       $('#clearSearchBt').show();
     }
   }
@@ -1239,7 +1240,7 @@ function OPP(providers, theme) {
       cluster.addLayers(self.oppLayers[key].getLayers());
     }
     self.isFiltered = false;
-    $('#toggleSearchBt').removeClass('filter');
+    $('#toggleSearchBt').removeClass('activeFilter');
     $('#clearSearchBt').hide();
   }
 
