@@ -14,7 +14,7 @@
     "clusterColor" : "#2981cbc8",
     "popup" : "{{NUM}} - {{NOM}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
-    "filters" : ["THEME", "COMMUNE"]
+    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"}
   },
   {
     "key" : "PNC",
@@ -31,7 +31,7 @@
     "clusterColor" : "#927e71c8",
     "popup" : "{{NUM}} - {{COMMUNE}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
-    "filters" : ["THEME", "COMMUNE"]
+    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"}
   },
   {
     "key" : "34",
@@ -48,6 +48,6 @@
     "clusterColor" : "#04ab8ac8",
     "popup" : "{{NUM}} - {{COMMUNE}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
-    "filters" : ["THEME", "COMMUNE"]
+    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"}
   }
 ]

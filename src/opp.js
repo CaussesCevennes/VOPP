@@ -125,7 +125,7 @@ function OPP(providers, theme) {
 
     //Fill provider drowdown filter
     self.providers.forEach(function(prov) {
-      $('#providerFilter')
+      $('#PROVIDER')
         .append($('<option></option>')
         .val(prov.key)
         .html(prov.name)
@@ -1145,28 +1145,54 @@ function OPP(providers, theme) {
   search handlers
   ######################################## */
 
-  /* Search POV with a query string and then :
-   > fill the result list view
-   > rebuild the clusters by filtering markers according to the search result */
-  var research = function(qry){
+
+  var search = function(){
+
+    //First filter data with a query string
+    let qry = $('#query').val();
+    if (qry) {
+      var data = fuse.search(qry);
+    } else {
+      var data = self.oppData;
+    }
+
+    //Then apply all dropdown filters
+    $('.dropDownFilter').each(function (idx, elem) {
+      elem = $(elem);
+      if (elem.val()) {
+        data = data.filter(pov => {
+          if (Array.isArray(pov[elem.attr('id')])){
+            return pov[elem.attr('id')].includes(elem.val());
+          } else {
+            return pov[elem.attr('id')] == elem.val();
+          }
+        });
+      }
+    });
+
+    //Process result
+    showSearchResults(data);
+  }
+
+  /* fill the result list view and rebuild the clusters by filtering markers
+   according to the search result */
+  var showSearchResults = function(r){
     $('#results').empty();
-    var r = fuse.search(qry);
-    //$('#results').append($(`<tr><td>Nom</td><td>Commune</td><td>Date</td></tr>`));
     r.forEach(function(pov){
       let years = pov.PHOTOS.map(photo => photo.YEAR);
       let yearMin = Math.min(...years);
       let yearMax = Math.max(...years);
 
-      $('#results').append(
+      $('#results').append(/*
         $(`<li id=${pov.PROVIDER}__${pov.NUM} style="color:${getProvider(pov.PROVIDER).clusterColor}">
             <span>${pov.NOM} - ${pov.COMMUNE} <br> ${yearMin} > ${yearMax}</span>
           </li>`)
-        /*
+        */
         $(`<tr id=${pov.PROVIDER}__${pov.NUM} style="color:${getProvider(pov.PROVIDER).clusterColor}"">
             <td>${pov.NOM}</td>
             <td>${pov.COMMUNE}</td>
             <td>${yearMin} > ${yearMax}</td>
-          </tr>`)*/
+          </tr>`)
       );
     });
     //spatial filter
@@ -1199,7 +1225,9 @@ function OPP(providers, theme) {
 
   /* Clear the result list and the spatial filter */
   var clearSearch = function() {
+    $('#query').val('');
     $('#results').empty();
+    $('#PROVIDER').prop('selectedIndex', 0);
     for (let key in self.markersClusters){
       let cluster = self.markersClusters[key];
       cluster.clearLayers();
@@ -1209,6 +1237,57 @@ function OPP(providers, theme) {
     $('#toggleSearchBt').removeClass('filter');
   }
 
+
+  /*Create and fill provider's custom filters */
+  var updateCustomFilters = function() {
+    $('.dropDownFilter:not(#PROVIDER)').remove();
+    var selectedProvider = getProvider($('#PROVIDER').val());
+    if (!selectedProvider){return};
+
+    for (let filter in selectedProvider.filters) {
+    //selectedProvider.filters.forEach(filter => {
+      let label = selectedProvider.filters[filter];
+      $('#filters').append(
+        $('<span>').html(label),
+        $('<select>').addClass('dropDownFilter').attr('id', filter)
+        .append($('<option></option>').val(''))
+      );
+      var uniqueValues = [];
+      self.oppData.filter(pov => pov['PROVIDER'] == selectedProvider.key).forEach(pov => {
+        v = pov[filter];
+        if (!v) {return}; //skip blank values
+        if (Array.isArray(v)){
+          uniqueValues.push(...v); //extend
+        } else {
+          uniqueValues.push(v);
+        }
+      });
+      uniqueValues = Array.from(new Set(uniqueValues));
+      uniqueValues.sort();
+      uniqueValues.forEach(value => {
+        $('#'+filter).append(
+          $('<option></option>')
+          .val(value)
+          .html(value)
+        );
+      });
+    }//);
+  }
+
+  /* Deprecated
+  Synch provider dropdown filter with map cluster legend */
+  var updateProviderFilter = function() {
+    self.providers.forEach(p => {
+      if (p.key != $('#providerFilter').val()){
+        let lay = self.markersClusters[p.key];
+        if (self.map.hasLayer(lay)){
+          disableClusterLayer(p.key);
+        }
+      } else {
+        enableClusterLayer(p.key);
+      }
+    });
+  }
 
   /* ########################################
 
@@ -1269,12 +1348,16 @@ function OPP(providers, theme) {
     $('#photoPrev2').on('click', function () {
       dropDownDatePrev('#dropDownDate2');
     });
-    /* search */
-    $('#query').on('change', function() { //will be triggered with enter key
-      research($(this).val());
+    $('.chkBkgPhoto>input').on('change', function() {
+      updatePhotos(false);
     });
-    $("#searchBt").on('click', function () {
-      research($('#query').val());
+    /* search */
+    let keyUpTimeout;
+    $('#query').on('keyup', function() {
+      clearTimeout(keyUpTimeout);
+      keyUpTimeout = setTimeout(function () {
+          search();
+      }, 750);
     });
     $("#clearSearchBt").on('click', function () {
       clearSearch();
@@ -1282,49 +1365,15 @@ function OPP(providers, theme) {
     $('#results').on('click', 'li, tr', function(){
       selectFromSearchList($(this).attr('id'));
     });
-    $('#providerFilter').on('change', function() {
-      updateFilters();
+    $('#PROVIDER').on('change', function() {
+      updateCustomFilters();
     });
-
-
-    $('.chkBkgPhoto>input').on('change', function() {
-      updatePhotos(false);
+    $('#filters').on('change', '.dropDownFilter', function() {
+      search();
     });
 
   }
 
-/*      let layGroup = self.oppLayers[provId];
-      let markers = layGroup.getLayers().filter(elem => povIds.includes(elem.feature.properties.NUM));*/
-
-      var updateFilters = function() {
-        $('.dropDownFilter:not(#providerFilter)').remove();
-        var selectedProvider = getProvider($('#providerFilter').val());
-        selectedProvider.filters.forEach(filter => {
-          $('#filters').append(
-            $('<select>').addClass('dropDownFilter').attr('id', filter)
-          );
-          //var uniqueItems = Array.from(new Set(self.oppData.filter(pov => pov['PROVIDER'] == selectedProvider.key).map(pov => pov[filter])));
-          var uniqueItems = [];
-          self.oppData.filter(pov => pov['PROVIDER'] == selectedProvider.key).forEach(pov => {
-            v = pov[filter];
-            if (!v) {return}; //skip blank values
-            if (Array.isArray(v)){
-              uniqueItems.push(...v); //extend
-            } else {
-              uniqueItems.push(v);
-            }
-          });
-          uniqueItems = Array.from(new Set(uniqueItems));
-          uniqueItems.sort();
-          uniqueItems.forEach(value => {
-            $('#'+filter).append(
-              $('<option></option>')
-              .val(value)
-              .html(value)
-            );
-          });
-        });
-      }
 
 
   /* ########################################

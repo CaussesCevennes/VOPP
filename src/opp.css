@@ -308,18 +308,14 @@ hr{
 }
 
 
-#searchBt {
-    background: url("icons/search.svg?v=102") no-repeat;
-    background-size: contain;
-}
 #clearSearchBt {
   background: url("icons/clear_search.svg?v=102") no-repeat;
   background-size: contain;
 }
 
 .dropDownFilter {
-  display : block;
-  width: 300px;
+  /*display : block;*/
+  width: 200px;
   height: 30px;
   margin: 10px 0 10px 0;
   border-radius: 5px;
