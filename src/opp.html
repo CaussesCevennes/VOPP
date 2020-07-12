@@ -91,19 +91,27 @@
         <div id="split2" class="vsplitter"></div>
         <div id="infosPanel" class="panel"><!--template--></div>
         <div id="searchPanel" class="panel">
-          <div id="searchBar">
-            <span>Rechercher :</span>
-            <input type="text" id="query"></input>
-            <button id="clearSearchBt" class="searchPanelBt"></button>
+          <div id="seachHeader">
+            <span class="searchTitle">Rechercher : </span>
+            <button id="clearSearchBt" class="toolbarBt"><span class="tooltip">Supprimer les filtres</span></button>
+            <div id='filters'>
+              <div id='freetextFilter' class="filter">
+                <div class='label'>Mots clés :</div>
+                <input type="text" id="query" class='textFilter'></input>
+              </div>
+              <div id='providerFilter' class='filter'>
+                <div class='label'>Itinéraire : </div>
+                <select id='PROVIDER' class='dropDownFilter'>
+                  <option value=""></option>
+                </select>
+              </div>
+            </div>
+
           </div>
-          <div id='filters'>
-            <span>Itinéraire</span>
-            <select id='PROVIDER' class='dropDownFilter'>
-              <option value=""></option>
-            </select>
+          <div id='resultsPane'>
+            <!--table id="results"></table-->
+            <ul id="results"></ul>
           </div>
-          <!--table id="results"></table-->
-          <ul id="results"></ul>
         </div>
 
         <div id="aboutPanel" class="panel">

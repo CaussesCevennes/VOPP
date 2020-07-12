@@ -14,7 +14,8 @@
     "clusterColor" : "#2981cbc8",
     "popup" : "{{NUM}} - {{NOM}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
-    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"}
+    "filters" : {"THEME":"Thèmatique"},
+    "searchResultsTemplate": "{{NOM}} ({{UP}} {{SECTEUR}})"
   },
   {
     "key" : "PNC",
@@ -31,7 +32,8 @@
     "clusterColor" : "#927e71c8",
     "popup" : "{{NUM}} - {{COMMUNE}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
-    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"}
+    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
+    "searchResultsTemplate": "{{LIEUDIT}} ({{COMMUNE}})"
   },
   {
     "key" : "34",
@@ -39,7 +41,7 @@
     "name" : "Hérault",
     "shortName" : "34",
     "datafile" : "data/opp_34.geojson",
-    "photoUrl" : "{{URL}}",
+    "photoUrl" : "{{{URL}}}",
     "_photoUrl" : "photos/opp34/{{FILENAME}}",
     "infosPanel" : "templates/infospanel_34.mst",
     "sketch": "",
@@ -48,6 +50,7 @@
     "clusterColor" : "#04ab8ac8",
     "popup" : "{{NUM}} - {{COMMUNE}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
-    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"}
+    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
+    "searchResultsTemplate": "{{NOM}} ({{COMMUNE}})"
   }
 ]

@@ -122,6 +122,7 @@ function OPP(providers, theme) {
     }
 
     self.providers = self.providers.filter(p => p['key'] in self.theme['providers']);
+    $('#clearSearchBt').hide();
 
     //Fill provider drowdown filter
     self.providers.forEach(function(prov) {
@@ -1182,17 +1183,19 @@ function OPP(providers, theme) {
       let years = pov.PHOTOS.map(photo => photo.YEAR);
       let yearMin = Math.min(...years);
       let yearMax = Math.max(...years);
+      let prov = getProvider(pov.PROVIDER);
 
-      $('#results').append(/*
-        $(`<li id=${pov.PROVIDER}__${pov.NUM} style="color:${getProvider(pov.PROVIDER).clusterColor}">
-            <span>${pov.NOM} - ${pov.COMMUNE} <br> ${yearMin} > ${yearMax}</span>
+      $('#results').append(
+        $(`<li id=${pov.PROVIDER}__${pov.NUM} style="color:${prov.clusterColor}">
+            <div>${Mustache.render(prov.searchResultsTemplate, pov)}</div>
+            <div class='dateRange'>${yearMin} > ${yearMax}</div>
           </li>`)
-        */
+        /*
         $(`<tr id=${pov.PROVIDER}__${pov.NUM} style="color:${getProvider(pov.PROVIDER).clusterColor}"">
             <td>${pov.NOM}</td>
             <td>${pov.COMMUNE}</td>
             <td>${yearMin} > ${yearMax}</td>
-          </tr>`)
+          </tr>`)*/
       );
     });
     //spatial filter
@@ -1207,6 +1210,7 @@ function OPP(providers, theme) {
       cluster.addLayers(markers);
       self.isFiltered = true;
       $('#toggleSearchBt').addClass('filter');
+      $('#clearSearchBt').show();
     }
   }
 
@@ -1228,6 +1232,7 @@ function OPP(providers, theme) {
     $('#query').val('');
     $('#results').empty();
     $('#PROVIDER').prop('selectedIndex', 0);
+    $('.customFilter').remove();
     for (let key in self.markersClusters){
       let cluster = self.markersClusters[key];
       cluster.clearLayers();
@@ -1235,22 +1240,23 @@ function OPP(providers, theme) {
     }
     self.isFiltered = false;
     $('#toggleSearchBt').removeClass('filter');
+    $('#clearSearchBt').hide();
   }
 
 
   /*Create and fill provider's custom filters */
   var updateCustomFilters = function() {
-    $('.dropDownFilter:not(#PROVIDER)').remove();
+    $('.customFilter').remove();
     var selectedProvider = getProvider($('#PROVIDER').val());
     if (!selectedProvider){return};
-
     for (let filter in selectedProvider.filters) {
-    //selectedProvider.filters.forEach(filter => {
       let label = selectedProvider.filters[filter];
       $('#filters').append(
-        $('<span>').html(label),
-        $('<select>').addClass('dropDownFilter').attr('id', filter)
-        .append($('<option></option>').val(''))
+        $("<div>").addClass('filter customFilter').append(
+          $('<div>').addClass('label').html(`${label} : `),
+          $('<select>').addClass('dropDownFilter').attr('id', filter)
+          .append($('<option></option>').val(''))
+        )
       );
       var uniqueValues = [];
       self.oppData.filter(pov => pov['PROVIDER'] == selectedProvider.key).forEach(pov => {
@@ -1271,7 +1277,7 @@ function OPP(providers, theme) {
           .html(value)
         );
       });
-    }//);
+    }
   }
 
   /* Deprecated
@@ -1357,7 +1363,7 @@ function OPP(providers, theme) {
       clearTimeout(keyUpTimeout);
       keyUpTimeout = setTimeout(function () {
           search();
-      }, 750);
+      }, 500);
     });
     $("#clearSearchBt").on('click', function () {
       clearSearch();
