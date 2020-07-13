@@ -13,6 +13,7 @@
     "toolbarIconSelectColor" : "#aa0000ff",
     "providers" : {"CC":{}, "PNC":{}, "34":{"enable":false}},
     "layers": ["limits_cc", "up_cc"],
+    "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about.html",
     "browserHistory": false
   },
@@ -29,6 +30,7 @@
     "toolbarIconSelectColor" : "#aa0000ff",
     "providers" : {"34":{}},
     "layers": ["up_34"],
+    "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about_sample.html",
     "browserHistory": false
   },
@@ -45,6 +47,7 @@
     "toolbarIconSelectColor" : "#aa0000ff",
     "providers" : {"PNC":{}},
     "layers": ["pnc"],
+    "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about_sample.html",
     "browserHistory": false
   },
@@ -74,6 +77,7 @@
       }
     },
     "layers": ["limits_cc", "up_cc"],
+    "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about.html",
     "browserHistory": false
   }

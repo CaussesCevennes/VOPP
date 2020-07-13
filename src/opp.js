@@ -33,7 +33,7 @@ function OPP(providers, theme) {
   self.oppLayers = {}; //dictionnary of Leaflet geojson layergroups of photos markers, one entry for each provider key
   self.markersClusters = {}; //dictionnary of cluster layers, one entry for each provider key
   self.bkgLayers = {}; //dictionnary of Leaflet geojson layergroups used as background layers, one entry for each custom layer key
-  self.basemap; //Leaflet TileLayer object which provide by default the OpenStreetMap basemap
+  self.basemaps; //Leaflet TileLayer objects used as basemaps
 
   self.oppData = []; //array of objects containing properties of all point of view (used only for fuzzy search)
 
@@ -206,12 +206,25 @@ function OPP(providers, theme) {
     });
 
     //Create main map
-    self.map = L.map('map',{zoomControl:false, center:[46.2, 2.35], zoom:5});
-    self.basemap = L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      attribution: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(self.map);
+    self.map = L.map('map',{zoomControl:false, center:[46.2, 2.35], zoom:5, maxZoom:20});
+
     self.tocLayers = L.control.layers(null, null, {position:'topright'});
     self.tocLayers.addTo(self.map);
+
+    $.getJSON(`layers/basemaps.json?v=${version}`, function(basemaps){
+      basemaps
+        .filter(elem => self.theme.basemaps.includes(elem.key))
+        .forEach( (basemap, i) => {
+          var layer =  L.tileLayer(basemap.url, {
+            attribution: basemap.attribution
+          });
+          self.basemaps.push(layer);
+          self.tocLayers.addBaseLayer(layer, basemap.name);
+          if (i == 0) {
+            self.map.addLayer(layer);
+          }
+        });
+    });
 
     //add search control
     self.map.addControl( new L.Control.Search({

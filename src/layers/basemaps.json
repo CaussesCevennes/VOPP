@@ -1,0 +1,16 @@
+[
+  {
+    "key":"osm",
+    "name":"Open Street Map",
+    "url":"https://{s}.tile.osm.org/{z}/{x}/{y}.png",
+    "attribution":"<a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+  },
+
+  {
+    "key":"ignOrtho",
+    "name":"Photos aériennes",
+    "url":"https://wxs.ign.fr/pratique/wmts?layer=ORTHOIMAGERY.ORTHOPHOTOS&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={z}&TileCol={x}&TileRow={y}",
+    "attribution":"&copy; <a href='http://www.ign.fr'>IGN</a>"
+  }
+
+]
