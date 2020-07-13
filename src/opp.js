@@ -160,12 +160,15 @@ function OPP(providers, theme) {
       self.refresh(true);
       connectEvents();
 
-      //Setup Fuse engine TEST
-      fuse = new Fuse(self.oppData, {
-        keys: [ 'NUM', 'NOM', 'COMMUNE', 'THEME', 'UP', 'SECTEUR', 'PHOTOS.AUTEUR', 'PHOTOS.DATE' ],
-        threshold: 0.5,
-        distance: 50
-      });
+      //Setup Fuse engine
+      self.fuses = {};
+      self.providers.forEach(prov => {
+        self.fuses[prov.key] = new Fuse(self.oppData.filter(pov => pov['PROVIDER'] == prov.key), {
+          keys: prov.searchKeys,
+          threshold: 0.5,
+          distance: 50
+        });
+      })
 
       if (_initUpdatePhotoCpt > 1) {
         console.debug(`Warning, init sequence updates the photo ${_initUpdatePhotoCpt} times.`)
@@ -1150,13 +1153,17 @@ function OPP(providers, theme) {
 
   var search = function(){
 
-    //First filter data with a query string
+    //First filter data with the query string
+    var data = [];
     let qry = $('#query').val();
     if (qry) {
-      var data = fuse.search(qry);
+      self.providers.forEach(prov => {
+        data.push(...self.fuses[prov.key].search(qry));
+      });
     } else {
       var data = self.oppData;
     }
+
 
     //Then apply all dropdown filters
     $('.dropDownFilter').each(function (idx, elem) {
@@ -1253,7 +1260,7 @@ function OPP(providers, theme) {
     for (let filter in selectedProvider.filters) {
       let label = selectedProvider.filters[filter];
       $('#filters').append(
-        $("<div>").addClass('filter customFilter').append(
+        $("<div>").addClass('searchFilter customFilter').append(
           $('<div>').addClass('label').html(`${label} : `),
           $('<select>').addClass('dropDownFilter').attr('id', filter)
           .append($('<option></option>').val(''))

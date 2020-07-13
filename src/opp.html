@@ -91,26 +91,27 @@
         <div id="split2" class="vsplitter"></div>
         <div id="infosPanel" class="panel"><!--template--></div>
         <div id="searchPanel" class="panel">
-          <div id="seachHeader">
-            <span class="searchTitle">Rechercher : </span>
-            <button id="clearSearchBt" class="toolbarBt"><span class="tooltip">Supprimer les filtres</span></button>
-            <div id='filters'>
-              <div id='freetextFilter' class="searchFilter">
-                <div class='label'>Mots clés :</div>
-                <input type="text" id="query" class='textFilter'></input>
-              </div>
-              <div id='providerFilter' class='searchFilter'>
-                <div class='label'>Itinéraire : </div>
-                <select id='PROVIDER' class='dropDownFilter'>
-                  <option value=""></option>
-                </select>
+          <div id="searchPanelFlexContainer">
+            <div id="seachHeader">
+              <span class="searchTitle">Rechercher : </span>
+              <button id="clearSearchBt" class="toolbarBt"><span class="tooltip">Supprimer les filtres</span></button>
+              <div id='filters'>
+                <div id='freetextFilter' class="searchFilter">
+                  <div class='label'>Mots clés :</div>
+                  <input type="text" id="query" class='textFilter'></input>
+                </div>
+                <div id='providerFilter' class='searchFilter'>
+                  <div class='label'>Itinéraire : </div>
+                  <select id='PROVIDER' class='dropDownFilter'>
+                    <option value=""></option>
+                  </select>
+                </div>
               </div>
             </div>
-
-          </div>
-          <div id='resultsPane'>
-            <!--table id="results"></table-->
-            <ul id="results"></ul>
+            <div id='resultsPane'>
+              <!--table id="results"></table-->
+              <ul id="results"></ul>
+            </div>
           </div>
         </div>
 

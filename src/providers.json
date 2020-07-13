@@ -15,6 +15,7 @@
     "popup" : "{{NUM}} - {{NOM}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
     "filters" : {"THEME":"Thèmatique"},
+    "searchKeys": ["NOM", "COMMUNE", "THEME", "UP", "SECTEUR", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
     "searchResultsTemplate": "{{NOM}} ({{UP}} {{SECTEUR}})"
   },
   {
@@ -33,6 +34,7 @@
     "popup" : "{{NUM}} - {{COMMUNE}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
     "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
+    "searchKeys": ["LIEUDIT", "COMMUNE", "THEME", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
     "searchResultsTemplate": "{{LIEUDIT}} ({{COMMUNE}})"
   },
   {
@@ -51,6 +53,7 @@
     "popup" : "{{NUM}} - {{COMMUNE}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
     "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
+    "searchKeys": ["NOM", "COMMUNE", "THEME", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
     "searchResultsTemplate": "{{NOM}} ({{COMMUNE}})"
   }
 ]

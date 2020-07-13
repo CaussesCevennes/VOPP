@@ -293,16 +293,7 @@ hr{
    Search result panel
    ######################################## */
 
-#searchBar{
- margin-bottom: 20px;
-}
-
-#searchBar>*{
- vertical-align: middle;
- display: inline;
-}
-
-#searchPanel{
+#searchPanelFlexContainer{
   display: flex;
   flex-flow: column;
   overflow-y: hidden;
@@ -382,7 +373,6 @@ li, tr {
  padding:5px;
  border-bottom: 1px dotted #c3d4ef;
 }
-
 
 .dateRange{
  font-size:0.75em;
