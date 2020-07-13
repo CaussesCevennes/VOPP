@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg4159"
+   sodipodi:docname="timeline.svg"
+   viewBox="0 0 40 40.000002"
+   version="1.1"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   width="40"
+   height="40">
+  <defs
+     id="defs32" />
+  <sodipodi:namedview
+     id="base"
+     bordercolor="#666666"
+     inkscape:pageshadow="2"
+     inkscape:window-y="0"
+     fit-margin-left="0"
+     pagecolor="#ffffff"
+     fit-margin-top="0"
+     inkscape:window-maximized="1"
+     inkscape:zoom="11.313709"
+     inkscape:window-x="0"
+     inkscape:window-height="1012"
+     showgrid="false"
+     borderopacity="1.0"
+     inkscape:current-layer="layer1"
+     inkscape:cx="21.244454"
+     inkscape:cy="20.299365"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:pageopacity="0.0"
+     inkscape:document-units="px"
+     inkscape:snap-global="false" />
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     transform="translate(965.09,-657.53995)">
+    <path
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.09896254;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 19.488281 12.083984 C 19.117061 12.083984 18.818359 12.382686 18.818359 12.753906 L 18.818359 22.96875 A 1.5340513 1.5340513 0 0 0 18.330078 24.089844 A 1.5340513 1.5340513 0 0 0 19.865234 25.623047 A 1.5340513 1.5340513 0 0 0 21.246094 24.751953 L 27.027344 23.097656 C 27.260011 23.031098 27.392731 22.791261 27.326172 22.558594 L 27.154297 21.955078 C 27.087741 21.722421 26.847901 21.589691 26.615234 21.65625 L 21.130859 23.224609 A 1.5340513 1.5340513 0 0 0 20.808594 22.882812 L 20.808594 12.753906 C 20.808594 12.382686 20.509892 12.083984 20.138672 12.083984 L 19.488281 12.083984 z "
+       transform="translate(-965.09,657.53995)"
+       id="rect840" />
+    <path
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       d="m -945.22656,664.82422 c -8.63235,0 -15.66797,7.03562 -15.66797,15.66797 -10e-6,8.63235 7.03562,15.66601 15.66797,15.66601 8.63235,1e-5 15.66602,-7.03366 15.66601,-15.66601 0,-8.63235 -7.03366,-15.66798 -15.66601,-15.66797 z m 0,3.5 c 6.7408,-10e-6 12.16601,5.42716 12.16601,12.16797 1e-5,6.74081 -5.4252,12.16602 -12.16601,12.16601 -6.74081,0 -12.16798,-5.42521 -12.16797,-12.16601 0,-6.7408 5.42717,-12.16797 12.16797,-12.16797 z"
+       id="path3213"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#000000;stroke-width:0.62122619"
+       d="M 17.509766 0.037109375 C 17.075196 0.037109375 16.724609 0.3857425 16.724609 0.8203125 L 16.724609 4.4296875 C 16.724609 4.8642575 17.075196 5.2148438 17.509766 5.2148438 L 18.607422 5.2148438 L 18.607422 6.9003906 L 20.960938 6.9003906 L 20.960938 5.2148438 L 22.058594 5.2148438 C 22.493164 5.2148438 22.84375 4.8642575 22.84375 4.4296875 L 22.84375 0.8203125 C 22.84375 0.3857425 22.493164 0.037109375 22.058594 0.037109375 L 17.509766 0.037109375 z "
+       transform="translate(-965.09,657.53995)"
+       id="rect4009" />
+    <path
+       style="fill:#000000;stroke-width:0.43988255"
+       d="M 6.8164062 6.8203125 C 6.6744253 6.8203125 6.5326213 6.8755818 6.4238281 6.984375 L 4.1445312 9.2617188 C 3.9269449 9.4793051 3.9269449 9.8292886 4.1445312 10.046875 L 5.9511719 11.853516 C 6.1687582 12.071102 6.5187418 12.071102 6.7363281 11.853516 L 7.2871094 11.302734 L 8.1308594 12.148438 L 9.3085938 10.970703 L 8.4648438 10.125 L 9.015625 9.5761719 C 9.2332114 9.3585855 9.2332114 9.008602 9.015625 8.7910156 L 7.2089844 6.984375 C 7.1001912 6.8755818 6.9583872 6.8203125 6.8164062 6.8203125 z "
+       transform="translate(-965.09,657.53995)"
+       id="rect4025" />
+  </g>
+  <metadata
+     id="metadata29">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>stopwatch</dc:title>
+        <dc:date>2012-11-27T23:10:11</dc:date>
+        <dc:description />
+        <dc:source>https://openclipart.org/detail/173421/stopwatch-by-markroth8-173421</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>markroth8</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>chronograph</rdf:li>
+            <rdf:li>chronometer</rdf:li>
+            <rdf:li>clock</rdf:li>
+            <rdf:li>stopwatch</rdf:li>
+            <rdf:li>timekeeper</rdf:li>
+            <rdf:li>timepiece</rdf:li>
+            <rdf:li>timer</rdf:li>
+            <rdf:li>watch</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/publicdomain/zero/1.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

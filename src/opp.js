@@ -612,7 +612,7 @@ function OPP(providers, theme) {
     if (self.selectedMark === newMarker){
       return
     }
-    self.selectedMark = newMarker;
+    self.selectedMark = newMarker; //trigger updateMarker()
     updateYears();
     updatePhotos();
     updateUrl();
@@ -623,6 +623,40 @@ function OPP(providers, theme) {
     };
   }
 
+  var updateTimeline = function(){
+    $('#timeline').empty();
+    self.selectedFeatProps['PHOTOS'].forEach( (photo, i) => {
+      let dk = getDateKey(photo);
+      let thumbUrl = Mustache.render(self.activeProvider.thumbUrl, {...self.selectedFeatProps, ...photo});
+      $('#timeline').append(
+        $("<div id="+ dk +" class='photoThumb'></div>")
+        .css('background-image', 'url(' + thumbUrl + ')')
+        .append(
+          $("<div class='thumbDate'></div>")
+          .text(dk)
+        )
+      );
+    });
+  }
+
+
+  var thumbSelect = function(date) {
+
+    if (self.viewMode == 'SINGLE'){
+      dropDownDateSelect('#dropDownDate1', date);
+    } else {
+      //if (date < $('#dropDownDate2').val()) {
+      let targetDate = new Date(date);
+      let currentDate1 = new Date($('#dropDownDate1').val());
+      let currentDate2 = new Date($('#dropDownDate2').val());
+      if (Math.abs(targetDate - currentDate1) < Math.abs(targetDate - currentDate2)) {
+        dropDownDateSelect('#dropDownDate1', date);
+      } else {
+        dropDownDateSelect('#dropDownDate2', date);
+      }
+    }
+
+  }
 
   /* Parse url parameters and update app state according to them. */
   self.refresh = function(init){
@@ -720,6 +754,9 @@ function OPP(providers, theme) {
     }
 
     $('.dropDownDate').change();
+
+    updateTimeline();
+    synchTimeline();
 
     dropDownDateOn();
 
@@ -955,7 +992,7 @@ function OPP(providers, theme) {
     }
 
 
-    if ( hasActiveSketch1 && hasBkgPhoto1){
+    if (hasActiveSketch1 && hasBkgPhoto1){
       var refPhotoDate = self.selectedFeatProps['SKETCH']['PHOTOREF'];
       var bkgPhoto1 = getPhotoLay(refPhotoDate);
       if (self.viewMode == 'SBS'){
@@ -964,7 +1001,7 @@ function OPP(providers, theme) {
       bkgPhoto1.addTo(self.photoMap1).bringToBack();
 
     }
-    if ( hasActiveSketch2 && hasBkgPhoto2){
+    if (hasActiveSketch2 && hasBkgPhoto2){
       var refPhotoDate = self.selectedFeatProps['SKETCH']['PHOTOREF'];
       var bkgPhoto2 = getPhotoLay(refPhotoDate);
       bkgPhoto2.options.pane = "overlayPane";
@@ -988,11 +1025,6 @@ function OPP(providers, theme) {
         });
       });
     }
-
-
-    self.photoMap1.on("contextmenu", function (event) {
-      console.log("Coordinates: " + event.latlng.toString());
-    });
 
     //Checks if the map container size changed and updates the map if so
     //we need to invalidate size before any fit bounds
@@ -1063,10 +1095,33 @@ function OPP(providers, theme) {
   var dropDownDateOn = function () {
     $('.dropDownDate').on('change', function() {
       updatePhotos(false);
+      synchTimeline();
       if (registerDates) {
         updateUrl();
       }
     });
+  }
+
+  var synchTimeline = function () {
+    $('.photoThumb.active').toggleClass('active');
+    $('.thumbMark1, .thumbMark2').remove();
+    let d1 = $('#dropDownDate1').val();
+    let d2 = $('#dropDownDate2').val();
+    $(`#${d1}.photoThumb`)
+    .toggleClass('active')
+    .append(
+      $("<div class='thumbMark1'></div>")
+      .text("1")
+    );
+    if (self.viewMode != 'SINGLE') {
+      $(`#${d2}.photoThumb`)
+      .toggleClass('active')
+      .append(
+        $("<div class='thumbMark2'></div>")
+        .text("2")
+      );
+    }
+
   }
 
   /* Select a dropdown entry given a target date */
@@ -1385,7 +1440,13 @@ function OPP(providers, theme) {
     $('#filters').on('change', '.dropDownFilter', function() {
       search();
     });
-
+    /*Timeline*/
+    $("#toggleTimelineBt").on('click', function () {
+      toggleTimeline();
+    });
+    $("#timeline").on('click', '.photoThumb', function () {
+      thumbSelect($(this).attr('id'));
+    });
   }
 
 
@@ -1401,6 +1462,7 @@ function OPP(providers, theme) {
     $('#photo2').css('display', 'none');
     $('#widgets2').hide();
     updatePhotos();
+    synchTimeline();
   }
 
   var toggleSplitView = function () {
@@ -1418,6 +1480,7 @@ function OPP(providers, theme) {
       $('#widgets2>*').removeClass('alignRight')
     }
     updatePhotos();
+    synchTimeline();
   }
 
   var toggleSbsView = function () {
@@ -1435,6 +1498,7 @@ function OPP(providers, theme) {
       $('#widgets2>*').addClass('alignRight')
     }
     updatePhotos();
+    synchTimeline();
   }
 
   var toggleSpotView = function () {
@@ -1452,15 +1516,22 @@ function OPP(providers, theme) {
       $('#widgets2>*').addClass('alignRight')
     }
     updatePhotos();
+    synchTimeline();
   }
 
+  var toggleTimeline = function () {
+    $('#toggleTimelineBt, #timeline').toggleClass('active');
+    self.photoMap1.invalidateSize();
+    self.photoMap2.invalidateSize();
+
+  }
 
   /* ########################################
   panels switch
   ######################################## */
 
   var toggleInfosPanel = function () {
-    if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != $("#toggleInfosBt").prop('id'))){
+    if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != "toggleInfosBt")){
       $("#sidePanel, .panel.active:not(#infosPanel), .toolbarBt.active:not(#toggleInfosBt, .viewMode)").toggleClass('active');
     }
     $("#sidePanel, #infosPanel, #toggleInfosBt").toggleClass('active');
@@ -1469,7 +1540,7 @@ function OPP(providers, theme) {
   }
 
   var toggleSearchPanel = function(){
-    if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != $("#toggleSearchBt").prop('id'))){
+    if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != "toggleSearchBt")){
       $("#sidePanel, .panel.active:not(#searchPanel), .toolbarBt.active:not(#toggleSearchBt, .viewMode)").toggleClass('active');
     }
     $("#sidePanel, #searchPanel, #toggleSearchBt").toggleClass('active');
@@ -1478,7 +1549,7 @@ function OPP(providers, theme) {
   }
 
   var toggleAboutPanel = function(){
-    if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != $("#aboutBt").prop('id'))){
+    if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != "aboutBt")){
       $("#sidePanel, .panel.active:not(#aboutPanel), .toolbarBt.active:not(#aboutBt, .viewMode)").toggleClass('active');
     }
     $("#sidePanel, #aboutPanel, #aboutBt").toggleClass('active');

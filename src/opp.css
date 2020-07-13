@@ -1,14 +1,15 @@
-html, body { width:100%; height:100%; margin:0; padding:0; font-size:100%; font-family:'Quicksand', sans-serif; }
-#head { position:relative; width:100%; height:5%; overflow:hidden; color:black; background:white; }
-    #title { position:absolute; top:25%; left:1%; width:75%; letter-spacing:0.5em; font-size:2vmin;}
-    #logo { position:absolute; height:100%; top:5%; right:0; }
-#container {position:relative; width:100%; height:95%; display:flex; flex-direction:row; overflow:hidden; }
-    #map {position:relative; width:35%; height:100%; flex:0 0 auto; }
-    #photos {position:relative; height:100%; flex:1 1 auto; }
-        #photo1 {width:100%; height:100%; }
-        #photo2 {width:100%; height:50%; display:none; }
-    #sidePanel { width:25%; height:100%; flex:0 0 auto;}
-    #toolbar { width:35px; height:100%; flex:0 0 auto; }
+html, body { width:100%; height:100%; margin:0; padding:0; font-size:100%; font-family:'Quicksand', sans-serif;}
+#head {position:relative; width:100%; height:5%; overflow:hidden; color:black; background:white;}
+    #title {position:absolute; top:25%; left:1%; width:75%; letter-spacing:0.5em; font-size:2vmin;}
+    #logo {position:absolute; height:100%; top:5%; right:0;}
+#container {position:relative; width:100%; height:95%; display:flex; flex-direction:row; overflow:hidden;}
+    #map {position:relative; width:35%; height:100%; flex:0 0 auto;}
+    #photos {position:relative; height:100%; flex:1 1 auto; display:flex; flex-direction:column;}
+        #photo1 {width:100%; height:100%; flex:1 1 auto;}
+        #photo2 {width:100%; height:50%; display:none; flex:1 1 auto;}
+        #timeline {width:100%; height:20%; display:none; flex:1 1 auto;}
+    #sidePanel {width:25%; height:100%; flex:0 0 auto;}
+    #toolbar {width:35px; height:100%; flex:0 0 auto;}
 
 * {
  box-sizing: border-box;
@@ -288,6 +289,64 @@ hr{
 
 .toolbarBt.activeFilter svg path#ico-filter{
   fill:var(--tb-icon-select-color) !important;
+}
+
+/* ########################################
+   Timeline
+   ######################################## */
+
+#timeline.active{
+  display: flex;
+  align-items: center;
+  overflow-x: scroll;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.photoThumb{
+  cursor: pointer;
+  flex: 0 0 200px;
+  background: center no-repeat;
+  background-size: cover;
+  height: 100%;
+  margin-left: 5px;
+  margin-right: 5px;
+  position: relative;
+}
+
+.photoThumb.active{
+  border:4px dashed #aa0000ff;
+}
+
+.thumbDate {
+  position:absolute;
+  bottom:2px; right:4px;
+  font-weight: bold;
+  font-size: 1em;
+  color: white;
+}
+
+.thumbMark1, .thumbMark2 {
+  position:absolute;
+  font-weight: bold;
+  font-size: 1em;
+  color: #aa0000ff;
+  background-color: rgba(255, 255, 255, 0.75);
+  width:20px;
+  height:20px;
+  border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 20px;
+}
+
+.thumbMark1 {
+  top:2px; left:4px;
+}
+
+.thumbMark2 {
+  top:2px; right:4px;
 }
 
 /* ########################################
