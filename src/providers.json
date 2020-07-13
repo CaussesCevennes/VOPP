@@ -15,7 +15,7 @@
     "clusterColor" : "#2981cbc8",
     "popup" : "{{NUM}} - {{NOM}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
-    "filters" : {"THEME":"Thèmatique"},
+    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
     "searchKeys": ["NOM", "COMMUNE", "THEME", "UP", "SECTEUR", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
     "searchResultsTemplate": "{{NOM}} ({{UP}} {{SECTEUR}})"
   },
