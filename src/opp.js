@@ -33,7 +33,7 @@ function OPP(providers, theme) {
   self.oppLayers = {}; //dictionnary of Leaflet geojson layergroups of photos markers, one entry for each provider key
   self.markersClusters = {}; //dictionnary of cluster layers, one entry for each provider key
   self.bkgLayers = {}; //dictionnary of Leaflet geojson layergroups used as background layers, one entry for each custom layer key
-  self.basemaps; //Leaflet TileLayer objects used as basemaps
+  self.basemaps = {}; //Leaflet TileLayer objects used as basemaps
 
   self.oppData = []; //array of objects containing properties of all point of view (used only for fuzzy search)
 
@@ -218,7 +218,7 @@ function OPP(providers, theme) {
           var layer =  L.tileLayer(basemap.url, {
             attribution: basemap.attribution
           });
-          self.basemaps.push(layer);
+          self.basemaps[basemap.key] = layer;
           self.tocLayers.addBaseLayer(layer, basemap.name);
           if (i == 0) {
             self.map.addLayer(layer);
@@ -637,11 +637,11 @@ function OPP(providers, theme) {
   }
 
   var updateTimeline = function(){
-    $('#timeline').empty();
+    $('#thumbs').empty();
     self.selectedFeatProps['PHOTOS'].forEach( (photo, i) => {
       let dk = getDateKey(photo);
       let thumbUrl = Mustache.render(self.activeProvider.thumbUrl, {...self.selectedFeatProps, ...photo});
-      $('#timeline').append(
+      $('#thumbs').append(
         $("<div id="+ dk +" class='photoThumb'></div>")
         .css('background-image', 'url(' + thumbUrl + ')')
         .append(
@@ -1127,9 +1127,11 @@ function OPP(providers, theme) {
       .text("1")
     );
     if (self.viewMode != 'SINGLE') {
-      $(`#${d2}.photoThumb`)
-      .toggleClass('active')
-      .append(
+      thumb2 = $(`#${d2}.photoThumb`);
+      if (d1 != d2) {
+        thumb2.toggleClass('active');
+      }
+      thumb2.append(
         $("<div class='thumbMark2'></div>")
         .text("2")
       );
@@ -1459,6 +1461,13 @@ function OPP(providers, theme) {
     });
     $("#timeline").on('click', '.photoThumb', function () {
       thumbSelect($(this).attr('id'));
+    });
+    $("#thumbNext").click(function(){
+      //$("#thumbs").scrollLeft($("#thumbs").scrollLeft() + 500);
+      $("#thumbs").animate( {scrollLeft : $("#thumbs").scrollLeft() + 500} );
+    });
+    $("#thumbPrev").click(function(){
+      $("#thumbs").animate( {scrollLeft : $("#thumbs").scrollLeft() - 500} );
     });
   }
 

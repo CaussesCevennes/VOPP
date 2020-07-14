@@ -10,7 +10,7 @@ html, body { width:100%; height:100%; margin:0; padding:0; font-size:100%; font-
           #photo2 {width:100%; height:50%; display:none;}
       #timeline {width:100%; height:20%; display:none; flex:1 1 auto;}
     #sidePanel {width:25%; height:100%; flex:0 0 auto;}
-    #toolbar {width:35px; height:100%; flex:0 0 auto;}
+    #toolbar {width:38px; height:100%; flex:0 0 auto;}
 
 * {
  box-sizing: border-box;
@@ -212,11 +212,12 @@ hr{
 .toolbarBt {
   border: none;
   cursor: pointer;
-  height: 32px;
-  width: 32px;
-  margin: auto;
+  box-sizing: content-box;
+  height: 26px;
+  width: 26px;
   display: block;
   position: relative;
+  margin: 3px;
   padding: 3px;
   background-color: transparent;
 }
@@ -288,6 +289,11 @@ hr{
   fill:var(--tb-icon-select-color) !important;
 }
 
+.toolbarBt.panelSwitch.active{
+  border-left: 4px solid var(--tb-icon-select-color);
+  margin-left: 0;
+}
+
 .toolbarBt.activeFilter svg path#ico-filter{
   fill:var(--tb-icon-select-color) !important;
 }
@@ -297,12 +303,18 @@ hr{
    ######################################## */
 
 #timeline.active{
+  position: relative;
+  display: block;
+}
+
+#thumbs{
   display: flex;
+  width:100%;
+  height:100%;
   align-items: center;
   overflow-x: scroll;
-  margin: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .photoThumb{
@@ -317,7 +329,7 @@ hr{
 }
 
 .photoThumb.active{
-  border:4px dashed #aa0000ff;
+  border:4px solid #2ca089ff;
 }
 
 .thumbDate {
@@ -332,8 +344,8 @@ hr{
   position:absolute;
   font-weight: bold;
   font-size: 1em;
-  color: #aa0000ff;
-  background-color: rgba(255, 255, 255, 0.75);
+  color: white;
+  background-color: #2ca089ff;
   width:20px;
   height:20px;
   border-radius: 50%;
@@ -348,6 +360,44 @@ hr{
 
 .thumbMark2 {
   top:2px; right:4px;
+}
+
+.thumbNavBt {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 0.5s, opacity 0.5s linear;
+  position:absolute;
+  top: 50%;
+  transform: translateY(-60%);
+  cursor: pointer;
+  width:30px;
+  height:30px;
+  line-height: 20px;
+  text-align: center;
+  background-color: #f1f1f1ad;
+  color: black;
+  border-radius: 50%;
+  font-size: 40px;
+  margin: 2px;
+  z-index: 1000;
+}
+
+.thumbNavBt:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+#timeline:hover .thumbNavBt{
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.5s linear;
+}
+
+#thumbPrev{
+  left: 5px;
+}
+#thumbNext{
+  right: 5px;
 }
 
 /* ########################################
