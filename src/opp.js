@@ -366,7 +366,8 @@ function OPP(providers, theme) {
             feat.properties['PHOTOS'].forEach(function(photo){
               Object.defineProperty(photo, 'YEAR', {
                 get: function() {
-                  return this['DATE'].split('-')[0] },
+                  //return this['DATE'].split('-')[0] },
+                  return new Date(this['DATE']).getFullYear() },
                 enumerable: true,
               });
               Object.defineProperty(photo, 'MONTH', {
@@ -380,8 +381,22 @@ function OPP(providers, theme) {
                 enumerable: true,
               });
             });
+            //year min and year max
+            Object.defineProperty(feat.properties, 'YEARMIN', {
+              get: function() {
+                return Math.min(...this['PHOTOS'].map(photo => photo.YEAR));
+              },
+              enumerable: true,
+            });
+            Object.defineProperty(feat.properties, 'YEARMAX', {
+              get: function() {
+                return Math.max(...this['PHOTOS'].map(photo => photo.YEAR));
+              },
+              enumerable: true,
+            });
           });
 
+          //build marker
           self.oppLayers[provider['key']] = L.geoJson(data,{
             pointToLayer: function (feature, latlng) {
               var marker = L.marker(latlng, {icon: self.locIcons[provider['key']]});
@@ -1258,15 +1273,17 @@ function OPP(providers, theme) {
   var showSearchResults = function(r){
     $('#results').empty();
     r.forEach(function(pov){
+      /*
       let years = pov.PHOTOS.map(photo => photo.YEAR);
       let yearMin = Math.min(...years);
       let yearMax = Math.max(...years);
+      */
       let prov = getProvider(pov.PROVIDER);
 
       $('#results').append(
         $(`<li id=${pov.PROVIDER}__${pov.NUM} style="color:${prov.clusterColor}">
             <div>${Mustache.render(prov.searchResultsTemplate, pov)}</div>
-            <div class='dateRange'>${yearMin} > ${yearMax}</div>
+            <div class='dateRange'>${pov.YEARMIN} > ${pov.YEARMAX}</div>
           </li>`)
         /*
         $(`<tr id=${pov.PROVIDER}__${pov.NUM} style="color:${getProvider(pov.PROVIDER).clusterColor}"">
