@@ -17,7 +17,7 @@
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
     "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
     "searchKeys": ["NOM", "COMMUNE", "THEME", "UP", "SECTEUR", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
-    "searchResultsTemplate": "{{NOM}} ({{UP}} {{SECTEUR}})"
+    "searchResultsTemplate": ["{{NOM}} ({{UP}} {{SECTEUR}})", "{{YEARMIN}} > {{YEARMAX}}"]
   },
   {
     "key" : "PNC",
@@ -37,7 +37,7 @@
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
     "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
     "searchKeys": ["LIEUDIT", "COMMUNE", "THEME", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
-    "searchResultsTemplate": "{{LIEUDIT}} ({{COMMUNE}})"
+    "searchResultsTemplate": ["{{LIEUDIT}} ({{COMMUNE}})", "{{YEARMIN}} > {{YEARMAX}}"]
   },
   {
     "key" : "34",
@@ -57,6 +57,7 @@
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
     "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
     "searchKeys": ["NOM", "COMMUNE", "THEME", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
-    "searchResultsTemplate": "{{NOM}} ({{COMMUNE}})"
+    "searchResultsTemplate": ["{{NOM}}", "Commune de {{COMMUNE}}", "{{YEARMIN}} > {{YEARMAX}}"]
+
   }
 ]

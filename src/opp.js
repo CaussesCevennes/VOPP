@@ -1273,18 +1273,17 @@ function OPP(providers, theme) {
   var showSearchResults = function(r){
     $('#results').empty();
     r.forEach(function(pov){
-      /*
-      let years = pov.PHOTOS.map(photo => photo.YEAR);
-      let yearMin = Math.min(...years);
-      let yearMax = Math.max(...years);
-      */
       let prov = getProvider(pov.PROVIDER);
 
       $('#results').append(
-        $(`<li id=${pov.PROVIDER}__${pov.NUM} style="color:${prov.clusterColor}">
-            <div>${Mustache.render(prov.searchResultsTemplate, pov)}</div>
-            <div class='dateRange'>${pov.YEARMIN} > ${pov.YEARMAX}</div>
-          </li>`)
+        $('<li>')
+          .attr('id', `${pov.PROVIDER}__${pov.NUM}`)
+          .css('color', prov.clusterColor)
+          .append(
+            prov.searchResultsTemplate.map( (line, i) => {
+              return $('<div>').append(Mustache.render(line, pov)).addClass(`line${i+1}`)//
+            })
+          )
         /*
         $(`<tr id=${pov.PROVIDER}__${pov.NUM} style="color:${getProvider(pov.PROVIDER).clusterColor}"">
             <td>${pov.NOM}</td>

@@ -495,13 +495,15 @@ li, tr {
  cursor: pointer;
  background-color:white;
  color:#2c5aa0ff;
- font-size:1em;
  font-weight: bold;
  padding:5px;
  border-bottom: 1px dotted #c3d4ef;
 }
 
-.dateRange{
+li div.line1){
+ font-size:1em;
+}
+li div:not(.line1){
  font-size:0.75em;
 }
 
