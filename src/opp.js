@@ -322,7 +322,7 @@ function OPP(providers, theme) {
         self.providers.forEach(function(provider){
           div.innerHTML += `<div class='clusterLegendContainer'>
             <div id='${provider['key']}' class='clusterLegend hvr-bounce-in'>${provider['shortName']}</div>
-            <span class='tooltip'>${provider['name']}</span>
+            <span class='clusterLegendTooltip'>${provider['name']}</span>
           </div>`;
         });
         return div;

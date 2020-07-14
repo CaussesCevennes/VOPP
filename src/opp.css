@@ -216,6 +216,7 @@ hr{
   width: 28px;
   display: block;
   padding: 4px;
+  position: relative;
   background-color: transparent;
 }
 
@@ -682,7 +683,7 @@ li:hover, li.selected, tr:hover, tr.selected  {
 }
 
 /* Tooltip text */
-.clusterLegendContainer .tooltip {
+.clusterLegendTooltip {
  visibility: hidden;
  width: 100px;
  background-color: black;
@@ -702,7 +703,7 @@ li:hover, li.selected, tr:hover, tr.selected  {
 }
 
 /* Tooltip arrow */
-.clusterLegendContainer .tooltip::after {
+.clusterLegendTooltip::after {
  content: "";
  position: absolute;
  top: 100%;
@@ -714,7 +715,7 @@ li:hover, li.selected, tr:hover, tr.selected  {
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
-.clusterLegendContainer:hover .tooltip {
+.clusterLegendContainer:hover .clusterLegendTooltip {
  visibility: visible;
  opacity: 0.6;
 
