@@ -24,6 +24,7 @@ Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCeve
   - [Préparation-des-templates](#préparation-des-templates)
     - [Panneau d'information](#panneau-dinformation)
     - [Panneau à propos](#panneau-à-propos)
+  - [Définition des fonds de carte](#définition-des-fonds-de-carte)
   - [Ajout de couches supplémentaires](#ajout-de-couches-supplémentaires)
 - [Déploiement côté serveur](#déploiement-côté-serveur)
   - [Url alias pour les thèmes](#url-alias-pour-les-thèmes)
@@ -486,6 +487,7 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
   "toolbarColor" : "linear-gradient(to top, white, #778bad)",
   "providers" : {"CC":{}, "PNC":{}, "34":{"enable":false}},
   "layers": ["limits_cc", "up_cc"],
+  "basemaps": ["osm", "ignOrtho"],
   "about" : "templates/about.html",
   "browserHistory": false
 }
@@ -513,6 +515,8 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 
 - **layers** : la liste des couches supplémentaires que l'on souhaite afficher sur la carte (par exemple les limites communales, ou bien les entités paysagères). La configuration de couches additionnelles est décrite plus bas.
 
+- **basemaps** : liste des fonds de carte utilisables avec ce thème. Il s'agit de service tuilés OGC dont la configuration est décrite plus bas.
+
 - **about :** url vers le template html qui sera affiché dans le panneau "à propos"
 
 - **browserHistory** : indique si lorsque l'on change de point de vue il faut ajouter l'url à l'historique de navigation.
@@ -538,7 +542,10 @@ Comme précédemment il s'agit d'un simple fichier JSON présentant les différe
     "sketch": "croquis/{{SKETCH.FILENAME}}",
     "infosPanel" : "templates/infospanel_cc.mst",
     "popup" : "{{NUM}} - {{NOM}}",
-    "photoAttrib" : "© {{YEAR}} {{AUTEUR}}"
+    "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
+    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
+    "searchKeys": ["NUM", "NOM", "COMMUNE", "THEME", "UP", "SECTEUR", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
+    "searchResultsTemplate": ["{{NOM}} ({{UP}} {{SECTEUR}})", "n°{{NUM}} {{YEARMIN}} > {{YEARMAX}}"]
   }
 ]
 ```
@@ -566,6 +573,12 @@ Comme précédemment il s'agit d'un simple fichier JSON présentant les différe
 - **popup** :  template à utiliser pour renseigner le popup, les variables sont recherchées dans les propriétés du point de vue
 
 - **photoAttrib** : template à utiliser pour renseigner l'auteur d'une photo, les variables sont recherchées dans les propriétés de la photo concernée. Ce template est également utilisé pour définir le texte d'attribution des croquis, les variables doivent donc aussi exister dans le sous dictionnaire `SKETCH`.
+
+- **filters** : permet d'indiquer les propriétés des points de vue qui seront utilisées comme variable de filtrage dans le panneau de recherche. A chaque champs spécifié correspondra une liste déroulante contenant les valeurs unique contenues dans ce champs. Les filtres sont indiqués sous la forme d'un dictionnaire dont la clé est le nom de la variable et la valeur correspond au label qui sera utilisé dans l'interface graphique.
+
+- **searchKeys** : liste des propriétés du geojson qui seront prises en compte par le moteur de recherche par texte libre. Les sous-dictionnaires sont accessibles en utilisant le point comme séparateur de clé.
+
+- **searchResultsTemplate** : template définissant le formatage des résultats d'une recherche. Cette variable est définie sous la forme d'une liste de template, chaque entrée correspondant à une ligne distincte. Ainsi il possible de formater l'affichage sur plusieurs ligne, la première ayant une police de caractère plus importante que les suivantes.
 
 A noter que le fichier de configuration permet de définir la couleur des clusters mais que ce paramètre n'a aucune influence sur la couleur du symbole SVG utilisé pour représenter un point.  Cela signifie que pour mettre les couleurs en cohérence il est nécessaire de modifier manuellement le symbole SVG. Ceci peut être réalisé très facilement avec l'aide d'un logiciel de dessin vectoriel type Inkscape.
 
@@ -612,9 +625,42 @@ Le résultat obtenu permet d'illustrer les classes CSS disponibles :
 
 Le template ***about.html*** peut être édité directement pour modifier le texte qui sera afficher dans le panneau à propos. Ce template n'utilise pas de variables.
 
+## Définition des fonds de carte
+
+Il est possible de personnaliser les fonds de carte disponibles en indiquant les services tuilé (XYZ, TMS ou WMTS sous certaines conditions) auquels ont souhaite pouvoir accéder. Le dossier **layers** contient un fichier **basemaps.json** dédié à cette configuration. Il s'agit d'une liste dont chaque entrée définie les propriétés du service. L'exemple ci-dessous illustre la configuration d'un flux OpenStreetMap :
+
+```
+[
+  {
+    "key":"osm",
+    "name":"Open Street Map",
+    "url":"https://{s}.tile.osm.org/{z}/{x}/{y}.png",
+    "attribution":"<a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+  }
+]
+```
+
+- **key** : l'identifiant du service qui sera utilisé dans les paramètres du thème
+- **name** : le nom du service tel qu'il sera affiché dans le contrôle des couches
+- **url** : l'adresse du service sous la forme d'un template indiquant la position des différentes variables (x, y et z les coordonnées de la tuile et s le numéro de serveur)
+- **attribution** : le texte html indiquant les mentions de copyright
+
+Par défaut la librairie Leaflet ne supporte pas les services WMTS et les grilles ou projections hétérogènes. C'est pourquoi les flux ici spécifiés doivent nécessairement être des services **standard** c'est à dire respectant la grille Google Web Mercator. Néanmoins, il est possible de se connecter à des flux WMTS à partir du moment où leur configuration est calée sur la grille standard. Dans ce cas il suffit d'écrire les paramètres KVP de l'url en dur. L'exemple ci-dessous illustre la configuration d'un flux WMTS de l'IGN :
+
+```
+{
+  "key":"ignOrtho",
+  "name":"Photos aériennes",
+  "url":"https://wxs.ign.fr/APIKEY/wmts?layer=ORTHOIMAGERY.ORTHOPHOTOS&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={z}&TileCol={x}&TileRow={y}",
+  "attribution":"&copy; <a href='http://www.ign.fr'>IGN</a>"
+}
+```
+
+Nota : dans l'url il faut remplacer la variable APIKEY par votre clé personnelle. La clé est écrite en clair, elle doit donc au préalable être protégée en l'associant soit à l'IP de votre serveur, soit à un nom de domaine particulier.
+
 ## Ajout de couches supplémentaires
 
-il est possible de configurer l'affichage des couches géographiques supplémentaires. Néanmoins cela implique nécessairement d'écrire du code javascript personnalisé afin de définir comment l'information doit être stylisée.
+Il est possible de configurer l'affichage des couches géographiques supplémentaires. Néanmoins cela implique nécessairement d'écrire du code javascript personnalisé afin de définir comment l'information doit être stylisée.
 
 La première étape est de convertir votre couche géographique en un fichier GeoJSON. La création du GeoJSON pour les données OPP était complexe car elle impliquait de combiner deux tables distinctes. Ici, dans la plupart des cas vous n'aurez pas cette difficulté, c'est pourquoi cette étape peut facilement être réalisée avec le logiciel QGIS. Il suffit de charger la couche dans le logiciel quelque soit son format initial (Shapefile, Geopackage, PostGIS...) puis de l'exporter en GeoJSON. Plusieurs paramètres doivent être considérés :
 
