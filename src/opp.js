@@ -86,7 +86,7 @@ function OPP(providers, theme) {
   var registerHistory = false; //flag if urls must be added to history stack
   var registerDates = true; //flag if urls must include dates parameters
   var registerViewMode = true; //flag if urls must include viewmode parameter
-  var hideParams = false; //hide url parameters (only possible if registerHistory is false)
+  var hideParams = true; //hide url parameters (only possible if registerHistory is false)
 
   //debug
   var _initUpdatePhotoCpt = 0;
@@ -1075,9 +1075,8 @@ function OPP(providers, theme) {
   Url availale parameters : &theme, &provider, &pov, &date1, &date2, &viewmode */
   var generateUrl = function(includeDates, includeViewMode){
     let params = '?';
-    let currentParams = new URL(window.location).searchParams;
-    if (currentParams.has('theme')){
-      params += 'theme=' + currentParams.get('theme') + '&';
+    if (!self.theme.default){
+      params += `theme=${self.theme.key}&`;
     }
     params += `provider=${self.activeProvider.key}&pov=${self.selectedFeatProps.NUM}`;
     if (includeDates){
@@ -1485,9 +1484,19 @@ function OPP(providers, theme) {
     $("#thumbPrev").click(function(){
       $("#thumbs").animate( {scrollLeft : $("#thumbs").scrollLeft() - 500} );
     });
+    $("#shareBt").click(function() {
+      shareUrl();
+    }).on('click', 'div', function(e) {
+      // clicked on descendant div
+      e.stopPropagation();
+    });
   }
 
-
+  var shareUrl = function (e) {
+    $('.sharePanel, #shareBt').toggleClass('active');
+    let url = generateUrl(registerDates, registerViewMode);
+    $('#urlTxt').html(url);
+  }
 
   /* ########################################
   view modes switch

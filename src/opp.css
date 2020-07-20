@@ -248,7 +248,6 @@ hr{
   /* Position the tooltip text */
   position: absolute;
   z-index: 1100;
-  top:4px;
   right: 125%;
   /* Fade in tooltip */
   opacity: 0;
@@ -259,7 +258,7 @@ hr{
 .tooltip::after {
   content: "";
   position: absolute;
-  top: 25%;
+  top: 6px;
   left: 100%;
   border-width: 6px;
   border-style: solid;
@@ -272,7 +271,6 @@ hr{
   opacity: 0.6;
   transition-delay:1s;
 }
-
 
 #toolbar {
   --tb-icon-base-color: white;
@@ -308,6 +306,55 @@ hr{
 .toolbarBt.activeFilter svg path#ico-filter{
   fill:var(--tb-icon-select-color) !important;
 }
+
+/* ########################################
+   Share url panel
+   ######################################## */
+
+
+.sharePanel{
+  cursor:default;
+  visibility: hidden;
+  width: 250px;
+  padding: 5px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1200;
+  top:0;
+  right: 125%;
+  color: white;
+  font-weight: bold;
+  background-color: #575757;
+  text-align: left;
+}
+
+.sharePanel::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 100%;
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent #575757;
+}
+
+.sharePanel.active{
+  visibility: visible;
+}
+
+#urlTxt{
+  display: block;
+  padding:5px;
+  margin:5px;
+  user-select: all;
+  cursor: text;
+  font-weight:normal;
+  color:black;
+  background-color:white;
+  border-radius: 10px;
+}
+
+
 
 /* ########################################
    Timeline
