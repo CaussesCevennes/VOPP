@@ -129,7 +129,7 @@ if __name__ == '__main__':
     parser.add_argument('-ks', '--key-separator', dest='keySep', type=str, default='.', help='Caractère utilisé pour définir des propriétés enfants')
     parser.add_argument('-as', '--array-separator', dest='arraySep', type=str, default=';', help='Caractère utilisé pour séparer les valeurs dans un tableau')
     parser.add_argument('-f', '--fields', dest='targetFields', type=str, nargs='*', help='Liste des champs à inclure')
-    parser.add_argument('-csv-sep', '--csv-separator', dest='csvSep', type=str, default='\t', help='Caractère séparateur du fichier csv')
+    parser.add_argument('-csv-sep', '--csv-separator', dest='csvSep', type=lambda v: '\t' if v == '\\t' else v, default='\t', help='Caractère séparateur du fichier csv')
     parser.add_argument('-csv-nl', '--csv-newline', dest='csvNewLine', type=str, default='', help='Caratère de fin de ligne du fichier csv')
     parser.add_argument('-csv-chart', '--csv-chartset', dest='csvEncoding', type=str, default='utf8', help='Encodage du fichier csv')
     parser.add_argument('-i', '--indent', action='store_true', help='Indique si le fichier geojson doit être indenté')
