@@ -609,6 +609,21 @@ li:hover, li.selected, tr:hover, tr.selected  {
    line-height: 24px;
 }
 
+.zoomToExtentBt{
+  width:30px;
+  height: 30px;
+  background: url("icons/zoom_extent.svg?v=102") no-repeat;
+  background-size: contain;
+  cursor: pointer;
+  border: none;
+}
+
+
+.zoomToExtentBt:hover{
+  background-color: #f4f4f4;
+  border: 2px solid rgba(128, 128 ,128, 0.5);
+  border-radius: 4px;
+}
 
 
 /* ########################################

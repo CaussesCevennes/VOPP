@@ -211,6 +211,7 @@ function OPP(providers, theme) {
     self.tocLayers = L.control.layers(null, null, {position:'topright'});
     self.tocLayers.addTo(self.map);
 
+    //Load basemaps tile layers
     $.getJSON(`layers/basemaps.json?v=${version}`, function(basemaps){
       basemaps
         .filter(elem => self.theme.basemaps.includes(elem.key))
@@ -242,6 +243,15 @@ function OPP(providers, theme) {
       autoType: false,
       minLength: 2
     }) );
+
+    //Add zoom to extent control
+    var zoomToExtent = L.control({position: 'topleft'});
+    zoomToExtent.onAdd = function (map) {
+        let bt = L.DomUtil.create('button', 'zoomToExtentBt');
+        bt.title = "Zoomer sur l'étendue de la carte";
+        return bt
+    };
+    zoomToExtent.addTo(self.map);
 
     //Create photos maps
     var photoCRS = L.CRS.Simple
@@ -287,14 +297,14 @@ function OPP(providers, theme) {
 
     oppLayersPromise.then(function(){
       //zoom to data extent
-      let extent = L.latLngBounds();
+      self.extent = L.latLngBounds();
       for (let k in self.oppLayers){
         let layer = self.oppLayers[k];
         if (self.providers.find(prov => prov.key === k).enable){
-          extent.extend(layer.getBounds());
+          self.extent.extend(layer.getBounds());
         }
       }
-      self.map.flyToBounds(extent);
+      self.map.flyToBounds(self.extent);
     });
 
     return oppLayersPromise;
@@ -1395,8 +1405,12 @@ function OPP(providers, theme) {
   ######################################## */
 
   var connectEvents = function (){
+    /* Map controls */
     $('.clusterLegend').on('click', function(){
       toggleClusterLayer($(this).attr('id'));
+    });
+    $('.zoomToExtentBt').on('click', function(){
+      self.map.flyToBounds(self.extent);
     });
     /* View modes */
     $('#toggleSplitViewBt').on('click', function(){
@@ -1425,8 +1439,10 @@ function OPP(providers, theme) {
     });
     /* Misc tools */
     $("#shareBt").on('click', function () {
-      let url = generateUrl();
-      //TODO ui solution for reporting the url
+      shareUrl();
+    }).on('click', 'div', function(e) {
+      // clicked on descendant div
+      e.stopPropagation();
     });
     /* Widgets */
     $("#sketchButton1").on('click', function () {
@@ -1483,12 +1499,6 @@ function OPP(providers, theme) {
     });
     $("#thumbPrev").click(function(){
       $("#thumbs").animate( {scrollLeft : $("#thumbs").scrollLeft() - 500} );
-    });
-    $("#shareBt").click(function() {
-      shareUrl();
-    }).on('click', 'div', function(e) {
-      // clicked on descendant div
-      e.stopPropagation();
     });
   }
 
