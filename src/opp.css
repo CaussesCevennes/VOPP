@@ -288,6 +288,7 @@ hr{
 
 .toolbarBt:hover svg path{
   fill:var(--tb-icon-select-color) !important;
+  opacity:0.5 !important;
 }
 
 .toolbarBt svg path#ico-filter{

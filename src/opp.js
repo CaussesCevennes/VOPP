@@ -1514,7 +1514,7 @@ function OPP(providers, theme) {
 
   var toggleSingleView = function () {
     self.viewMode = 'SINGLE';
-    $('.toolbarBt.active:not(.panelSwitch)').removeClass('active');
+    $('.toolbarBt.viewMode.active').removeClass('active');
     $('#photo1').css('height', '100%');
     $('#photo2').css('display', 'none');
     $('#widgets2').hide();
@@ -1527,7 +1527,7 @@ function OPP(providers, theme) {
         toggleSingleView();
     } else {
       self.viewMode = 'SPLIT';
-      $('.toolbarBt.active:not(.panelSwitch)').removeClass('active');
+      $('.toolbarBt.viewMode.active').removeClass('active');
       $('#toggleSplitViewBt').addClass('active');
       $('#photo1').css('height', '50%');
       $('#photo2').css('display', 'block');
@@ -1545,7 +1545,7 @@ function OPP(providers, theme) {
       toggleSingleView();
     } else {
       self.viewMode = 'SBS';
-      $('.toolbarBt.active:not(.panelSwitch)').removeClass('active');
+      $('.toolbarBt.viewMode.active').removeClass('active');
       $('#toggleSbsViewBt').addClass('active');
       $('#photo1').css('height', '100%');
       $('#photo2').css('display', 'none');
@@ -1563,7 +1563,7 @@ function OPP(providers, theme) {
       toggleSingleView();
     } else {
       self.viewMode = 'SPOT';
-      $('.toolbarBt.active:not(.panelSwitch)').removeClass('active');
+      $('.toolbarBt.viewMode.active').removeClass('active');
       $('#toggleSpotViewBt').addClass('active');
       $('#photo1').css('height', '100%');
       $('#photo2').css('display', 'none');
@@ -1589,7 +1589,7 @@ function OPP(providers, theme) {
 
   var toggleInfosPanel = function () {
     if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != "toggleInfosBt")){
-      $("#sidePanel, .panel.active:not(#infosPanel), .toolbarBt.active:not(#toggleInfosBt, .viewMode)").toggleClass('active');
+      $("#sidePanel, .panel.active:not(#infosPanel), .toolbarBt.panelSwitch.active:not(#toggleInfosBt)").toggleClass('active');
     }
     $("#sidePanel, #infosPanel, #toggleInfosBt").toggleClass('active');
     self.photoMap1.invalidateSize();
@@ -1598,7 +1598,7 @@ function OPP(providers, theme) {
 
   var toggleSearchPanel = function(){
     if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != "toggleSearchBt")){
-      $("#sidePanel, .panel.active:not(#searchPanel), .toolbarBt.active:not(#toggleSearchBt, .viewMode)").toggleClass('active');
+      $("#sidePanel, .panel.active:not(#searchPanel), .toolbarBt.panelSwitch.active:not(#toggleSearchBt)").toggleClass('active');
     }
     $("#sidePanel, #searchPanel, #toggleSearchBt").toggleClass('active');
     self.photoMap1.invalidateSize();
@@ -1607,7 +1607,7 @@ function OPP(providers, theme) {
 
   var toggleAboutPanel = function(){
     if ($("#sidePanel").hasClass('active') && ($(".toolbarBt.panelSwitch.active").prop('id') != "aboutBt")){
-      $("#sidePanel, .panel.active:not(#aboutPanel), .toolbarBt.active:not(#aboutBt, .viewMode)").toggleClass('active');
+      $("#sidePanel, .panel.active:not(#aboutPanel), .toolbarBt.panelSwitch.active:not(#aboutBt)").toggleClass('active');
     }
     $("#sidePanel, #aboutPanel, #aboutBt").toggleClass('active');
     self.photoMap1.invalidateSize();
