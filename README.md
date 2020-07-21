@@ -14,6 +14,7 @@ Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCeve
   - [Traitement des photos](#traitement-des-photos)
     - [Approche sans tuilage](#approche-sans-tuilage--optimisation-des-fichiers-jpeg)
     - [Approche par tuilage](#approche-par-tuilage)
+    - [Générer les vignettes](#générer-les-vignettes)
   - [Création du fichier GeoJSON](#création-du-fichier-GeoJSON)
     - [Script Python](#fonctionnement-du-script-Python-pour-générer-le-GeoJSON)
     - [Intégration des croquis](#modèle-pour-lintégration-de-croquis)
@@ -229,6 +230,14 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 - `-q` : qualité de la compression jpeg, par défaut 75
 
 - `-r` : algorithme de ré-échantillonnage, par défaut *lanczos*
+
+### Générer les vignettes
+
+Les vignettes ou thumbnails sont des versions basses résolution des photographies qui seront utilisées à des fins de prévisualisation dans la ligne de temps. Pour les générer par lot il est possible d'utiliser l'utilitaire Image Magick. La commande ci-dessous illustre la création de vignettes dont le plus grand des côtés n'excédera pas 512px :
+
+```shell
+for file in *.jpg; do convert $file -thumbnail 512x512 ./THUMBS/$file; done;
+```
 
 ## Création du fichier GeoJSON
 
@@ -538,6 +547,7 @@ Comme précédemment il s'agit d'un simple fichier JSON présentant les différe
     "svgMarker" : "icons/marker_blue.svg",
     "clusterColor" : "#2981cbc8",
     "photoUrl" : "photos/CC/{{YEAR}}/{{FILENAME}}",
+    "thumbUrl" : "photos/CC/{{YEAR}}/THUMBS/{{FILENAME}}",
     "tiled" : false,
     "sketch": "croquis/{{SKETCH.FILENAME}}",
     "infosPanel" : "templates/infospanel_cc.mst",
@@ -545,7 +555,7 @@ Comme précédemment il s'agit d'un simple fichier JSON présentant les différe
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
     "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
     "searchKeys": ["NUM", "NOM", "COMMUNE", "THEME", "UP", "SECTEUR", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
-    "searchResultsTemplate": ["{{NOM}} ({{UP}} {{SECTEUR}})", "n°{{NUM}} {{YEARMIN}} > {{YEARMAX}}"]
+    "searchResultsTemplate": ["{{NOM}} ({{SECTEUR}})", "n°{{NUM}} {{YEARMIN}} > {{YEARMAX}}"]
   }
 ]
 ```
@@ -563,6 +573,8 @@ Comme précédemment il s'agit d'un simple fichier JSON présentant les différe
 - **clusterColor** : style CSS renseignant la couleur de fond des clusters. Les clusters désignent les symboles générés par le regroupement sur la carte de plusieurs points, lorsque l'échelle ne permet pas de les distinguer clairement.
 
 - **photoUrl** : url template permettant de construire le chemin d'accès aux photos, les variables sont recherchées dans les propriétés du point de vue et dans les propriétés de la photo concernée. Si les couches sont tuilées il faut également le renseigner le template permettant d'accéder aux tuiles via leurs coordonnées, par exemple `{z}_{x}_{y}`.
+
+- **thumbUrl** : url template permettant de construire le chemin d'accès aux thumbnails (vignettes) qui seront affichées dans la ligne de temps.
 
 - **tiled** : indique si les photos sont tuilées ou non
 
@@ -627,7 +639,7 @@ Le template ***about.html*** peut être édité directement pour modifier le tex
 
 ## Définition des fonds de carte
 
-Il est possible de personnaliser les fonds de carte disponibles en indiquant les services tuilé (XYZ, TMS ou WMTS sous certaines conditions) auquels ont souhaite pouvoir accéder. Le dossier **layers** contient un fichier **basemaps.json** dédié à cette configuration. Il s'agit d'une liste dont chaque entrée définie les propriétés du service. L'exemple ci-dessous illustre la configuration d'un flux OpenStreetMap :
+Il est possible de personnaliser les fonds de carte disponibles en indiquant les services tuilé (XYZ, TMS ou WMTS sous certaines conditions) auxquels ont souhaite pouvoir accéder. Le dossier **layers** contient un fichier **basemaps.json** dédié à cette configuration. Il s'agit d'une liste dont chaque entrée définie les propriétés du service. L'exemple ci-dessous illustre la configuration d'un flux OpenStreetMap :
 
 ```
 [
