@@ -260,7 +260,7 @@ function OPP(providers, theme) {
     self.photoMap1.attributionControl.setPrefix('');
     self.photoMap2.attributionControl.setPrefix('');
 
-
+    //Create azimuth custom control
     self.north = L.control({position: "topright"});
     self.north.onAdd = function(map) {
         var div = L.DomUtil.create("div", "windrose");
@@ -653,6 +653,19 @@ function OPP(providers, theme) {
     setupSketchButton();
 
     //update azimuth
+    setAzimuth();
+
+    //Fill infos panel
+    let template = self.activeProvider['infosPanelTemplate'];
+    let render = Mustache.render(template, self.selectedFeatProps);
+    $('#infosPanel').html(render);
+
+  }
+
+  var setAzimuth = function(){
+    if (!self.selectedMark){
+      return
+    }
     let azimuth = self.selectedFeatProps['AZIMUTH'];
     if (azimuth != undefined) {
       $('.windrose').show();
@@ -660,12 +673,6 @@ function OPP(providers, theme) {
     } else {
       $('.windrose').hide();
     }
-
-    //Fill infos panel
-    let template = self.activeProvider['infosPanelTemplate'];
-    let render = Mustache.render(template, self.selectedFeatProps);
-    $('#infosPanel').html(render);
-
   }
 
   var markerClickHandler = function(newMarker){
@@ -1540,7 +1547,8 @@ function OPP(providers, theme) {
     $('#photo1').css('height', '100%');
     $('#photo2').css('display', 'none');
     $('#widgets2').hide();
-    self.north.setPosition('topright');
+    self.north.setPosition('topright'); //because setPosition remove and then recreate the div...
+    setAzimuth(); //...we need to recompute the angle
     updatePhotos();
     synchTimeline();
   }
@@ -1577,6 +1585,7 @@ function OPP(providers, theme) {
       $('#sketchButton2').detach().insertBefore('#dropDownDate2');
       $('#widgets2>*').addClass('alignRight');
       self.north.setPosition('bottomright');
+      setAzimuth();
     }
     updatePhotos();
     synchTimeline();
@@ -1596,6 +1605,7 @@ function OPP(providers, theme) {
       $('#sketchButton2').detach().insertBefore('#dropDownDate2');
       $('#widgets2>*').addClass('alignRight');
       self.north.setPosition('bottomright');
+      setAzimuth();
     }
     updatePhotos();
     synchTimeline();
