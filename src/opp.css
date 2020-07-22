@@ -205,6 +205,22 @@ hr{
   color: black;
 }
 
+
+.windrose{
+  width:75px;
+  height:75px;
+  background: url("icons/windrose.svg?v=102") no-repeat;
+  background-size: contain;
+}
+
+.azimuth{
+  width:100%;
+  height:100%;
+  background: url("icons/azimuth.svg?v=102") no-repeat;
+  background-size: contain;
+}
+
+
 /* ########################################
   buttons, toolbar, tootip
   ######################################## */

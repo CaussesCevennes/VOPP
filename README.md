@@ -95,7 +95,7 @@ Au delà de ces champs requis, vous aurez certainement besoin d'afficher d'autre
 
 - Des données relatives à la prise de vue :
 
-  - **azimut** : angle de visée en degré
+  - **azimut** : angle de visée en degré. Si le champs `AZIMUTH` est présent alors il sera automatiquement utilisé pour l'affichage d'une rose des vents indiquant l'orientation du point de vue.
 
   - **hauteur** : hauteur du pieds en cm
 

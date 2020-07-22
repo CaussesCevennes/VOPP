@@ -260,6 +260,19 @@ function OPP(providers, theme) {
     self.photoMap1.attributionControl.setPrefix('');
     self.photoMap2.attributionControl.setPrefix('');
 
+
+    self.north = L.control({position: "topright"});
+    self.north.onAdd = function(map) {
+        var div = L.DomUtil.create("div", "windrose");
+        $(div)
+          .attr('title', 'Orientation de la photo')
+          .append(
+            $('<div>').addClass('azimuth')
+          );
+        return div;
+    }
+    self.north.addTo(self.photoMap1);
+
     //Setup maps sync addon
     self.photoMap1.sync(self.photoMap2);
     self.photoMap2.sync(self.photoMap1);
@@ -639,6 +652,15 @@ function OPP(providers, theme) {
     //if sketches are available and displaying the corresponding button accordingly
     setupSketchButton();
 
+    //update azimuth
+    let azimuth = self.selectedFeatProps['AZIMUTH'];
+    if (azimuth != undefined) {
+      $('.windrose').show();
+      $('.azimuth').css('transform', `rotate(${azimuth}deg)`);
+    } else {
+      $('.windrose').hide();
+    }
+
     //Fill infos panel
     let template = self.activeProvider['infosPanelTemplate'];
     let render = Mustache.render(template, self.selectedFeatProps);
@@ -902,7 +924,7 @@ function OPP(providers, theme) {
       setLoadingEvents(photoLay);
       return photoLay;
     } else {
-      return L.tileLayer.voppTiles(url, {
+      var photoLay = L.tileLayer.voppTiles(url, {
         width: photo['WIDTH'],
         height: photo['HEIGHT'],
         targetRatio: self.selectedFeatProps['RATIO'],
@@ -912,6 +934,7 @@ function OPP(providers, theme) {
         tileSize:256,
         overlap:0
       });
+      return photoLay;
     }
   }
 
@@ -1007,7 +1030,6 @@ function OPP(providers, theme) {
 
     if (self.viewMode == 'SINGLE'){
       photoLay1.addTo(self.photoMap1);
-
     }
     else if (self.viewMode == 'SPLIT'){
       photoLay1.addTo(self.photoMap1);
@@ -1518,6 +1540,7 @@ function OPP(providers, theme) {
     $('#photo1').css('height', '100%');
     $('#photo2').css('display', 'none');
     $('#widgets2').hide();
+    self.north.setPosition('topright');
     updatePhotos();
     synchTimeline();
   }
@@ -1534,7 +1557,7 @@ function OPP(providers, theme) {
       $('#widgets2').show();
       $("#widgets2").removeClass('topRight').addClass('middleLeft');
       $('#sketchButton2').detach().insertAfter('#dropDownDate2');
-      $('#widgets2>*').removeClass('alignRight')
+      $('#widgets2>*').removeClass('alignRight');
     }
     updatePhotos();
     synchTimeline();
@@ -1552,7 +1575,8 @@ function OPP(providers, theme) {
       $('#widgets2').show();
       $("#widgets2").removeClass('middleLeft').addClass('topRight');
       $('#sketchButton2').detach().insertBefore('#dropDownDate2');
-      $('#widgets2>*').addClass('alignRight')
+      $('#widgets2>*').addClass('alignRight');
+      self.north.setPosition('bottomright');
     }
     updatePhotos();
     synchTimeline();
@@ -1570,7 +1594,8 @@ function OPP(providers, theme) {
       $('#widgets2').show();
       $("#widgets2").removeClass('middleLeft').addClass('topRight');
       $('#sketchButton2').detach().insertBefore('#dropDownDate2');
-      $('#widgets2>*').addClass('alignRight')
+      $('#widgets2>*').addClass('alignRight');
+      self.north.setPosition('bottomright');
     }
     updatePhotos();
     synchTimeline();
