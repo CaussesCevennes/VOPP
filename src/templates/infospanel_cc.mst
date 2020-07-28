@@ -14,7 +14,7 @@
     <span class='value'>{{DPT}}</span>
   </div><div class="entry">
     <span class='field'>Secteur :</span>
-    <span class='value'>{{UP}} {{SECTEUR}}</span>
+    <span class='value'>{{SECTEUR}}</span>
   </div><div class="entry">
     <span class='field'>Commune :</span>
     <span class='value'>{{COMMUNE}}</span>

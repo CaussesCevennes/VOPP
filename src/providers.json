@@ -16,7 +16,7 @@
     "popup" : "{{NUM}} - {{NOM}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
     "filters" : {"THEME":"Thèmatique", "ATTR":"Attributs"},
-    "searchKeys": ["NUM", "NOM", "COMMUNE", "THEME", "UP", "SECTEUR", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
+    "searchKeys": ["NUM", "NOM", "COMMUNE", "THEME", "ATTR", "SECTEUR", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
     "searchResultsTemplate": ["{{NOM}} ({{SECTEUR}})", "Vue n°{{NUM}}, période {{YEARMIN}} > {{YEARMAX}}"]
   },
   {
