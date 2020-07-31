@@ -699,30 +699,25 @@ function OPP(providers, theme) {
         $("<div id="+ dk +" class='photoThumb'></div>")
         .css('background-image', 'url(' + thumbUrl + ')')
         .append(
-          $("<div class='thumbDate'></div>")
-          .text(dk)
+          $("<div class='thumbDate'></div>").text(dk),
+          $("<div id='thumbLink1' class='thumbLink hvr-pop' title='Remplacer la vue 1'></div>").text('1'),
+          $("<div id='thumbLink2' class='thumbLink hvr-pop' title='Remplacer la vue 2'></div>").text('2')
         )
       );
     });
   }
 
 
-  var thumbSelect = function(date) {
-
+  var thumbSelect = function(date, target) {
     if (self.viewMode == 'SINGLE'){
       dropDownDateSelect('#dropDownDate1', date);
     } else {
-      //if (date < $('#dropDownDate2').val()) {
-      let targetDate = new Date(date);
-      let currentDate1 = new Date($('#dropDownDate1').val());
-      let currentDate2 = new Date($('#dropDownDate2').val());
-      if (Math.abs(targetDate - currentDate1) < Math.abs(targetDate - currentDate2)) {
+      if (target == 'thumbLink1') {
         dropDownDateSelect('#dropDownDate1', date);
-      } else {
+      } else if (target == 'thumbLink2') {
         dropDownDateSelect('#dropDownDate2', date);
       }
     }
-
   }
 
   /* Parse url parameters and update app state according to them. */
@@ -1176,8 +1171,7 @@ function OPP(providers, theme) {
     $(`#${d1}.photoThumb`)
     .toggleClass('active')
     .append(
-      $("<div class='thumbMark1'></div>")
-      .text("1")
+      $("<div class='thumbMark1'></div>").text("1")
     );
     if (self.viewMode != 'SINGLE') {
       thumb2 = $(`#${d2}.photoThumb`);
@@ -1185,8 +1179,7 @@ function OPP(providers, theme) {
         thumb2.toggleClass('active');
       }
       thumb2.append(
-        $("<div class='thumbMark2'></div>")
-        .text("2")
+        $("<div class='thumbMark2'></div>").text("2")
       );
     }
 
@@ -1520,7 +1513,22 @@ function OPP(providers, theme) {
       toggleTimeline();
     });
     $("#timeline").on('click', '.photoThumb', function () {
-      thumbSelect($(this).attr('id'));
+      if (self.viewMode == 'SINGLE'){
+        thumbSelect($(this).attr('id'));
+      } else {
+        $(this).addClass('activeLink');
+        $(this).children('.thumbLink').addClass('activeLink');
+      }
+    });
+    $("#timeline").on('mouseleave', '.photoThumb', function () {
+      $(this).removeClass('activeLink');
+      $(this).children('.thumbLink').removeClass('activeLink');
+    });
+    $("#timeline").on('click', '.thumbLink', function (e) {
+      thumbSelect($(this).parent().attr('id'), $(this).attr('id'));
+      $(this).parent().removeClass('activeLink');
+      $('.thumbLink').removeClass('activeLink');
+      e.stopPropagation();
     });
     $("#thumbNext").click(function(){
       //$("#thumbs").scrollLeft($("#thumbs").scrollLeft() + 500);
