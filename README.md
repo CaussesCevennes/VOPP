@@ -777,7 +777,7 @@ Pour faciliter les mises à jour ultérieures du code deux alternatives au trans
 
 - déployer l'application sous la forme d'un clone *git*. C'est une approche très commode si vous maîtrisez le logiciel de versionnement *git*, cela vous permet de modifier la configuration de l'application à partir d'un fork et d'utiliser votre propre dépôt distant pour synchroniser le serveur.
 
-- l'utilitaire *rzync* est une autre solution très commode pour synchroniser un répertoire local avec un répertorie distant. Contrairement à *git*, *rzync* ne permet pas le versionnement des fichiers mais c'est une solution plus légère et facile. Le versionnement peut toujours être gérer en local avant synchronisation.
+- l'utilitaire *rsync* est une autre solution très commode pour synchroniser un répertoire local avec un répertorie distant. Contrairement à *git*, *rsync* ne permet pas le versionnement des fichiers mais c'est une solution plus légère et facile. Le versionnement peut toujours être gérer en local avant synchronisation.
 
 
 
