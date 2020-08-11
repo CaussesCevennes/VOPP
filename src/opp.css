@@ -1,15 +1,15 @@
-html, body { width:100%; height:100%; margin:0; padding:0; font-size:100%; font-family:'Quicksand', sans-serif;}
-#head {position:relative; width:100%; height:5%; overflow:hidden; color:black; background:white;}
-    #title {position:absolute; top:25%; left:1%; width:75%; letter-spacing:0.5em; font-size:2vmin;}
-    #logo {position:absolute; height:100%; top:5%; right:0;}
-#container {position:relative; width:100%; height:95%; display:flex; flex-direction:row; overflow:hidden;}
-    #map {position:relative; width:35%; height:100%; flex:0 0 auto;}
-    #photosWrapper {position:relative; height:100%; flex:1 1 auto; display:flex; flex-direction:column;}
+html, body { width:100%; height:100%; margin:0; padding:0; font-size:100%; font-family:'Quicksand', sans-serif; display:flex; flex-direction:column;}
+#head {position:relative; width:100%; height:auto; overflow:hidden; color:black; background:white; padding:10px;}
+    #title {display:inline-block; width:75%; height:auto; letter-spacing:0.5em; font-size:2vmin; overflow-wrap: break-word;}
+    #logo {position: absolute; height:100%; top:0; right:0; }
+#container {position:relative; width:100%; display:flex; flex-direction:row; flex-grow: 1;}
+    #map {position:relative; width:35%; height:100%; flex:0 0 auto; max-width:80%; min-width: 0;}
+    #photosWrapper {position:relative; width:40%; height:100%; flex:1 1 auto; display:flex; flex-direction:column; min-width: 0;}
       #photos {position:relative; height:100%; flex:1 1 auto;}
           #photo1 {width:100%; height:100%; }
           #photo2 {width:100%; height:50%; display:none;}
       #timeline {width:100%; height:20%; display:none; flex:1 1 auto;}
-    #sidePanel {width:25%; height:100%; flex:0 0 auto;}
+    #sidePanel {width:25%; height:100%; flex:0 0 auto; max-width:40%; min-width: 5%;}
     #toolbar {width:38px; height:100%; flex:0 0 auto;}
 
 * {
@@ -384,8 +384,8 @@ hr{
 
 #thumbs{
   display: flex;
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
   align-items: center;
   overflow-x: scroll;
   padding-top: 10px;
@@ -398,9 +398,20 @@ hr{
   background: center no-repeat;
   background-size: cover;
   height: 100%;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin: 0 2px 0 2px;
   position: relative;
+  border:4px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.photoThumb:hover{
+  border:4px dashed #2ca089BF;
+}
+
+.photoThumb.activeLink{
+  cursor: default;
 }
 
 .photoThumb.active{
@@ -413,6 +424,29 @@ hr{
   font-weight: bold;
   font-size: 1em;
   color: white;
+}
+
+.photoThumb:hover .thumbLink.activeLink{
+  visibility: visible;
+  opacity: 0.75;
+}
+
+.thumbLink{
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.1s linear;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 2em;
+  color: white;
+  background-color: #2ca089ff;
+  flex: 0 0 40px;
+  height : 40px;
+  border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 40px;
+  margin: 5px;
 }
 
 .thumbMark1, .thumbMark2 {
@@ -823,4 +857,36 @@ li:hover, li.selected, tr:hover, tr.selected  {
   transform: scale(1.2);
   -webkit-transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
   transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
+}
+
+
+/* Pop */
+@-webkit-keyframes hvr-pop {
+  50% {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+  }
+}
+@keyframes hvr-pop {
+  50% {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+  }
+}
+.hvr-pop {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+}
+.hvr-pop:hover, .hvr-pop:focus, .hvr-pop:active {
+  -webkit-animation-name: hvr-pop;
+  animation-name: hvr-pop;
+  -webkit-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
 }
