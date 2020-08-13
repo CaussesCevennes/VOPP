@@ -15,7 +15,7 @@ Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCeve
     - [Approche sans tuilage](#approche-sans-tuilage--optimisation-des-fichiers-jpeg)
     - [Approche par tuilage](#approche-par-tuilage)
     - [Générer les vignettes](#générer-les-vignettes)
-    - [Appliquer un filigrane](appliquer-un-filigrane)
+    - [Appliquer un filigrane](#appliquer-un-filigrane)
   - [Création du fichier GeoJSON](#création-du-fichier-GeoJSON)
     - [Script Python](#fonctionnement-du-script-Python-pour-générer-le-GeoJSON)
     - [Intégration des croquis](#modèle-pour-lintégration-de-croquis)
