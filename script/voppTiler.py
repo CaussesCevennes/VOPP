@@ -125,7 +125,7 @@ RESIZE_FILTERS = {
 
 class VOPPTiler():
 
-    def __init__(self, inFile, outFolder, tileSize=256, overlap=0, initRes='TILESIZE', zFactor=2, cropTiles=False, tileFormat="jpg", jpgQuality=75, resizeFilter='lanczos', pathFormat = '{z}_{x}_{y}'):
+    def __init__(self, inFile, outFolder, tileSize=256, overlap=0, initRes='TILESIZE', zFactor=2, cropTiles=False, tileFormat="jpg", jpgQuality=75, resizeFilter='lanczos', pathFormat = '{z}_{x}_{y}', **kwargs):
         self.src = inFile
         self.dst = outFolder
 
@@ -260,6 +260,13 @@ def main():
         help="Destination folder of the output, a new directory named accordingly to the input file will be created inside this destinaton folder",
     )
     parser.add_argument(
+        "-kext",
+        "--keep-extension",
+        dest="keepExtension",
+        action='store_true',
+        help="Define if the directory of tiles, named accordingly to the input file, should also include the filename extension",
+    )
+    parser.add_argument(
         "-s",
         "--tile-size",
         dest="tileSize",
@@ -346,10 +353,16 @@ def main():
     if not args.outFolder:
         #if there is no destination provided then the new directory of tiles will be
         #created in the same folder as the input file
-        args.outFolder = os.path.splitext(args.inFile)[0]
+        if not args.keepExtension:
+            args.outFolder = os.path.splitext(args.inFile)[0]
+        else:
+            args.outFolder = args.inFile
     else:
         #otherwise it will be created into the specified destination folder
-        args.outFolder = os.path.join(args.outFolder, os.path.splitext(os.path.basename(args.inFile))[0])
+        if not args.keepExtension:
+            args.outFolder = os.path.join(args.outFolder, os.path.splitext(os.path.basename(args.inFile))[0])
+        else:
+            args.outFolder = os.path.join(args.outFolder, os.path.basename(args.inFile))
 
     if os.path.exists(args.outFolder):
         logging.warning('Destination folder already exists, it\'s content will be overwritten')
