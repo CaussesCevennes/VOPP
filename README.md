@@ -15,6 +15,7 @@ Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCeve
     - [Approche sans tuilage](#approche-sans-tuilage--optimisation-des-fichiers-jpeg)
     - [Approche par tuilage](#approche-par-tuilage)
     - [Générer les vignettes](#générer-les-vignettes)
+    - [Appliquer un filigrane](Appliquer-un-filigrane)
   - [Création du fichier GeoJSON](#création-du-fichier-GeoJSON)
     - [Script Python](#fonctionnement-du-script-Python-pour-générer-le-GeoJSON)
     - [Intégration des croquis](#modèle-pour-lintégration-de-croquis)
@@ -136,7 +137,7 @@ L'utilitaire [exiftool](https://exiftool.org/) peut vous aider à dresser la lis
 
 `exiftool.exe -r -csv -n -FileName -FileSize -FileType -CreateDate -ImageWidth -ImageHeight -Orientation -Aperture -ExposureTime -FocalLength -FocalLengthIn35mmFormat -FOV -HyperfocalDistance -ISO -GPSLatitude -GPSLatitudeRef -GPSLongitude -GPSLongitudeRef "INPUT_FOLDER" > output.csv`
 
-Options : 
+Options :
 
 `-r recursive folders scan`
 
@@ -157,13 +158,19 @@ L'utilitaire [Imagemagick](https://imagemagick.org/script/convert.php) peut êtr
 Exemple de traitement par lot de tous les fichiers jpg d'un dossier sur une machine Linux
 
 ```bash
-for file in *.jpg; do convert $file -interlace plane -strip -quality 75% ./progressive/$file; done;
+for file in *.jpg; do magick $file -interlace plane -strip -quality 75% ./progressive/$file; done;
 ```
 
 Equivalent sous Windows:
 
 ```shell
-for %f in (*.jpg) do convert %x -interlace plane -strip -quality 75% ./progressive/%f
+for %f in (*.jpg) do magick %x -interlace plane -strip -quality 75% ./progressive/%f
+```
+
+Windows Powershell:
+
+```shell
+foreach ($f in Get-ChildItem "." -filter *.jpg) { magick $f -interlace plane -strip -quality 75% ./progressive/$f }
 ```
 
 Options :
@@ -214,11 +221,19 @@ Windows :
 for %f in (*.jpg) do python3 voppTiler.py %f -d TILES -c
 ```
 
+Windows Powershell:
+
+```shell
+foreach ($f in Get-ChildItem "." -filter *.jpg) { python3 voppTiler.py $f -d TILES -c }
+```
+
 Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous :
 
 - `source` : nom du fichier image à tuiler
 
 - `-d` : dossier de destination des tuiles. Les tuiles générées sont toujours placées dans un nouveau dossier du même nom que l'image. Par défaut ce dernier est placé dans le même dossier que l'image, ce paramètre permet de spécifier un autre dossier de destination. A noter qu'en complément des tuiles l'outil génère également un fichier json décrivant le tuilage.
+
+- `-kext` : définie si le dossier, du même nom que l'image, qui contiendra les tuiles doit aussi inclure l'extension du fichier dans son nom (par défaut cette dernière est exclue).
 
 - `-s` : taille des tuiles, par défaut 256px. Doit être constant pour toutes les photos.
 
@@ -236,7 +251,7 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 
 - `-z` : facteur de zoom, par défaut 2. Ne pas modifier.
 
-- `-f `: format des tuiles (jpg ou png), par défaut jpg
+- `-f`: format des tuiles (jpg ou png), par défaut jpg
 
 - `-q` : qualité de la compression jpeg, par défaut 75
 
@@ -244,19 +259,73 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 
 ### Générer les vignettes
 
-Les vignettes ou thumbnails sont des versions basse résolution des photographies qui seront utilisées à des fins de prévisualisation dans la ligne de temps. Pour les générer par lot il est possible d'utiliser l'utilitaire Image Magick. La commande ci-dessous illustre la création de vignettes dont le plus grand des côtés n'excédera pas 512px :
+Les vignettes ou thumbnails sont des versions basse résolution des photographies qui seront utilisées à des fins de prévisualisation dans la ligne de temps. Pour les générer par lot il est possible d'utiliser l'utilitaire ImageMagick. La commande ci-dessous illustre la création de vignettes dont le plus grand des côtés n'excédera pas 512px :
 
 Linux :
 
 ```shell
-for file in *.jpg; do convert $file -thumbnail 512x512 ./THUMBS/$file; done;
+for file in *.jpg; do magick $file -thumbnail 512x512 ./THUMBS/$file; done;
 ```
 
 Windows :
 
 ```shell
-for %f in (*.jpg) do convert %f -thumbnail 512x512 ./THUMBS/%f
+for %f in (*.jpg) do magick %f -thumbnail 512x512 ./THUMBS/%f
 ```
+
+Windows Powershell:
+
+```shell
+foreach ($f in Get-ChildItem "." -filter *.jpg) { magick $f -thumbnail 512x512 ./THUMBS/$f }
+```
+
+Autre exemple Powershell permettant de traiter un ensemble de sous dossier en créant automatiquement le dossier de destination
+
+```shell
+foreach ($d in Get-ChildItem -Directory) { 
+    New-Item -path $d -name "thumbs" -ItemType "directory"
+    foreach ($f in Get-ChildItem $d -filter *.jpg) {
+        $name = $f.name
+        convert $f -thumbnail 512x512 $d/thumbs/$name
+    }
+}
+```
+
+### Appliquer un filigrane
+
+Il peut être souhaitable d'ajouter les mentions de droit d'auteur à travers l'application d'un filigrane (watermark) sur la photo. Le script `voopWatermark.py` peut être utilisé pour réaliser cette tâche sur l'ensemble des clichés en s'appuyant sur la base de données des photos pour renseigner le nom de l'auteur.
+
+Exemple de commande :
+
+```shell
+python voppWatermarker.py photos.csv inFolder outFolder "{FILENAME}.jpg" "© {YEAR} {AUTEUR}" -c 255 255 255 255 -bg 0 0 0 150 -ff arial -fs 20 -pos bottomright -pad 10 -mg 10
+```
+
+Description des paramètres:
+
+- `datafile` : nom du fichier csv de la table des photos
+
+- `source` : nom du dossier contenant les photos à traiter
+
+- `destination` : nom du dossier de destination pour les photos marquées
+
+- `filename-template` : le template permettant de construire les noms de fichier à partir des données de la table des photos
+
+- `watermark-template` : le template à appliquer pour construire la mention de copyright à partir des données de la table des photos
+
+- `-c` : couleur RGBA du texte de la marque. Par défaut en blanc (255 255 255 255)
+
+- `-bg` : couleur RGBA de l'arrière plan de la marque. Par défaut en noir avec transparence (0 0 0 150)
+
+- `-ff` : la police d'écriture de la marque. Doit correspondre au nom du fichier *.ttf* ciblé, par défaut _arial_. C'est ici que l'on peut choisir les variantes de police en gras, italique ...
+
+- `-fs` : la taille de la police exprimée en millième de la hauteur de la photo. Par exemple pour une photo de 2500px de hauteur, une valeur de 20 correspondra à une taille de police de 50px, soit 2% de la hauteur de l'image. Exprimée la valeur de cette façon permet de pouvoir obtenir des tailles de police proportionnellement équivalentes pour des photos de dimensions variables. Valeur par défaut : 20.
+
+- `-pos` : position du copyright, choix parmi les valeurs `topleft`, `topright`, `bottomleft`, `bottomright`
+
+- `-pad` : la valeur de padding, c'est à dire de la marge entre le texte et les limites de son arrière plan. Exprimée en millième de la hauteur de la photo, valeur par défaut : 10.
+
+- `-mg` : valeur de la marge entre les bords de l'image et la position de la marque. Exprimée en millième de la hauteur de la photo, valeur par défaut : 10.
 
 ## Création du fichier GeoJSON
 
@@ -778,8 +847,6 @@ Pour faciliter les mises à jour ultérieures du code deux alternatives au trans
 - déployer l'application sous la forme d'un clone *git*. C'est une approche très commode si vous maîtrisez le logiciel de versionnement *git*, cela vous permet de modifier la configuration de l'application à partir d'un fork et d'utiliser votre propre dépôt distant pour synchroniser le serveur.
 
 - l'utilitaire *rsync* est une autre solution très commode pour synchroniser un répertoire local avec un répertorie distant. Contrairement à *git*, *rsync* ne permet pas le versionnement des fichiers mais c'est une solution plus légère et facile. Le versionnement peut toujours être gérer en local avant synchronisation.
-
-
 
 Dans tous les cas, le dossier de destination doit être servi par votre serveur http, le fichier d'index sera `opp.html`. Pour les photos, une mise en cache forte est préférable puisque les fichiers sont lourds et ne changent jamais.
 
