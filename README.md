@@ -576,7 +576,7 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 {
   "key" : "cc",
   "default" : true,
-  "domains" : "observatoire.causses-et-cevennes.fr"],
+  "domains" : ["observatoire.causses-et-cevennes.fr"],
   "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
   "description" : "Explorez et comparez les clichés de l'observatoire photographique du paysage culturel des Causses et des Cévennes",
   "headerLogo" : "icons/logos/cc_logo.png",
