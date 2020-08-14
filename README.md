@@ -576,6 +576,7 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 {
   "key" : "cc",
   "default" : true,
+  "domains" : "observatoire.causses-et-cevennes.fr"],
   "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
   "description" : "Explorez et comparez les clichés de l'observatoire photographique du paysage culturel des Causses et des Cévennes",
   "headerLogo" : "icons/logos/cc_logo.png",
@@ -593,6 +594,8 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 - **key** : il s'agit d'un identifiant unique pour votre thème. La valeur pourra être passée dans l'url. Proscrire les accents, espaces ou autres caractères spéciaux.
 
 - **default** : indique si le thème doit être chargé par défaut (c'est à dire en l'absence d'un paramètre dans l'url). Il ne peut y avoir qu'un seul thème par défaut.
+
+- **domains** : propriété facultative permettant d'associer le thème à un nom de domaine particulier. Utile lorsque l'on veut faire pointer des sous domaines vers un différents thèmes.
 
 - **title** : le titre du thème, correspond au titre qui sera affiché dans la barre d'en-tête de la page web ainsi que dans la balise *title* du document HTML (utilisée pour l'indexation du site par les moteurs de recherche)
 
@@ -866,11 +869,45 @@ Exemple de configuration Apache avec mise en cache de 3 ans pour les jpg.
 
 ## Url alias pour les thèmes
 
+**Identification du thème via un paramètre d'url :**
+
 Le nom du thème est normalement passer via un paramètre d'url, par exemple `observatoire.causses-et-cevenne.fr/opp?&theme=monTheme` le code javascript côté client se charge ensuite de récupérer ce paramètre.  Le cas échéant, le nom du thème sera rechercher dans la dernière partie de l'url, ainsi il est donc possible d'avoir des urls de la forme `observatoire.causses-et-cevenne.fr/opp/monTheme` ce qui est plus lisible lorsque l'on veut héberger plusieurs thèmes.  Si la dernière partie de l'url ne correspond à aucun nom de thème alors c'est le thème par défaut qui sera appliqué. Pour que ce type d'url fonctionne il faut côté serveur que l'adresse soit traité comme un alias renvoyant vers notre fichier index `opp.html`. Exemple de directive Apache avec le module *mod_alias* :
 
 ```
 Alias /opp/montheme /srv/www/opp/opp
 ```
+
+Attention la directive *Alias* ne peut pas être exécutée dans un fichier *htaccess*
+
+
+
+**Associer un nom de domaine à un thème particulier :**
+
+Dans le fichier de configuration des thèmes, il est possible de définir pour chacun le ou les noms de domaine auxquels ils seront associés. Si aucun paramètre de thème n'est passé dans l'url, alors le nom de domaine sera testé. Si aucune association n'est trouvée alors le thème par défaut sera renvoyé. Ainsi en synthèse, l'ordre de priorité pour la sélection du thème est le suivant :
+
+1. paramètre passé dans l'url (query string ou url alias)
+
+2. correspondance avec un nom de domaine spécifié dans la configuration du thème
+
+3. thème par défaut
+
+Pour configurer différents sous-domaines vers des thèmes spécifiques, il faut donc :
+
+1. renseigner la propriété `domains` dans la configuration des thèmes
+
+2. faire pointer le sous domaine vers l'adresse IP du serveur (à faire dans l'interface de gestion de votre nom de domaine)
+
+3. rediriger en interne les requêtes provenant du sous domaine vers le dossier hébergeant l'application
+
+Ce dernier point peut-être réalisé en ajoutant une règle de réécriture au serveur Apache, soit dans le fichier de configuration général soit dans un fichier *htaccess*.  Exemple pour faire pointer le sous-domaine test.causses-et-cevennes.fr vers le dossier /opp du serveur on peut ajouter les directives suivantes :
+
+```apacheconf
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^test\.causses-et-cevennes\.fr$
+RewriteRule ^(.*)$ /opp/$1 [L,QSA]
+```
+
+
 
 ## Forcer mise à jour du cache des navigateurs
 

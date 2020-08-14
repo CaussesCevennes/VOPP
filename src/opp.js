@@ -1732,6 +1732,7 @@ $(document).ready(function() {
     }
   });
 
+  //Search if the target theme is identified in the url
   let params = new URL(window.location).searchParams;
   let themeKey = params.get('theme');
   if (!themeKey){
@@ -1759,7 +1760,14 @@ $(document).ready(function() {
         settings = data.find(theme => theme.key == themeKey);
       }
       if (!themeKey || !settings){
-        settings = data.find(theme => Boolean(theme.default));
+        //test if this url domain is associated to a specific theme
+        settings = data.filter(theme => "domains" in theme).find(theme => {
+          return theme.domains.some(domain => domain == window.location.hostname);
+        });
+        //if not return the default theme
+        if (!settings){
+          settings = data.find(theme => Boolean(theme.default));
+        }
       }
     })
   ).then(function(){
