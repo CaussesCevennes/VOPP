@@ -871,15 +871,16 @@ Exemple de configuration Apache avec mise en cache de 3 ans pour les jpg.
 
 **Identification du thème via un paramètre d'url :**
 
-Le nom du thème est normalement passer via un paramètre d'url, par exemple `observatoire.causses-et-cevenne.fr/opp?&theme=monTheme` le code javascript côté client se charge ensuite de récupérer ce paramètre.  Le cas échéant, le nom du thème sera rechercher dans la dernière partie de l'url, ainsi il est donc possible d'avoir des urls de la forme `observatoire.causses-et-cevenne.fr/opp/monTheme` ce qui est plus lisible lorsque l'on veut héberger plusieurs thèmes.  Si la dernière partie de l'url ne correspond à aucun nom de thème alors c'est le thème par défaut qui sera appliqué. Pour que ce type d'url fonctionne il faut côté serveur que l'adresse soit traité comme un alias renvoyant vers notre fichier index `opp.html`. Exemple de directive Apache avec le module *mod_alias* :
+Le nom du thème est normalement passer via un paramètre d'url, par exemple `observatoire.causses-et-cevenne.fr/opp?theme=monTheme` le code javascript côté client se charge ensuite de récupérer ce paramètre.  Le cas échéant, le nom du thème sera rechercher dans la dernière partie de l'url, ainsi il est donc possible d'avoir des urls de la forme `observatoire.causses-et-cevenne.fr/opp/monTheme` ce qui est plus lisible lorsque l'on veut héberger plusieurs thèmes.  Si la dernière partie de l'url ne correspond à aucun nom de thème alors c'est le thème par défaut qui sera appliqué. Pour que ce type d'url fonctionne il faut côté serveur que l'adresse soit traitée comme un alias renvoyant vers notre fichier index `opp.html`. Exemple de directive Apache avec le module *mod_alias* :
 
 ```apacheconf
-Alias /opp/montheme /srv/www/opp/opp
+Alias /opp/montheme /srv/www/opp
 ```
 
 Attention la directive *Alias* ne peut pas être exécutée dans un fichier *htaccess*, mais il est possible d'écrire une directive équivalente avec le module *rewrite* :
 
 ```apacheconf
+RewriteEngine on
 RewriteRule ^/opp/montheme(/.*)*$ /opp/$1 [L,QSA]
 ```
 
@@ -908,8 +909,6 @@ RewriteEngine on
 RewriteCond %{HTTP_HOST} ^test\.causses-et-cevennes\.fr$
 RewriteRule ^(.*)$ /opp/$1 [L,QSA]
 ```
-
-
 
 ## Forcer mise à jour du cache des navigateurs
 
