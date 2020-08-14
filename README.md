@@ -732,7 +732,7 @@ Le template ***about.html*** peut être édité directement pour modifier le tex
 
 Il est possible de personnaliser les fonds de carte disponibles en indiquant les services tuilé (XYZ, TMS ou WMTS sous certaines conditions) auxquels ont souhaite pouvoir accéder. Le dossier **layers** contient un fichier **basemaps.json** dédié à cette configuration. Il s'agit d'une liste dont chaque entrée définie les propriétés du service. L'exemple ci-dessous illustre la configuration d'un flux OpenStreetMap :
 
-```
+```json
 [
   {
     "key":"osm",
@@ -750,7 +750,7 @@ Il est possible de personnaliser les fonds de carte disponibles en indiquant les
 
 Par défaut la librairie Leaflet ne supporte pas les services WMTS et les grilles ou projections hétérogènes. C'est pourquoi les flux ici spécifiés doivent nécessairement être des services **standard** c'est à dire respectant la grille Google Web Mercator. Néanmoins, il est possible de se connecter à des flux WMTS à partir du moment où leur configuration est calée sur la grille standard. Dans ce cas il suffit d'écrire les paramètres KVP de l'url en dur. L'exemple ci-dessous illustre la configuration d'un flux WMTS de l'IGN :
 
-```
+```json
 {
   "key":"ignOrtho",
   "name":"Photos aériennes",
@@ -783,8 +783,8 @@ Le fichier GeoJSON généré doit être ensuite déposé dans le sous dossier da
 opp.bkgLayers['limits_cc'] = {
 
   title : 'Zonage UNESCO',
-
   enable : true,
+  maxZoom : 20,
 
   load : function(data){
 
@@ -855,7 +855,7 @@ Dans tous les cas, le dossier de destination doit être servi par votre serveur 
 
 Exemple de configuration Apache avec mise en cache de 3 ans pour les jpg.
 
-```
+```apacheconf
 <Directory /srv/www/opp>
    DirectoryIndex opp.html
    AllowOverride None
@@ -873,13 +873,15 @@ Exemple de configuration Apache avec mise en cache de 3 ans pour les jpg.
 
 Le nom du thème est normalement passer via un paramètre d'url, par exemple `observatoire.causses-et-cevenne.fr/opp?&theme=monTheme` le code javascript côté client se charge ensuite de récupérer ce paramètre.  Le cas échéant, le nom du thème sera rechercher dans la dernière partie de l'url, ainsi il est donc possible d'avoir des urls de la forme `observatoire.causses-et-cevenne.fr/opp/monTheme` ce qui est plus lisible lorsque l'on veut héberger plusieurs thèmes.  Si la dernière partie de l'url ne correspond à aucun nom de thème alors c'est le thème par défaut qui sera appliqué. Pour que ce type d'url fonctionne il faut côté serveur que l'adresse soit traité comme un alias renvoyant vers notre fichier index `opp.html`. Exemple de directive Apache avec le module *mod_alias* :
 
-```
+```apacheconf
 Alias /opp/montheme /srv/www/opp/opp
 ```
 
-Attention la directive *Alias* ne peut pas être exécutée dans un fichier *htaccess*
+Attention la directive *Alias* ne peut pas être exécutée dans un fichier *htaccess*, mais il est possible d'écrire une directive équivalente avec le module *rewrite* :
 
-
+```apacheconf
+RewriteRule ^/opp/montheme(/.*)*$ /opp/$1 [L,QSA]
+```
 
 **Associer un nom de domaine à un thème particulier :**
 
@@ -899,7 +901,7 @@ Pour configurer différents sous-domaines vers des thèmes spécifiques, il faut
 
 3. rediriger en interne les requêtes provenant du sous domaine vers le dossier hébergeant l'application
 
-Ce dernier point peut-être réalisé en ajoutant une règle de réécriture au serveur Apache, soit dans le fichier de configuration général soit dans un fichier *htaccess*.  Exemple pour faire pointer le sous-domaine test.causses-et-cevennes.fr vers le dossier /opp du serveur on peut ajouter les directives suivantes :
+Ce dernier point peut-être réalisé en ajoutant une règle de réécriture au serveur Apache, soit dans le fichier de configuration général soit dans un fichier *htaccess*.  Exemple pour faire pointer le sous-domaine *test.causses-et-cevennes.fr* vers le dossier */opp* du serveur on peut ajouter les directives suivantes :
 
 ```apacheconf
 RewriteEngine on
