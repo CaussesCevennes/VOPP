@@ -15,6 +15,7 @@ Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCeve
     - [Approche sans tuilage](#approche-sans-tuilage--optimisation-des-fichiers-jpeg)
     - [Approche par tuilage](#approche-par-tuilage)
     - [Générer les vignettes](#générer-les-vignettes)
+    - [Appliquer un filigrane](#appliquer-un-filigrane)
   - [Création du fichier GeoJSON](#création-du-fichier-GeoJSON)
     - [Script Python](#fonctionnement-du-script-Python-pour-générer-le-GeoJSON)
     - [Intégration des croquis](#modèle-pour-lintégration-de-croquis)
@@ -30,7 +31,6 @@ Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCeve
 - [Déploiement côté serveur](#déploiement-côté-serveur)
   - [Url alias pour les thèmes](#url-alias-pour-les-thèmes)
   - [Forcer mise à jour du cache des navigateurs](#forcer-mise-à-jour-du-cache-des-navigateurs)
-
 
 # Préambule
 
@@ -54,7 +54,9 @@ Cette structuration n'est pas requise en l'état pour le fonctionnement de l'app
 
 Pour alimenter l'application, **à minima deux tables sont requises** (en rouge sur le schéma) : **la liste des points de vue** de l'itinéraire photographique et **la liste de toutes les photos** pour tous les points de vue. Il est indispensable de bien distinguer les deux tableaux.
 
-Pour ces deux tables, certaines informations sont indispensables au bon fonctionnement de l'application, et doivent obligatoirement être présentes.
+L'approche la plus simple consiste donc à préparer uniquement ces deux tableaux dans un logiciel tableur. Dans ce cas, vous pouvez prévoir d'intégrer directement dans ces tables toutes les données relationnelles que vous souhaitez valoriser. Par exemple le nom de la commune peut être intégré directement dans la table des points de vue. Les noms et prénoms du photographe directement dans la table des photos etc. Il est aussi possible de maintenir un modèle relationnel avec des tables séparées puis d'opérer des jointures SQL à posteriori. Quelque soit l'approche choisie, pour que les données puissent être consommées par l'application elles devront être transposées au format geojson (cf. section [_création du fichier GeoJSON_](#création-du-fichier-GeoJSON)). La méthode qui sera préférée pour l'écriture du geojson peut orienter la façon dont vous allez décider de structurer votre base de données.
+
+Dans tous les cas, pour ces deux tables, certaines informations sont indispensables au bon fonctionnement de l'application, et doivent obligatoirement être présentes.
 
 **<u>Table des points de vue</u>**
 
@@ -68,15 +70,15 @@ Pour ces deux tables, certaines informations sont indispensables au bon fonction
 
 - **Numéro du point de vue** : le numéro du point de vue doit obligatoirement apparaître dans la table des photos car c'est lui qui permet de faire le lien entre les deux tables.
 
-- **Date :** la date de la prise de vue sera utilisée comme identifiant unique de la photo au sein d'un même point de vue. Pour représenter vos dates utilisez de préférence le format anglo-saxon (`yyyy-mm-dd`) qui a l'avantage de permettre le tri par ordre chronologique. Il n'est pas nécessaire d'inclure des champs séparés pour l'année, le mois et le jour, ces valeurs seront automatiquement dérivées de la date.
+- **Date :** la date de la prise de vue sera utilisée comme identifiant unique de la photo au sein d'un même point de vue. Pour représenter vos dates utilisez le format anglo-saxon (`yyyy-mm-dd`) qui a l'avantage de permettre le tri par ordre chronologique. Il n'est pas nécessaire d'inclure des champs séparés pour l'année, le mois et le jour, ces valeurs seront automatiquement dérivées de la date.
 
 - **Fichier** : la table des photos doit absolument contenir des informations permettant de déterminer le chemin d'accès vers le fichier image correspondant. Calculer le chemin dépend de l'arborescence des dossiers que vous allez déployer pour le stockage des photos. Par exemple :
-
+  
   - `photos/{NUM}/{DATE}/{FILENAME}.jpg` : ici les variables requises pour construire le chemin sont `NUM`, `DATE` et `FILENAME`
   - `photos/{YEAR}/{FILENAME}.jpg` : ici une organisation sensiblement différente
   - `photos/{NUM}_{DATE}_{NOM}.jpg` : dans cet exemple il n'y a pas de sous dossier, c'est le nom du fichier en lui même qui est composé par des variables séparées par un underscore
   - `www.mastructure.fr/opp/{NUM}/{DATE}` : ici le chemin sera une url spécifique
-
+  
   A vous donc de déterminer et inclure les variables nécessaires au calcul des chemins ou url et de nommer vos fichiers photos en suivant des règles de formatage strictes permettant leur détermination de façon logique, par exemple : `{NUM}_{DATE}_{NOM}.jpg`
 
 Les noms de certains champs requis sont prédéfinis : `NUM`, `LON`, `LAT`, `RATIO` pour la table des points de vue et `DATE` pour les photos. <!--Vous pouvez éventuellement choisir d'autre noms si vous préférez, la correspondance sera préciser dans les fichiers de configuration de l'application.--> Ces champs doivent être présents dans vos données et nommés tel quel en respectant les majuscules.
@@ -86,49 +88,49 @@ Au delà de ces champs requis, vous aurez certainement besoin d'afficher d'autre
 **<u>Table des points de vue</u>**
 
 - Des informations de localisation :
-
+  
   - **nom / lieu-dit** : un nom d'usage pour le point de vue, il s'agit souvent du lieu-dit
-
+  
   - **commune** : le nom de la commune où se trouve le point
-
+  
   - **unité paysagère** : le secteur paysager d'appartenance du point de vue
 
 - Des données relatives à la prise de vue :
-
+  
   - **azimut** : angle de visée en degré. Si le champs `AZIMUTH` est présent alors il sera automatiquement utilisé pour l'affichage d'une rose des vents indiquant l'orientation du point de vue.
-
+  
   - **hauteur** : hauteur du pieds en cm
-
+  
   - **champ de vision** (Field Of View) : largeur du champs horizontal en degrés
-
+  
   - **focal 35mm :** la focale équivalente pour un capteur de 35mm
 
 - Des éléments d'analyse :
-
+  
   - **thème(s)** : la ou les thématiques suivies par cette vue
-
+  
   - **descriptif** : descriptif de la photo
-
+  
   - **enjeux** : listing des enjeux identifiés
 
 **<u>Table des photos</u>**
 
 - Des informations sur l'auteur :
-
+  
   - **nom / prénom** : permet de pouvoir renseigner les mentions de droit d'auteur
-
+  
   - **organisme** : structure d'appartenance du photographe
 
 - Des données relatives à la prise de vue :
-
+  
   - **ouverture** : Valeur d'ouverture du diaphragme exprimée par le dénominateur de la fraction simplifiée focale / diamètre d'ouverture
-
+  
   - **exposition / vitesse** : Temps d'exposition en fraction de seconde (valeur du dénominateur)
-
+  
   - **focale** : Valeur de la distance focale utilisée en mm (cette donnée n'a de sens que si l'on connait la taille du capteur utilisé)
-
+  
   - **appareil** : la référence de l'appareil photo utilisé dont dépend notamment la taille du capteur et le crop factor
-
+  
   - **largeur / hauteur :** la résolution en pixels de la photo
 
 L'utilitaire [exiftool](https://exiftool.org/) peut vous aider à dresser la liste des photos en extrayant automatiquement les métadonnées qu'elles contiennent (date, coordonnées GPS, focale ...). Ci dessous un exemple de commande :
@@ -136,7 +138,9 @@ L'utilitaire [exiftool](https://exiftool.org/) peut vous aider à dresser la lis
 `exiftool.exe -r -csv -n -FileName -FileSize -FileType -CreateDate -ImageWidth -ImageHeight -Orientation -Aperture -ExposureTime -FocalLength -FocalLengthIn35mmFormat -FOV -HyperfocalDistance -ISO -GPSLatitude -GPSLatitudeRef -GPSLongitude -GPSLongitudeRef "INPUT_FOLDER" > output.csv`
 
 Options :
+
 `-r recursive folders scan`
+
 `-n get coordinates as signed decimal degrees`
 
 ## Traitement des photos
@@ -147,20 +151,26 @@ Il est préférable de maintenir les photos dans leur résolution initiale pour 
 
 L'application d'une compression jpeg est la meilleurs solution pour réduire le poids d'une image et accélérer son temps de transfert. Néanmoins, il peut être difficile de déterminer le meilleur compromis entre poids et qualité de l'image. De façon conventionnelle, un facteur de compression de **75%** (pourcentage de qualité) est un bon point de départ pour un usage web, il ne serait pas raisonnable de viser un taux plus élevé. En revanche une compression plus forte (60 à 70%) peut s'envisager.
 
-Par ailleurs, pour offrir la meilleur expérience utilisateur possible il souhaitable de générer des jpeg dits **progressifs**. En effet, ce format intègre des versions basse résolution de la photo qui seront chargées en priorité par le navigateur web. Ainsi, le navigateur peut afficher rapidement une image qui sera ensuite progressivement affiner au fur et à mesure que le téléchargement progresse. Les jpeg non progressifs se chargent quand à eux par bandes horizontales du haut vers le bas ce qui peut imposer un délai important avant affichage de l'image complète. L'unique contrepartie des jpeg progressifs est que le poids des fichiers augmentent sensiblement.
+Par ailleurs, pour offrir la meilleur expérience utilisateur possible, il est souhaitable de générer des jpeg dits **progressifs**. En effet, ce format intègre des versions en basse résolution de la photo qui seront chargées en priorité par le navigateur web. Ainsi, le navigateur peut afficher rapidement une image qui sera ensuite progressivement affiner au fur et à mesure que le téléchargement progresse. Les jpeg non progressifs se chargent quand à eux par bandes horizontales du haut vers le bas ce qui peut imposer un délai important avant affichage de l'image complète. L'unique contrepartie des jpeg progressifs est que le poids des fichiers augmentent sensiblement.
 
 L'utilitaire [Imagemagick](https://imagemagick.org/script/convert.php) peut être utilisé pour convertir toutes vos photos en jpeg progressif en un seule commande.
 
 Exemple de traitement par lot de tous les fichiers jpg d'un dossier sur une machine Linux
 
 ```bash
-for file in *.jpg; do convert $file -interlace plane -strip -quality 75% ./progressive/$file; done;
+for file in *.jpg; do magick $file -interlace plane -strip -quality 75% ./progressive/$file; done;
 ```
 
 Equivalent sous Windows:
 
 ```shell
-for %x in (*.jpg) do convert %x -interlace plane -strip -quality 75% ./progressive/%x
+for %f in (*.jpg) do magick %x -interlace plane -strip -quality 75% ./progressive/%f
+```
+
+Windows Powershell:
+
+```shell
+foreach ($f in Get-ChildItem "." -filter *.jpg) { magick $f -interlace plane -strip -quality 75% ./progressive/$f }
 ```
 
 Options :
@@ -172,7 +182,7 @@ Options :
 D'autres options sont à considérer pour optimiser le poids des images :
 
 - `-gaussian-blur 0.05` : ajoute un très léger flou à l'image ce qui permet d'écrêter les hautes fréquences de l'image et ainsi d'améliorer fortement les performances de l'algorithme de compression. La réduction de la taille du fichier est de l'ordre de 20 à 30% ce qui est considérable. La décision d'appliquer ou non un flou doit donc être mûrement réfléchie, ci-dessous une comparaison illustre, à titre indicatif, l'impact d'un flou de 0.05 sur une image ici zoomée à 125%. Dans un contexte web ce niveau d'altération semble raisonnable et le gain de poids améliorera considérablement la réactivité de l'application, encore une fois il s'agit de trouver un juste milieu.
-
+  
   ![](https://raw.githubusercontent.com/wiki/CaussesCevennes/OPP/img/blur.jpg)
 
 - `-sampling-factor 4:2:0` : réduit le résolution chromatique de moitié ce qui permet un gain sensible de poids pour un impact très peu perceptible par l'oeil humain. Voir [Wikipedia](https://fr.wikipedia.org/wiki/Sous-%C3%A9chantillonnage_de_la_chrominance) pour plus d'explication sur ce paramètre. A noter qu'il semble que `4:2:0` soit déjà la valeur par défaut utilisée par ImageMagick (la documentation n'est pas explicite à ce sujet). Cette option peut être combinée avec l'option `-define jpeg:dct-method=float` qui permet un calcul plus précis mais sensiblement plus lent ([source](https://stackoverflow.com/a/7262050/8440810)).
@@ -180,14 +190,14 @@ D'autres options sont à considérer pour optimiser le poids des images :
 Traiter un grand nombre de photos implique de choisir un taux de compression commun et donc de décider d'un compromis.  Des images comportant beaucoup de détails supportent plus facilement une forte compression (50 à 60%) alors qu'un gradient de bleu dans un ciel nécessitera une très faible compression (85 - 90%), la vision humaine étant très sensible aux variations de teinte dans les zones homogènes. L'efficacité d'une compression jpeg est en réalité très dépendante de la composition de l'image et ce qui rend le résultat final difficilement prédictible. Certaines stratégies peuvent être mise en place pour essayer de déterminer le facteur de compression optimal pour une image donnée :
 
 - La comparaison des courbes représentant respectivement l'évolution du poids du fichier et l'évolution de la qualité visuelle de l'image en fonction du taux de compression permet de mieux comprendre l'effet de la compression.
-
+  
   ![](https://raw.githubusercontent.com/wiki/CaussesCevennes/OPP/img/jpeg_qualityVSsize_chart.gif)
-
+  
   On observe que le poids du fichier diminue très rapidement pour des pourcentages de compression faible (10 à 20% ou 80 à 100% si on exprime la valeur en pourcentage de qualité) alors que l'impact sur la qualité de l'image est très faible. Par la suite le gain de poids est beaucoup plus modéré alors que la qualité de l'image se dégrade rapidement. On peut donc rechercher la valeur de compression optimale en appliquant successivement des taux de compression de plus en plus fort. L'optimum est atteint quand le gain de poids par rapport l'itération précédente tombe en dessous d'un seuil donné, c'est à dire quand la nouvelle compression se conclue par réduction mineure du poids du fichier mais un impact probablement significatif sur la qualité de l'image. Ce genre de procédure peut facilement être automatisée.
 
 - D'autres méthodes s'appuie également sur une approche itérative mais cette fois un mesurant un indicateur de la qualité visuelle d'une image, comme par exemple l'indicateur [SSIM](https://fr.wikipedia.org/wiki/Structural_Similarity). L'idée est de déterminer le taux compression le plus fort permettant de maintenir l'indicateur de qualité visuelle au dessus d'un seuil donné. Cette approche est bien plus précise que la méthode précédente car la qualité est cette fois mesurée et non présagée. L'utilitaire [jpeg-recompress](https://github.com/danielgtaylor/jpeg-archive#jpeg-recompress) peut être utilisé pour ce travail. Pour autant cette approche automatique n'apporte pas nécessaire une grande plus-value. Par exemple avec un jeu de donnée test, en visant une qualité dite *moyenne* on obtient des taux de compression optimum majoritairement entre 70 et 75%, ce qui correspond au taux généralement préconisés. Néanmoins pour certaines photos l'optimum est significativement plus haut ou plus bas, aussi il peut être intéressant d'exécuter l'outil pour identifier ces fichiers.
 
-La questions des débits de connexion devrait aussi être prise en compte dans la réflexion. Plus les temps de téléchargement des photos seront courts et plus l'application sera agréable à utiliser. Or le débit de téléchargement est très variable d'un utilisateur à l'autre pouvant aller de 1Mbit/s pour les cas les plus défavorables à 30Mbit/s avec la fibre. Prenons par exemple une connexion plutôt faible de 2Mbit/s, un bit valant 8 octets le débit est de 0.25Mo/s. Pour télécharger une photo de 4Mo il faudra donc 16 secondes ce qui est considérable. Bien entendu il s'agit d'un exemple défavorable mais ces débits se rencontrent encore fréquemment. Par ailleurs l'utilisateur lambda affichera en peu de temps plusieurs points de vue ou bien naviguera rapidement entre les différentes photos d'un point de vue, générant ainsi de nombreuses requêtes. Il faut savoir qu'une requête lancée ne sera pas stoppée par le navigateur web même si la photo n'a plus besoin d'être affichée à l'écran. C'est un stratégie des navigateurs qui consiste à toujours préférer aller au bout du téléchargement d'une ressource de façon à pouvoir la mettre en cache pour la suite. Or l'utilisateur doit partager son débit entre les différentes ressources en cours de téléchargement, donc si deux photos sont affichées simultanément cela double leur durée de téléchargement et plus l'utilisateur aura de requêtes en cours, plus les temps de téléchargement augmenteront. On a donc tout intérêt à ce qu'un téléchargement se termine le plus rapidement possible de façon à ne pas encombrer la bande passante et permettre aux dernières photos demandées de s'afficher rapidement. En revanche côté serveur, peu de chance de saturer la bande passante à moins d'avoir des milliers d'utilisateurs connectés simultanément.
+La questions des débits de connexion devrait aussi être prise en compte dans la réflexion. Plus les temps de téléchargement des photos seront courts et plus l'application sera agréable à utiliser. Or le débit de téléchargement est très variable d'un utilisateur à l'autre pouvant aller de 1Mbit/s pour les cas les plus défavorables à 30Mbit/s avec la fibre. Prenons par exemple une connexion plutôt faible de 2Mbit/s, un bit valant 8 octets le débit est de 0.25Mo/s. Pour télécharger une photo de 4Mo il faudra donc 16 secondes ce qui est considérable. Bien entendu il s'agit d'un exemple défavorable mais ces débits se rencontrent encore fréquemment. Par ailleurs l'utilisateur lambda affichera en peu de temps plusieurs points de vue ou bien naviguera rapidement entre les différentes photos d'un point de vue, générant ainsi de nombreuses requêtes. Il faut savoir qu'une requête lancée ne sera pas stoppée par le navigateur web même si la photo n'a plus besoin d'être affichée à l'écran. C'est une stratégie des navigateurs web qui consiste à toujours préférer aller au bout du téléchargement d'une ressource de façon à pouvoir la mettre en cache pour la suite. Or l'utilisateur doit partager son débit entre les différentes ressources en cours de téléchargement, donc si deux photos sont affichées simultanément cela double leur durée de téléchargement et plus l'utilisateur aura de requêtes en cours, plus les temps de téléchargement augmenteront. On a donc tout intérêt à ce qu'un téléchargement se termine le plus rapidement possible de façon à ne pas encombrer la bande passante et permettre aux dernières photos demandées de s'afficher rapidement. En revanche côté serveur, peu de chance de saturer la bande passante à moins d'avoir des milliers d'utilisateurs connectés simultanément.
 
 ### Approche par tuilage
 
@@ -199,8 +209,22 @@ La librairie Leaflet étant adaptée à l'affichage de données cartographiques 
 
 La préparation des tuiles nécessite un traitement préalable qui peut être réalisé à l'aide du script Python `voppTiler.py.` Dans un premier temps il faut installer Python puis le package *Pillow* avec la commande `pip3 install pillow`. Pour l'exécution du programme, tous les paramètres optionnels peuvent être laissés par défaut : indiquer la source de l'image à traiter est suffisant. Exemple de commande pour traiter l'ensemble d'un dossier :
 
+Linux :
+
 ```shell
 for file in *.jpg; do python3 voppTiler.py $file -d TILES -c; done;
+```
+
+Windows :
+
+```shell
+for %f in (*.jpg) do python3 voppTiler.py %f -d TILES -c
+```
+
+Windows Powershell:
+
+```shell
+foreach ($f in Get-ChildItem "." -filter *.jpg) { python3 voppTiler.py $f -d TILES -c }
 ```
 
 Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous :
@@ -209,14 +233,16 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 
 - `-d` : dossier de destination des tuiles. Les tuiles générées sont toujours placées dans un nouveau dossier du même nom que l'image. Par défaut ce dernier est placé dans le même dossier que l'image, ce paramètre permet de spécifier un autre dossier de destination. A noter qu'en complément des tuiles l'outil génère également un fichier json décrivant le tuilage.
 
+- `-kext` : définie si le dossier, du même nom que l'image, qui contiendra les tuiles doit aussi inclure l'extension du fichier dans son nom (par défaut cette dernière est exclue).
+
 - `-s` : taille des tuiles, par défaut 256px. Doit être constant pour toutes les photos.
 
 - `-o` : nombre de pixels de recouvrement entre 2 tuiles, par défaut 0. Cette option étend la taille des tuiles de la valeur spécifiée sur la droite et vers le bas. Peut être utile pour résoudre des problèmes d'affichage où les tuiles n'apparaissent pas parfaitement jointive (cf. [rapport de bug Leaflet](https://github.com/Leaflet/Leaflet/issues/3575)), dans ce cas un pixel de recouvrement sera suffisant. Doit être constant pour toutes les photos.
 
 - `-i` : taille initiale utilisée comme référence pour calculer le tuilage. Deux valeurs sont possibles :
-
+  
   - `TILESIZE` : (valeur par défaut) au niveau de zoom minimum, l'image est représentée par une unique tuile de 256px. Le plus grand des côtés de l'image couvre l'intégralité des 256px. Les niveaux de zoom suivant sont calculés en respectant cette règle ainsi, quelque soit la résolution originale de l'image son plus grand côté couvre toujours l'intégralité de la grille. La pyramide de zoom est constante : 256, 512, 1024, 2048, 4096,  8192 ... Cette méthode facilite la comparaison d'images de résolution différentes mais en contrepartie la photo n'est jamais présentée directement dans sa résolution originale. Par exemple une image de 5616 pixels de large sera représentée au niveau de zoom 5 par 4096 pixels (sous-échantillonnage) puis 8192 pixels au niveau suivant (sur-échantillonnage). Du fait du sur-échantillonnage, le poids total des tuiles excède toujours le poids initial de l'image. Le sur-échantillonnage pourrait être réduit en choisissant un meilleur candidat pour la taille des tuiles, mais il ne sera pas possible d'aligner correctement 2 images dont le tuilage diffère ce qui limite la comparaison.
-
+  
   - `IMAGESIZE`: le niveau de zoom maximum est déterminé en fonction du nombre minimum de tuiles nécessaire pour couvrir la résolution originale de l'image, les niveaux de zoom précédant sont calculés en fonction de cette référence. Par exemple pour une image de 5616 pixels de large il faut 22 tuiles de 256px ce qui donne alors la pyramide suivante : 5632, 2816, 1536, 768, 512, 256. Cette méthode permet de respecter la résolution originale de l'image mais en contrepartie chaque niveau de zoom impose une marge dans les deux directions. Dans notre exemple les largeurs effectives de l'image seront : 5616, 2808, 1404, 702, 351, 175,5. Cette méthode ne peut pas être utilisée pour comparer des photos de résolutions différentes.
 
 - `-t `: template utilisé pour construire l'arborescence des fichiers, par défaut `{z}_{x}_{y}`, cela signifie que toutes les tuiles seront dans le même dossier et nommées par les composantes de leur coordonnée séparées par un underscore (ex: `0_0_0.jpg`). Pour les tuilages générant énormément de fichiers il peut être préférable de les ventiler dans des sous-dossiers, par exemple `{z}/{x}_{y}` pour 2 niveaux ou bien `{z}/{x}/{y}` pour 3 niveaux.
@@ -225,7 +251,7 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 
 - `-z` : facteur de zoom, par défaut 2. Ne pas modifier.
 
-- `-f `: format des tuiles (jpg ou png), par défaut jpg
+- `-f`: format des tuiles (jpg ou png), par défaut jpg
 
 - `-q` : qualité de la compression jpeg, par défaut 75
 
@@ -233,11 +259,73 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 
 ### Générer les vignettes
 
-Les vignettes ou thumbnails sont des versions basses résolution des photographies qui seront utilisées à des fins de prévisualisation dans la ligne de temps. Pour les générer par lot il est possible d'utiliser l'utilitaire Image Magick. La commande ci-dessous illustre la création de vignettes dont le plus grand des côtés n'excédera pas 512px :
+Les vignettes ou thumbnails sont des versions basse résolution des photographies qui seront utilisées à des fins de prévisualisation dans la ligne de temps. Pour les générer par lot il est possible d'utiliser l'utilitaire ImageMagick. La commande ci-dessous illustre la création de vignettes dont le plus grand des côtés n'excédera pas 512px :
+
+Linux :
 
 ```shell
-for file in *.jpg; do convert $file -thumbnail 512x512 ./THUMBS/$file; done;
+for file in *.jpg; do magick $file -thumbnail 512x512 ./THUMBS/$file; done;
 ```
+
+Windows :
+
+```shell
+for %f in (*.jpg) do magick %f -thumbnail 512x512 ./THUMBS/%f
+```
+
+Windows Powershell:
+
+```shell
+foreach ($f in Get-ChildItem "." -filter *.jpg) { magick $f -thumbnail 512x512 ./THUMBS/$f }
+```
+
+Autre exemple Powershell permettant de traiter un ensemble de sous dossier en créant automatiquement le dossier de destination
+
+```shell
+foreach ($d in Get-ChildItem -Directory) { 
+    New-Item -path $d -name "thumbs" -ItemType "directory"
+    foreach ($f in Get-ChildItem $d -filter *.jpg) {
+        $name = $f.name
+        convert $f -thumbnail 512x512 $d/thumbs/$name
+    }
+}
+```
+
+### Appliquer un filigrane
+
+Il peut être souhaitable d'ajouter les mentions de droit d'auteur à travers l'application d'un filigrane (watermark) sur la photo. Le script `voopWatermark.py` peut être utilisé pour réaliser cette tâche sur l'ensemble des clichés en s'appuyant sur la base de données des photos pour renseigner le nom de l'auteur.
+
+Exemple de commande :
+
+```shell
+python voppWatermarker.py photos.csv inFolder outFolder "{FILENAME}.jpg" "© {YEAR} {AUTEUR}" -c 255 255 255 255 -bg 0 0 0 150 -ff arial -fs 20 -pos bottomright -pad 10 -mg 10
+```
+
+Description des paramètres:
+
+- `datafile` : nom du fichier csv de la table des photos
+
+- `source` : nom du dossier contenant les photos à traiter
+
+- `destination` : nom du dossier de destination pour les photos marquées
+
+- `filename-template` : le template permettant de construire les noms de fichier à partir des données de la table des photos
+
+- `watermark-template` : le template à appliquer pour construire la mention de copyright à partir des données de la table des photos
+
+- `-c` : couleur RGBA du texte de la marque. Par défaut en blanc (255 255 255 255)
+
+- `-bg` : couleur RGBA de l'arrière plan de la marque. Par défaut en noir avec transparence (0 0 0 150)
+
+- `-ff` : la police d'écriture de la marque. Doit correspondre au nom du fichier *.ttf* ciblé, par défaut _arial_. C'est ici que l'on peut choisir les variantes de police en gras, italique ...
+
+- `-fs` : la taille de la police exprimée en millième de la hauteur de la photo. Par exemple pour une photo de 2500px de hauteur, une valeur de 20 correspondra à une taille de police de 50px, soit 2% de la hauteur de l'image. Exprimée la valeur de cette façon permet de pouvoir obtenir des tailles de police proportionnellement équivalentes pour des photos de dimensions variables. Valeur par défaut : 20.
+
+- `-pos` : position du copyright, choix parmi les valeurs `topleft`, `topright`, `bottomleft`, `bottomright`
+
+- `-pad` : la valeur de padding, c'est à dire de la marge entre le texte et les limites de son arrière plan. Exprimée en millième de la hauteur de la photo, valeur par défaut : 10.
+
+- `-mg` : valeur de la marge entre les bords de l'image et la position de la marque. Exprimée en millième de la hauteur de la photo, valeur par défaut : 10.
 
 ## Création du fichier GeoJSON
 
@@ -488,6 +576,7 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 {
   "key" : "cc",
   "default" : true,
+  "domains" : ["observatoire.causses-et-cevennes.fr"],
   "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
   "description" : "Explorez et comparez les clichés de l'observatoire photographique du paysage culturel des Causses et des Cévennes",
   "headerLogo" : "icons/logos/cc_logo.png",
@@ -505,6 +594,8 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 - **key** : il s'agit d'un identifiant unique pour votre thème. La valeur pourra être passée dans l'url. Proscrire les accents, espaces ou autres caractères spéciaux.
 
 - **default** : indique si le thème doit être chargé par défaut (c'est à dire en l'absence d'un paramètre dans l'url). Il ne peut y avoir qu'un seul thème par défaut.
+
+- **domains** : propriété facultative permettant d'associer le thème à un nom de domaine particulier. Utile lorsque l'on veut faire pointer des sous domaines vers un différents thèmes.
 
 - **title** : le titre du thème, correspond au titre qui sera affiché dans la barre d'en-tête de la page web ainsi que dans la balise *title* du document HTML (utilisée pour l'indexation du site par les moteurs de recherche)
 
@@ -641,7 +732,7 @@ Le template ***about.html*** peut être édité directement pour modifier le tex
 
 Il est possible de personnaliser les fonds de carte disponibles en indiquant les services tuilé (XYZ, TMS ou WMTS sous certaines conditions) auxquels ont souhaite pouvoir accéder. Le dossier **layers** contient un fichier **basemaps.json** dédié à cette configuration. Il s'agit d'une liste dont chaque entrée définie les propriétés du service. L'exemple ci-dessous illustre la configuration d'un flux OpenStreetMap :
 
-```
+```json
 [
   {
     "key":"osm",
@@ -659,12 +750,12 @@ Il est possible de personnaliser les fonds de carte disponibles en indiquant les
 
 Par défaut la librairie Leaflet ne supporte pas les services WMTS et les grilles ou projections hétérogènes. C'est pourquoi les flux ici spécifiés doivent nécessairement être des services **standard** c'est à dire respectant la grille Google Web Mercator. Néanmoins, il est possible de se connecter à des flux WMTS à partir du moment où leur configuration est calée sur la grille standard. Dans ce cas il suffit d'écrire les paramètres KVP de l'url en dur. L'exemple ci-dessous illustre la configuration d'un flux WMTS de l'IGN :
 
-```
+```json
 {
   "key":"ignOrtho",
   "name":"Photos aériennes",
   "url":"https://wxs.ign.fr/APIKEY/wmts?layer=ORTHOIMAGERY.ORTHOPHOTOS&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={z}&TileCol={x}&TileRow={y}",
-  "attribution":"&copy; <a href='http://www.ign.fr'>IGN</a>"
+  "attribution":"© <a href='http://www.ign.fr'>IGN</a>"
 }
 ```
 
@@ -692,8 +783,8 @@ Le fichier GeoJSON généré doit être ensuite déposé dans le sous dossier da
 opp.bkgLayers['limits_cc'] = {
 
   title : 'Zonage UNESCO',
-
   enable : true,
+  maxZoom : 20,
 
   load : function(data){
 
@@ -741,22 +832,30 @@ le code doit implémenter un objet javascript qui sera ajouté comme nouvelle pr
 - **enable** : indique si par défaut la couche doit être visible ou non
 
 - **load** : c'est la fonction principale qui se charge d'assigner des nouvelles propriétés à notre objet à partir des données GeoJSON. Trois nouvelles propriétés peuvent être définies :
-
+  
   - **layer** (requis) : la couche Leaflet représentant notre GeoJSON
-
+  
   - **legend** (optionnel) : un contrôle Leaflet contenant le code html à utiliser comme légende
-
+  
   - **info** (optionnel) : un contrôle Leaflet permettant d'afficher un label dans l'angle supérieur gauche lorsque le pointeur survole une entité de la couche
 
 Enfin, dans la configuration du thème, vous pouvez ajouter le nom de cette nouvelle couche dans la propriété `layers`, ce nom doit exactement correspondre au noms des fichiers GeoJSON et javascript correspondants.
 
 # Déploiement côté serveur
 
-Une fois l'application fonctionnelle en local, il suffit de déposer les fichier sur le serveur via FTP. Il est préférable de zipper les fichiers à transférer surtout s'il y a beaucoup de photos. Néanmoins cela implique d'avoir un accès ssh pour les dézipper. Le dossier de destination doit être servi par votre serveur http, le fichier d'index sera `opp.html`. Pour les photos, une mise en cache forte est préférable puisque les fichiers sont lourds et ne changent jamais.
+Une fois l'application fonctionnelle en local, il suffit de déposer les fichier sur le serveur via FTP. Il est préférable de zipper les fichiers à transférer surtout s'il y a beaucoup de photos. Néanmoins cela implique d'avoir un accès ssh pour les dézipper.
+
+Pour faciliter les mises à jour ultérieures du code deux alternatives au transfert FTP peuvent être envisagées :
+
+- déployer l'application sous la forme d'un clone *git*. C'est une approche très commode si vous maîtrisez le logiciel de versionnement *git*, cela vous permet de modifier la configuration de l'application à partir d'un fork et d'utiliser votre propre dépôt distant pour synchroniser le serveur.
+
+- l'utilitaire *rsync* est une autre solution très commode pour synchroniser un répertoire local avec un répertorie distant. Contrairement à *git*, *rsync* ne permet pas le versionnement des fichiers mais c'est une solution plus légère et facile. Le versionnement peut toujours être gérer en local avant synchronisation.
+
+Dans tous les cas, le dossier de destination doit être servi par votre serveur http, le fichier d'index sera `opp.html`. Pour les photos, une mise en cache forte est préférable puisque les fichiers sont lourds et ne changent jamais.
 
 Exemple de configuration Apache avec mise en cache de 3 ans pour les jpg.
 
-```
+```apacheconf
 <Directory /srv/www/opp>
    DirectoryIndex opp.html
    AllowOverride None
@@ -770,10 +869,45 @@ Exemple de configuration Apache avec mise en cache de 3 ans pour les jpg.
 
 ## Url alias pour les thèmes
 
-Le nom du thème est normalement passer via un paramètre d'url, par exemple `observatoire.causses-et-cevenne.fr/opp?&theme=monTheme` le code javascript côté client se charge ensuite de récupérer ce paramètre.  Le cas échéant, le nom du thème sera rechercher dans la dernière partie de l'url, ainsi il est donc possible d'avoir des urls de la forme `observatoire.causses-et-cevenne.fr/opp/monTheme` ce qui est plus lisible lorsque l'on veut héberger plusieurs thèmes.  Si la dernière partie de l'url ne correspond à aucun nom de thème alors c'est le thème par défaut qui sera appliqué. Pour que ce type d'url fonctionne il faut côté serveur que l'adresse soit traité comme un alias renvoyant vers notre fichier index `opp.html`. Exemple de directive Apache avec le module *mod_alias* :
+**Identification du thème via un paramètre d'url :**
 
+Le nom du thème est normalement passer via un paramètre d'url, par exemple `observatoire.causses-et-cevenne.fr/opp?theme=monTheme` le code javascript côté client se charge ensuite de récupérer ce paramètre.  Le cas échéant, le nom du thème sera rechercher dans la dernière partie de l'url, ainsi il est donc possible d'avoir des urls de la forme `observatoire.causses-et-cevenne.fr/opp/monTheme` ce qui est plus lisible lorsque l'on veut héberger plusieurs thèmes.  Si la dernière partie de l'url ne correspond à aucun nom de thème alors c'est le thème par défaut qui sera appliqué. Pour que ce type d'url fonctionne il faut côté serveur que l'adresse soit traitée comme un alias renvoyant vers notre fichier index `opp.html`. Exemple de directive Apache avec le module *mod_alias* :
+
+```apacheconf
+Alias /opp/montheme /srv/www/opp
 ```
-Alias /opp/montheme /srv/www/opp/opp
+
+Attention la directive *Alias* ne peut pas être exécutée dans un fichier *htaccess*, mais il est possible d'écrire une directive équivalente avec le module *rewrite* :
+
+```apacheconf
+RewriteEngine on
+RewriteRule ^/opp/montheme(/.*)*$ /opp/$1 [L,QSA]
+```
+
+**Associer un nom de domaine à un thème particulier :**
+
+Dans le fichier de configuration des thèmes, il est possible de définir pour chacun le ou les noms de domaine auxquels ils seront associés. Si aucun paramètre de thème n'est passé dans l'url, alors le nom de domaine sera testé. Si aucune association n'est trouvée alors le thème par défaut sera renvoyé. Ainsi en synthèse, l'ordre de priorité pour la sélection du thème est le suivant :
+
+1. paramètre passé dans l'url (query string ou url alias)
+
+2. correspondance avec un nom de domaine spécifié dans la configuration du thème
+
+3. thème par défaut
+
+Pour configurer différents sous-domaines vers des thèmes spécifiques, il faut donc :
+
+1. renseigner la propriété `domains` dans la configuration des thèmes
+
+2. faire pointer le sous domaine vers l'adresse IP du serveur (à faire dans l'interface de gestion de votre nom de domaine)
+
+3. rediriger en interne les requêtes provenant du sous domaine vers le dossier hébergeant l'application
+
+Ce dernier point peut-être réalisé en ajoutant une règle de réécriture au serveur Apache, soit dans le fichier de configuration général soit dans un fichier *htaccess*.  Exemple pour faire pointer le sous-domaine *test.causses-et-cevennes.fr* vers le dossier */opp* du serveur on peut ajouter les directives suivantes :
+
+```apacheconf
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^test\.causses-et-cevennes\.fr$
+RewriteRule ^(.*)$ /opp/$1 [L,QSA]
 ```
 
 ## Forcer mise à jour du cache des navigateurs

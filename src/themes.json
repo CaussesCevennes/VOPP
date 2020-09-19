@@ -3,6 +3,7 @@
   {
     "key" : "cc",
     "default" : true,
+    "domains" : ["observatoire.causses-et-cevennes.fr"],
     "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
     "description" : "Remontez le temps en explorant et comparant les clichés de l'observatoire photographique du paysage culturel des Causses et des Cévennes, inscrit sur la liste Patrimoine Mondial de l'UNESCO ! Au travers de séries photographiques reconduites régulièrement, découvrez un témoignage exceptionnel de la culture agro-pastorale méditerranéenne et suivez ses évolutions récentes.",
     "headerLogo" : "icons/logos/cc_logo.png",
@@ -20,6 +21,7 @@
 
   {
     "key" : "caue34",
+    "domains" : ["opp.causses-et-cevennes.fr"],
     "title" : "Observatoire Photographique de l'Hérault",
     "description" : "",
     "headerLogo" : "icons/logos/caue34_logo.png",
