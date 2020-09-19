@@ -164,7 +164,7 @@ for file in *.jpg; do magick $file -interlace plane -strip -quality 75% ./progre
 Equivalent sous Windows:
 
 ```shell
-for %f in (*.jpg) do magick %x -interlace plane -strip -quality 75% ./progressive/%f
+for %f in (*.jpg) do magick %f -interlace plane -strip -quality 75% ./progressive/%f
 ```
 
 Windows Powershell:
