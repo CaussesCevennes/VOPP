@@ -7,7 +7,7 @@
       <span class='field'>Nom :</span>
       <span class='value'>{{NOM}}</span>
   </div><div class="entry">
-    <span class='field'>Thèmatiques :</span>
+    <span class='field'>Thématiques :</span>
     <span class='value'>{{#THEME}}{{.}}, {{/THEME}}</span>
   </div><div class="entry">
     <span class='field'>Commune :</span>
