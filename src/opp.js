@@ -212,7 +212,7 @@ function OPP(providers, theme) {
     self.tocLayers.addTo(self.map);
 
     //Load basemaps tile layers
-    $.getJSON(`layers/basemaps.json?v=${version}`, function(basemaps){
+    $.getJSON(`${baseurl}/layers/basemaps.json?v=${version}`, function(basemaps){
       basemaps
         .filter(elem => self.theme.basemaps.includes(elem.key))
         .forEach( (basemap, i) => {
@@ -337,7 +337,7 @@ function OPP(providers, theme) {
         }
     });
 
-    self.activeLocIcon = new BaseIcon({iconUrl: `icons/marker_active.svg?v=${version}`});
+    self.activeLocIcon = new BaseIcon({iconUrl: `${baseurl}/icons/marker_active.svg?v=${version}`});
 
     var clusterLegend = L.control({position: 'bottomleft'});
     clusterLegend.onAdd = function (map) {
@@ -494,8 +494,8 @@ function OPP(providers, theme) {
 
     var promises = [];
     self.theme.layers.forEach(function(layerId){
-      let dataUrl = `data/${layerId}.geojson?v=${version}`;
-      let jsUrl = `layers/${layerId}.js?v=${version}`;
+      let dataUrl = `${baseurl}/data/${layerId}.geojson?v=${version}`;
+      let jsUrl = `${baseurl}/layers/${layerId}.js?v=${version}`;
       promises.push(
         $.getJSON(dataUrl, function(data){
           $.getScript(jsUrl, function() {
@@ -1708,6 +1708,7 @@ Main
 
 var opp; //global scope
 var version = 102;
+var baseurl = document.getElementById("oppjs").getAttribute('src').split('/').slice(0, -1).join('/');
 
 //make sure json MIME type exists because it sould be provided when loading local file
 $.ajaxSetup({beforeSend: function(xhr){
@@ -1752,10 +1753,10 @@ $(document).ready(function() {
 
   var providers, settings;
   $.when(
-    $.getJSON(`providers.json?v=${version}`, function (data) {
+    $.getJSON(`${baseurl}/providers.json?v=${version}`, function (data) {
       providers = data;
     }),
-    $.getJSON(`themes.json?v=${version}`, function (data) {
+    $.getJSON(`${baseurl}/themes.json?v=${version}`, function (data) {
       if (themeKey){
         settings = data.find(theme => theme.key == themeKey);
       }

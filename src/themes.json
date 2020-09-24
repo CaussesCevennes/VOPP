@@ -1,12 +1,30 @@
 [
 
   {
-    "key" : "cc",
+    "key" : "caue34",
     "default" : true,
+    "domains" : ["opp.causses-et-cevennes.fr"],
+    "title" : "Observatoire Photographique de l'Hérault",
+    "description" : "",
+    "headerLogo" : "/wp-content/plugins/vopp/VOPP/src/icons/logos/caue34_logo.png",
+    "headerTextColor" : "black",
+    "headerBkgColor" : "white",
+    "toolbarColor" : "lightslategrey",
+    "toolbarIconBaseColor" : "white",
+    "toolbarIconSelectColor" : "#aa0000ff",
+    "providers" : {"34":{}, "CC":{}, "PNC":{}},
+    "layers": ["up_34"],
+    "basemaps": ["osm", "ignOrtho"],
+    "about" : "/wp-content/plugins/vopp/VOPP/src/templates/about_sample.html",
+    "browserHistory": false
+  },
+
+  {
+    "key" : "cc",
     "domains" : ["observatoire.causses-et-cevennes.fr"],
     "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
     "description" : "Remontez le temps en explorant et comparant les clichés de l'observatoire photographique du paysage culturel des Causses et des Cévennes, inscrit sur la liste Patrimoine Mondial de l'UNESCO ! Au travers de séries photographiques reconduites régulièrement, découvrez un témoignage exceptionnel de la culture agro-pastorale méditerranéenne et suivez ses évolutions récentes.",
-    "headerLogo" : "icons/logos/cc_logo.png",
+    "headerLogo" : "https://observatoire.causses-et-cevennes.fr/opp/icons/logos/cc_logo.png",
     "headerTextColor" : "#404040",
     "headerBkgColor" : "linear-gradient(to left, #618BCD, white)",
     "toolbarColor" : "linear-gradient(to top, white, #778bad)",
@@ -15,25 +33,7 @@
     "providers" : {"CC":{}, "PNC":{}, "34":{"enable":false}},
     "layers": ["limits_cc", "up_cc"],
     "basemaps": ["osm", "ignOrtho"],
-    "about" : "templates/about.html",
-    "browserHistory": false
-  },
-
-  {
-    "key" : "caue34",
-    "domains" : ["opp.causses-et-cevennes.fr"],
-    "title" : "Observatoire Photographique de l'Hérault",
-    "description" : "",
-    "headerLogo" : "icons/logos/caue34_logo.png",
-    "headerTextColor" : "black",
-    "headerBkgColor" : "white",
-    "toolbarColor" : "lightslategrey",
-    "toolbarIconBaseColor" : "white",
-    "toolbarIconSelectColor" : "#aa0000ff",
-    "providers" : {"34":{}},
-    "layers": ["up_34"],
-    "basemaps": ["osm", "ignOrtho"],
-    "about" : "templates/about_sample.html",
+    "about" : "https://observatoire.causses-et-cevennes.fr/opp/templates/about.html",
     "browserHistory": false
   },
 
@@ -41,7 +41,7 @@
     "key" : "pnc",
     "title" : "Observatoire Photographique du Parc National des Cévennes",
     "description" : "",
-    "headerLogo" : "icons/logos/pnc_logo.png",
+    "headerLogo" : "https://observatoire.causses-et-cevennes.fr/opp/icons/logos/pnc_logo.png",
     "headerTextColor" : "black",
     "headerBkgColor" : "linear-gradient(to left, #9497b2ff, white)",
     "toolbarColor" : "linear-gradient(to top, white, #9497b2ff)",
@@ -50,7 +50,7 @@
     "providers" : {"PNC":{}},
     "layers": ["pnc"],
     "basemaps": ["osm", "ignOrtho"],
-    "about" : "templates/about_sample.html",
+    "about" : "https://observatoire.causses-et-cevennes.fr/opp/templates/about_sample.html",
     "browserHistory": false
   },
 
