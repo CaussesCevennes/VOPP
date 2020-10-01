@@ -25,9 +25,9 @@ class CSV2JSON:
     def _write(self, output, data, pretty=True):
         with open(output, 'w', encoding="utf8") as f:
             if pretty:
-                f.write(json.dumps(data, indent=4))
+                f.write(json.dumps(data, indent=4, ensure_ascii=False))
             else:
-                f.write(json.dumps(data))
+                f.write(json.dumps(data, ensure_ascii=False))
 
     def _castNumbers(self, row):
         for k,v in row.items():
@@ -151,6 +151,6 @@ if __name__ == '__main__':
 
     with open(output, 'w', encoding="utf8") as f:
         if args.indent:
-            f.write(json.dumps(pov, indent=4))
+            f.write(json.dumps(pov, indent=4, ensure_ascii=False))
         else:
-            f.write(json.dumps(pov))
+            f.write(json.dumps(pov, ensure_ascii=False))
