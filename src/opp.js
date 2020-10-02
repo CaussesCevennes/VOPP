@@ -539,10 +539,12 @@ function OPP(providers, theme) {
     self.map.on('zoomend', function () {
       for (let layerId in self.bkgLayers){
         let layer = self.bkgLayers[layerId];
-        if (self.map.getZoom() > layer.maxZoom){
+        if (self.map.getZoom() > layer.maxZoom && self.map.hasLayer(layer.layer)){
           self.map.removeLayer(layer.layer);
-        } else if (!self.map.hasLayer(layer.layer)){
+          layer._hide = true;
+        } else if (self.map.getZoom() <= layer.maxZoom && layer._hide){
           self.map.addLayer(layer.layer);
+          layer._hide = false;
         }
       }
     });
