@@ -24,9 +24,11 @@ function OPP(providers, theme) {
   self.photoMap1; //Leaflet map object used for displaying the first photo
   self.photoMap2; //Leaflet map object used for displaying the second photo
 
+  //Map hardcoded parameters
   self.phZoomSnap = 0.25;
-  self.constrainBounds = true;
+  self.constrainBounds = false;
   self.mapVisco = 0.75;
+  self.phImageOverlayMaxZoom = 7;
 
   //Map controls
   self.tocLayers; //Leaflet control used as layers table of content
@@ -1018,6 +1020,10 @@ function OPP(providers, theme) {
     self.photoMap2.clearLayers();
     spinner.stop();
 
+    //Clear max zoom
+    self.photoMap1.setMaxZoom();
+    self.photoMap2.setMaxZoom();
+
     //clear custom controls
     if (sbsCtrl) {
       self.photoMap1.removeControl(sbsCtrl);
@@ -1071,6 +1077,13 @@ function OPP(providers, theme) {
         zoomOffset : 0,
         layers: [ photoLay2 ]
       }).addTo(self.photoMap1);
+    }
+
+    if (!self.activeProvider.tiled){
+      self.photoMap1.setMaxZoom(self.phImageOverlayMaxZoom);
+      if (self.viewMode == 'SPLIT'){
+        self.photoMap2.setMaxZoom(self.phImageOverlayMaxZoom);
+      }
     }
 
     if (self.constrainBounds) {
