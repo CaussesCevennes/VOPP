@@ -21,7 +21,7 @@ Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCeve
     - [Intégration des croquis](#modèle-pour-lintégration-de-croquis)
 - [Configuration de l'application](#configuration-de-lapplication)
   - [Structure des dossiers](#structure-des-dossiers)
-  - [
+  - [Configuration du thème](#configuration-du-thème)
   - [Configuration des fournisseurs d'OPP](#configuration-des-fournisseurs-dOPP)
   - [Préparation-des-templates](#préparation-des-templates)
     - [Panneau d'information](#panneau-dinformation)
