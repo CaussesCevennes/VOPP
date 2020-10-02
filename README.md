@@ -21,7 +21,7 @@ Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCeve
     - [Intégration des croquis](#modèle-pour-lintégration-de-croquis)
 - [Configuration de l'application](#configuration-de-lapplication)
   - [Structure des dossiers](#structure-des-dossiers)
-  - [Configuration du thème](#configuration-du-thème)
+  - [
   - [Configuration des fournisseurs d'OPP](#configuration-des-fournisseurs-dOPP)
   - [Préparation-des-templates](#préparation-des-templates)
     - [Panneau d'information](#panneau-dinformation)
@@ -587,7 +587,8 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
   "layers": ["limits_cc", "up_cc"],
   "basemaps": ["osm", "ignOrtho"],
   "about" : "templates/about.html",
-  "browserHistory": false
+  "browserHistory": false,
+  "constrainMapExtent": true
 }
 ```
 
@@ -620,6 +621,8 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 - **about :** url vers le template html qui sera affiché dans le panneau "à propos"
 
 - **browserHistory** : indique si lorsque l'on change de point de vue il faut ajouter l'url à l'historique de navigation.
+
+- **constrainMapExtent** : restreindre les déplacements dans la vue carto et dans les photos de façon à rester centré sur la zone d'intérêt
 
 ## Configuration des fournisseurs d'OPP
 

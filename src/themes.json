@@ -16,7 +16,8 @@
     "layers": ["limits_cc", "up_cc"],
     "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about.html",
-    "browserHistory": false
+    "browserHistory": false,
+    "constrainMapExtent":true
   },
 
   {

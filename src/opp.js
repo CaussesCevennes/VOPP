@@ -26,7 +26,6 @@ function OPP(providers, theme) {
 
   //Map hardcoded parameters
   self.phZoomSnap = 0.25;
-  self.constrainBounds = false;
   self.mapVisco = 0.75;
   self.phImageOverlayMaxZoom = 7;
 
@@ -334,7 +333,7 @@ function OPP(providers, theme) {
     });
 
     //constrain map bounds at the end of the fly
-    if (self.constrainBounds){
+    if (self.theme.constrainMapExtent){
       self.map.once("moveend zoomend", function(e){
         self.map.setMaxBounds(self.extent.pad(0.5));
       });
@@ -1086,7 +1085,7 @@ function OPP(providers, theme) {
       }
     }
 
-    if (self.constrainBounds) {
+    if (self.theme.constrainMapExtent) {
       self.photoMap1.setMaxBounds(photoLay1.getBounds());
       if (self.viewMode == 'SPLIT'){
         self.photoMap2.setMaxBounds(photoLay2.getBounds());
