@@ -1758,7 +1758,9 @@ Main
 var opp; //global scope
 var version = 102;
 var baseurl = document.getElementById("oppjs").getAttribute('src').split('/').slice(0, -1).join('/');
-
+if (baseurl.length == 0) {
+  baseurl = ".";
+}
 //make sure json MIME type exists because it sould be provided when loading local file
 $.ajaxSetup({beforeSend: function(xhr){
   if (xhr.overrideMimeType)
