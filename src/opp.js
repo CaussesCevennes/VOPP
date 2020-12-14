@@ -358,18 +358,21 @@ function OPP(providers, theme) {
 
     self.activeLocIcon = new BaseIcon({iconUrl: `${baseurl}/icons/marker_active.svg?v=${version}`});
 
-    var clusterLegend = L.control({position: 'bottomleft'});
-    clusterLegend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'clustersLegend');
-        self.providers.forEach(function(provider){
-          div.innerHTML += `<div class='clusterLegendContainer'>
-            <div id='${provider['key']}' class='clusterLegend hvr-bounce-in'>${provider['shortName']}</div>
-            <span class='clusterLegendTooltip'>${provider['name']}</span>
-          </div>`;
-        });
-        return div;
-    };
-    clusterLegend.addTo(self.map);
+    if (self.providers.length > 1) {
+      var clusterLegend = L.control({position: 'bottomleft'});
+
+      clusterLegend.onAdd = function (map) {
+          var div = L.DomUtil.create('div', 'clustersLegend');
+          self.providers.forEach(function(provider){
+            div.innerHTML += `<div class='clusterLegendContainer'>
+              <div id='${provider['key']}' class='clusterLegend hvr-bounce-in'>${provider['shortName']}</div>
+              <span class='clusterLegendTooltip'>${provider['name']}</span>
+            </div>`;
+          });
+          return div;
+      };
+      clusterLegend.addTo(self.map);
+    }
 
     var promises = [];
     self.providers.forEach(function(provider){
