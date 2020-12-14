@@ -32,7 +32,7 @@
     "toolbarIconBaseColor" : "white",
     "toolbarIconSelectColor" : "#aa0000ff",
     "providers" : {"34":{}},
-    "layers": ["up_34"],
+    "layers": ["dept_34"],
     "basemaps": ["osm", "ignOrtho"],
     "about" : "/wp-content/plugins/vopp/templates/about.html",
     "browserHistory": false
