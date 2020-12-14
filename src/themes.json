@@ -1,25 +1,6 @@
 [
 
   {
-    "key" : "caue34",
-    "default" : true,
-    "domains" : ["opp.causses-et-cevennes.fr"],
-    "title" : "Observatoire Photographique de l'Hérault",
-    "description" : "",
-    "headerLogo" : "/wp-content/plugins/vopp/VOPP/src/icons/logos/caue34_logo.png",
-    "headerTextColor" : "black",
-    "headerBkgColor" : "white",
-    "toolbarColor" : "lightslategrey",
-    "toolbarIconBaseColor" : "white",
-    "toolbarIconSelectColor" : "#aa0000ff",
-    "providers" : {"34":{}, "CC":{}, "PNC":{}},
-    "layers": ["up_34"],
-    "basemaps": ["osm", "ignOrtho"],
-    "about" : "/wp-content/plugins/vopp/VOPP/src/templates/about_sample.html",
-    "browserHistory": false
-  },
-
-  {
     "key" : "cc",
     "domains" : ["observatoire.causses-et-cevennes.fr"],
     "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
@@ -34,6 +15,26 @@
     "layers": ["limits_cc", "up_cc"],
     "basemaps": ["osm", "ignOrtho"],
     "about" : "https://observatoire.causses-et-cevennes.fr/opp/templates/about.html",
+    "browserHistory": false,
+    "constrainMapExtent":true
+  },
+
+  {
+    "key" : "caue34",
+    "default" : true,
+    "domains" : ["opp.causses-et-cevennes.fr"],
+    "title" : "Observatoire Photographique de l'Hérault",
+    "description" : "",
+    "headerLogo" : "/wp-content/plugins/vopp/VOPP/src/icons/logos/caue34_logo.png",
+    "headerTextColor" : "black",
+    "headerBkgColor" : "white",
+    "toolbarColor" : "lightslategrey",
+    "toolbarIconBaseColor" : "white",
+    "toolbarIconSelectColor" : "#aa0000ff",
+    "providers" : {"34":{}},
+    "layers": ["up_34"],
+    "basemaps": ["osm", "ignOrtho"],
+    "about" : "/wp-content/plugins/vopp/templates/about.html",
     "browserHistory": false
   },
 

@@ -24,6 +24,11 @@ function OPP(providers, theme) {
   self.photoMap1; //Leaflet map object used for displaying the first photo
   self.photoMap2; //Leaflet map object used for displaying the second photo
 
+  //Map hardcoded parameters
+  self.phZoomSnap = 0.25;
+  self.mapVisco = 0.75;
+  self.phImageOverlayMaxZoom = 7;
+
   //Map controls
   self.tocLayers; //Leaflet control used as layers table of content
   var sbsCtrl; //side by side addon control
@@ -206,7 +211,7 @@ function OPP(providers, theme) {
     });
 
     //Create main map
-    self.map = L.map('map',{zoomControl:false, center:[46.2, 2.35], zoom:5, maxZoom:20});
+    self.map = L.map('map',{zoomControl:false, center:[46.65, 2.55], zoom:5, maxZoom:20, maxBoundsViscosity: self.mapVisco});
 
     self.tocLayers = L.control.layers(null, null, {position:'topright'});
     self.tocLayers.addTo(self.map);
@@ -255,8 +260,15 @@ function OPP(providers, theme) {
 
     //Create photos maps
     var photoCRS = L.CRS.Simple
-    self.photoMap1 = L.map('photo1', {zoomControl:false, crs: photoCRS, center: [0, 0], zoom: 0, zoomSnap: 0.25});
-    self.photoMap2 = L.map('photo2', {zoomControl:false, crs: photoCRS, center: [0, 0], zoom: 0, zoomSnap: 0.25});
+    var photoMapOptions = {
+      zoomControl:false,
+      crs: photoCRS,
+      center: [0, 0], zoom: 0,
+      zoomSnap: self.phZoomSnap,
+      maxBoundsViscosity: self.mapVisco
+    }
+    self.photoMap1 = L.map('photo1', photoMapOptions);
+    self.photoMap2 = L.map('photo2', photoMapOptions);
     self.photoMap1.attributionControl.setPrefix('');
     self.photoMap2.attributionControl.setPrefix('');
 
@@ -319,6 +331,13 @@ function OPP(providers, theme) {
       }
       self.map.flyToBounds(self.extent);
     });
+
+    //constrain map bounds at the end of the fly
+    if (self.theme.constrainMapExtent){
+      self.map.once("moveend zoomend", function(e){
+        self.map.setMaxBounds(self.extent.pad(0.5));
+      });
+    }
 
     return oppLayersPromise;
 
@@ -539,10 +558,12 @@ function OPP(providers, theme) {
     self.map.on('zoomend', function () {
       for (let layerId in self.bkgLayers){
         let layer = self.bkgLayers[layerId];
-        if (self.map.getZoom() > layer.maxZoom){
+        if (self.map.getZoom() > layer.maxZoom && self.map.hasLayer(layer.layer)){
           self.map.removeLayer(layer.layer);
-        } else if (!self.map.hasLayer(layer.layer)){
+          layer._hide = true;
+        } else if (self.map.getZoom() <= layer.maxZoom && layer._hide){
           self.map.addLayer(layer.layer);
+          layer._hide = false;
         }
       }
     });
@@ -998,6 +1019,10 @@ function OPP(providers, theme) {
     self.photoMap2.clearLayers();
     spinner.stop();
 
+    //Clear max zoom
+    self.photoMap1.setMaxZoom();
+    self.photoMap2.setMaxZoom();
+
     //clear custom controls
     if (sbsCtrl) {
       self.photoMap1.removeControl(sbsCtrl);
@@ -1053,6 +1078,19 @@ function OPP(providers, theme) {
       }).addTo(self.photoMap1);
     }
 
+    if (!self.activeProvider.tiled){
+      self.photoMap1.setMaxZoom(self.phImageOverlayMaxZoom);
+      if (self.viewMode == 'SPLIT'){
+        self.photoMap2.setMaxZoom(self.phImageOverlayMaxZoom);
+      }
+    }
+
+    if (self.theme.constrainMapExtent) {
+      self.photoMap1.setMaxBounds(photoLay1.getBounds());
+      if (self.viewMode == 'SPLIT'){
+        self.photoMap2.setMaxBounds(photoLay2.getBounds());
+      }
+    }
 
     if (hasActiveSketch1 && hasBkgPhoto1){
       var refPhotoDate = self.selectedFeatProps['SKETCH']['PHOTOREF'];
