@@ -35,7 +35,8 @@
     "layers": ["dept_34"],
     "basemaps": ["osm", "ignOrtho"],
     "about" : "/wp-content/plugins/vopp/templates/about.html",
-    "browserHistory": false
+    "browserHistory": false,
+    "viewmode": "SBS"
   },
 
   {

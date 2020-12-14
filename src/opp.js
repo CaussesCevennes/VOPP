@@ -787,7 +787,15 @@ function OPP(providers, theme) {
     } else if (requestedViewMode == 'SPOT' && self.viewMode != 'SPOT'){
       toggleSpotView();
     } else if (init) {
-      toggleSingleView();
+      if (self.theme['viewmode'] == 'SPLIT') {
+        toggleSplitView();
+      } else if (self.theme['viewmode'] == 'SBS') {
+        toggleSbsView();
+      } else if (self.theme['viewmode'] == 'SPOT') {
+        toggleSpotView();
+      } else {
+        toggleSingleView();
+      }
     } else { //preserve the current view mode and just update the displayed photos
       updatePhotos();
     }
