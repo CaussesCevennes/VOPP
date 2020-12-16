@@ -16,7 +16,9 @@
     "basemaps": ["osm", "ignOrtho"],
     "about" : "https://observatoire.causses-et-cevennes.fr/opp/templates/about.html",
     "browserHistory": false,
-    "constrainMapExtent":true
+    "constrainMapExtent":true,
+    "viewmode": "SINGLE",
+    "saveDates": true
   },
 
   {
@@ -34,7 +36,9 @@
     "layers": ["up_34"],
     "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about_sample.html",
-    "browserHistory": false
+    "browserHistory": false,
+    "viewmode": "SINGLE",
+    "saveDates": true
   },
 
   {
@@ -51,7 +55,9 @@
     "layers": ["pnc"],
     "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about_sample.html",
-    "browserHistory": false
+    "browserHistory": false,
+    "viewmode": "SINGLE",
+    "saveDates": true
   },
 
   {
@@ -81,7 +87,9 @@
     "layers": ["limits_cc", "up_cc"],
     "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about.html",
-    "browserHistory": false
+    "browserHistory": false,
+    "viewmode": "SINGLE",
+    "saveDates": true
   },
 
   {
@@ -100,7 +108,6 @@
       "WP": {
         "key": "WP",
         "enable": true,
-        "saveDates": false,
         "name": "OPP CAUE Hérault",
         "shortName": "WP",
         "datafile": "/vopp-json/",
@@ -126,7 +133,8 @@
     "basemaps": ["osm", "ignOrtho"],
     "about": "/wp-content/plugins/vopp/VOPP/src/templates/about.html",
     "browserHistory": false,
-    "viewmode": "SBS"
+    "viewmode": "SBS",
+    "saveDates": false
   }
 
 ]
