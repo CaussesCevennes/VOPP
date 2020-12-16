@@ -100,7 +100,7 @@
       "WP": {
         "key": "WP",
         "enable": true,
-        "saveDates": true,
+        "saveDates": false,
         "name": "OPP CAUE Hérault",
         "shortName": "WP",
         "datafile": "/vopp-json/",
