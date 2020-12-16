@@ -21,29 +21,27 @@
 
   {
     "key" : "caue34",
-    "default" : true,
     "domains" : ["opp.causses-et-cevennes.fr"],
     "title" : "Observatoire Photographique de l'Hérault",
     "description" : "",
-    "headerLogo" : "/wp-content/plugins/vopp/VOPP/src/icons/logos/caue34_logo.png",
+    "headerLogo" : "icons/logos/caue34_logo.png",
     "headerTextColor" : "black",
     "headerBkgColor" : "white",
     "toolbarColor" : "lightslategrey",
     "toolbarIconBaseColor" : "white",
     "toolbarIconSelectColor" : "#aa0000ff",
     "providers" : {"34":{}},
-    "layers": ["dept_34"],
+    "layers": ["up_34"],
     "basemaps": ["osm", "ignOrtho"],
-    "about" : "/wp-content/plugins/vopp/templates/about.html",
-    "browserHistory": false,
-    "viewmode": "SBS"
+    "about" : "templates/about_sample.html",
+    "browserHistory": false
   },
 
   {
     "key" : "pnc",
     "title" : "Observatoire Photographique du Parc National des Cévennes",
     "description" : "",
-    "headerLogo" : "https://observatoire.causses-et-cevennes.fr/opp/icons/logos/pnc_logo.png",
+    "headerLogo" : "icons/logos/pnc_logo.png",
     "headerTextColor" : "black",
     "headerBkgColor" : "linear-gradient(to left, #9497b2ff, white)",
     "toolbarColor" : "linear-gradient(to top, white, #9497b2ff)",
@@ -52,7 +50,7 @@
     "providers" : {"PNC":{}},
     "layers": ["pnc"],
     "basemaps": ["osm", "ignOrtho"],
-    "about" : "https://observatoire.causses-et-cevennes.fr/opp/templates/about_sample.html",
+    "about" : "templates/about_sample.html",
     "browserHistory": false
   },
 
@@ -84,6 +82,51 @@
     "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about.html",
     "browserHistory": false
+  },
+
+  {
+    "key": "wordpress",
+    "default": true,
+    "domains": [],
+    "title": "{{{TITLE}}}",
+    "description": "",
+    "headerLogo": "/wp-content/plugins/vopp/VOPP/src/icons/logos/caue34_logo.png",
+    "headerTextColor": "black",
+    "headerBkgColor": "white",
+    "toolbarColor": "lightslategrey",
+    "toolbarIconBaseColor": "white",
+    "toolbarIconSelectColor": "#aa0000ff",
+    "providers": {
+      "WP": {
+        "key": "WP",
+        "enable": true,
+        "saveDates": true,
+        "name": "OPP CAUE Hérault",
+        "shortName": "WP",
+        "datafile": "/vopp-json/",
+        "_photoUrl": "{{{URL}}}",
+        "photoUrl": "{{{FILENAME}}}",
+        "thumbUrl": "{{{THUMB}}}",
+        "infosPanel": "/wp-content/plugins/vopp/VOPP/src/templates/infospanel_34.mst",
+        "sketch": "",
+        "tiled": false,
+        "svgMarker": "/wp-content/plugins/vopp/VOPP/src/icons/marker_green.svg",
+        "clusterColor": "#04ab8ac8",
+        "popup": "{{NUM}} - {{COMMUNE}}",
+        "photoAttrib": "© {{YEAR}} {{AUTEUR}}",
+        "filters": {
+          "THEME": "Thématique",
+          "COMMUNE": "Commune"
+        },
+        "searchKeys": ["NOM", "COMMUNE", "THEME", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
+        "searchResultsTemplate": ["{{NOM}}", "Commune de {{COMMUNE}}", "{{YEARMIN}} > {{YEARMAX}}"]
+      }
+    },
+    "layers": ["dept_34"],
+    "basemaps": ["osm", "ignOrtho"],
+    "about": "/wp-content/plugins/vopp/VOPP/src/templates/about.html",
+    "browserHistory": false,
+    "viewmode": "SBS"
   }
 
 ]

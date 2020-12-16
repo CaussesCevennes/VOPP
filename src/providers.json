@@ -15,7 +15,7 @@
     "clusterColor" : "#2981cbc8",
     "popup" : "{{NUM}} - {{NOM}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
-    "filters" : {"THEME":"Thèmatique", "ATTR":"Attributs"},
+    "filters" : {"THEME":"Thématique", "ATTR":"Attributs"},
     "searchKeys": ["NUM", "NOM", "COMMUNE", "THEME", "ATTR", "SECTEUR", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
     "searchResultsTemplate": ["{{NOM}} ({{SECTEUR}})", "Vue n°{{NUM}}, période {{YEARMIN}} > {{YEARMAX}}"]
   },
@@ -35,29 +35,29 @@
     "clusterColor" : "#927e71c8",
     "popup" : "{{NUM}} - {{COMMUNE}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
-    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
+    "filters" : {"THEME":"Thématique", "COMMUNE":"Commune"},
     "searchKeys": ["LIEUDIT", "COMMUNE", "THEME", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
     "searchResultsTemplate": ["{{LIEUDIT}} ({{COMMUNE}})", "{{YEARMIN}} > {{YEARMAX}}"]
   },
   {
     "key" : "34",
     "enable" : true,
-    "name" : "OPP CAUE Hérault",
+    "name" : "Hérault",
     "shortName" : "34",
-    "datafile" : "/vopp-json/",
+    "datafile" : "data/opp_34.geojson",
     "_photoUrl" : "{{{URL}}}",
-    "photoUrl" : "{{{FILENAME}}}",
-    "thumbUrl" : "{{{THUMB}}}",
-    "infosPanel" : "/wp-content/plugins/vopp/VOPP/src/templates/infospanel_34.mst",
+    "photoUrl" : "photos/opp34/{{FILENAME}}",
+    "thumbUrl" : "photos/opp34/THUMBS/{{FILENAME}}",
+    "infosPanel" : "templates/infospanel_34.mst",
     "sketch": "",
     "tiled": false,
-    "svgMarker" : "/wp-content/plugins/vopp/VOPP/src/icons/marker_green.svg",
+    "svgMarker" : "icons/marker_green.svg",
     "clusterColor" : "#04ab8ac8",
     "popup" : "{{NUM}} - {{COMMUNE}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
     "filters" : {"THEME":"Thématique", "COMMUNE":"Commune"},
     "searchKeys": ["NOM", "COMMUNE", "THEME", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
     "searchResultsTemplate": ["{{NOM}}", "Commune de {{COMMUNE}}", "{{YEARMIN}} > {{YEARMAX}}"]
-
   }
+
 ]
