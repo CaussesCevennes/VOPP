@@ -96,7 +96,7 @@
     "key": "wordpress",
     "default": true,
     "domains": [],
-    "title": "{{{TITLE}}}",
+    "title": "Observatoire Photographique de l'Hérault",
     "description": "",
     "headerLogo": "/wp-content/plugins/vopp/VOPP/src/icons/logos/caue34_logo.png",
     "headerTextColor": "black",
@@ -131,7 +131,7 @@
     },
     "layers": ["dept_34"],
     "basemaps": ["osm", "ignOrtho"],
-    "about": "/wp-content/plugins/vopp/VOPP/src/templates/about.html",
+    "about": "/wp-content/plugins/vopp/templates/about.html",
     "browserHistory": false,
     "viewmode": "SBS",
     "saveDates": false

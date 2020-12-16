@@ -384,13 +384,6 @@ function OPP(providers, theme) {
       promises.push(
         $.getJSON(`${provider['datafile']}?v=${version}`, function(data){
 
-
-          if (data.title) {
-            var title = Mustache.render(self.theme['title'], {'TITLE': data.title});
-            $('head title').html(title);
-            $('#title').html(title);
-          }
-
           data.features.forEach(function(feat){
             //Make sure date is of type String
             feat.properties['PHOTOS'].forEach(function(photo){
