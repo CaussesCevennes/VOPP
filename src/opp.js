@@ -121,6 +121,10 @@ function OPP(providers, theme) {
     for (let k in self.theme['providers']){
       let options = self.theme['providers'][k];
       let provider = getProvider(k);
+      if (! provider) {
+        self.providers.push(self.theme['providers'][k]);
+        provider = getProvider(k);
+      }
       for (let opt in options){
         provider[opt] = options[opt];
       }
@@ -831,22 +835,21 @@ function OPP(providers, theme) {
     });
 
     //select the target date or the previous corresponding date or set to default
-    if (targetDate1){
-      $('#dropDownDate1').val(targetDate1);
-    } else if ($("#dropDownDate1 [value='"+selectedDate1+"']").length != 0){
-      $('#dropDownDate1').val(selectedDate1);
-    } else {
-      $('#dropDownDate1').val(getDateKey(photos[0])); //first date
-    }
+    if (targetDate1) {
+       $('#dropDownDate1').val(targetDate1);
+   } else if (self.theme['saveDates'] && ($("#dropDownDate1 [value='" + selectedDate1 + "']").length != 0)) {
+       $('#dropDownDate1').val(selectedDate1);
+   } else {
+       $('#dropDownDate1').val(getDateKey(photos[0])); //first date
+   }
 
-    if (targetDate1){
-      $('#dropDownDate2').val(targetDate2);
-    } else if ($("#dropDownDate2 [value='"+selectedDate2+"']").length != 0){
-      $('#dropDownDate2').val(selectedDate2);
-    } else {
-      $('#dropDownDate2').val(getDateKey(photos[photos.length-1])); //last
-    }
-
+   if (targetDate2) {
+       $('#dropDownDate2').val(targetDate2);
+   } else if (self.theme['saveDates'] && ($("#dropDownDate2 [value='" + selectedDate2 + "']").length != 0)) {
+       $('#dropDownDate2').val(selectedDate2);
+   } else {
+       $('#dropDownDate2').val(getDateKey(photos[photos.length - 1])); //last
+   }
     $('.dropDownDate').change();
 
     updateTimeline();
@@ -1761,6 +1764,11 @@ var baseurl = document.getElementById("oppjs").getAttribute('src').split('/').sl
 if (baseurl.length == 0) {
   baseurl = ".";
 }
+
+if (typeof themeJsonUrl == 'undefined') {
+  var themeJsonUrl = baseurl + '/themes.json?v=' + version;
+}
+
 //make sure json MIME type exists because it sould be provided when loading local file
 $.ajaxSetup({beforeSend: function(xhr){
   if (xhr.overrideMimeType)
@@ -1807,7 +1815,8 @@ $(document).ready(function() {
     $.getJSON(`${baseurl}/providers.json?v=${version}`, function (data) {
       providers = data;
     }),
-    $.getJSON(`${baseurl}/themes.json?v=${version}`, function (data) {
+    //$.getJSON(`${baseurl}/themes.json?v=${version}`, function (data) {
+    $.getJSON(`${themeJsonUrl}`, function (data) {
       if (themeKey){
         settings = data.find(theme => theme.key == themeKey);
       }
