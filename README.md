@@ -588,7 +588,9 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
   "basemaps": ["osm", "ignOrtho"],
   "about" : "templates/about.html",
   "browserHistory": false,
-  "constrainMapExtent": true
+  "constrainMapExtent": true,
+  "viewmode": "SINGLE",
+  "saveDates": true
 }
 ```
 
@@ -623,6 +625,16 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 - **browserHistory** : indique si lorsque l'on change de point de vue il faut ajouter l'url à l'historique de navigation.
 
 - **constrainMapExtent** : restreindre les déplacements dans la vue carto et dans les photos de façon à rester centré sur la zone d'intérêt
+
+- **viewmode** : le mode de visualisation par défaut :
+    - 'SINGLE' : Vue simple avec une seule photo
+    - 'SPLIT' : Vue comparée de deux photos synchronisées
+    - 'SBS' : vue comparée avec séparateur glissant
+    - 'SPOT' : Vue comparée avec une loupe
+
+- **saveDates** : Mémoriser les dates (années plus ancienne et plus récente) entre deux points de vue
+
+
 
 ## Configuration des fournisseurs d'OPP
 
