@@ -121,6 +121,10 @@ function OPP(providers, theme) {
     for (let k in self.theme['providers']){
       let options = self.theme['providers'][k];
       let provider = getProvider(k);
+      if (! provider) {
+        self.providers.push(self.theme['providers'][k]);
+        provider = getProvider(k);
+      }
       for (let opt in options){
         provider[opt] = options[opt];
       }
@@ -217,7 +221,7 @@ function OPP(providers, theme) {
     self.tocLayers.addTo(self.map);
 
     //Load basemaps tile layers
-    $.getJSON(`layers/basemaps.json?v=${version}`, function(basemaps){
+    $.getJSON(`${baseurl}/layers/basemaps.json?v=${version}`, function(basemaps){
       basemaps
         .filter(elem => self.theme.basemaps.includes(elem.key))
         .forEach( (basemap, i) => {
@@ -356,20 +360,23 @@ function OPP(providers, theme) {
         }
     });
 
-    self.activeLocIcon = new BaseIcon({iconUrl: `icons/marker_active.svg?v=${version}`});
+    self.activeLocIcon = new BaseIcon({iconUrl: `${baseurl}/icons/marker_active.svg?v=${version}`});
 
-    var clusterLegend = L.control({position: 'bottomleft'});
-    clusterLegend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'clustersLegend');
-        self.providers.forEach(function(provider){
-          div.innerHTML += `<div class='clusterLegendContainer'>
-            <div id='${provider['key']}' class='clusterLegend hvr-bounce-in'>${provider['shortName']}</div>
-            <span class='clusterLegendTooltip'>${provider['name']}</span>
-          </div>`;
-        });
-        return div;
-    };
-    clusterLegend.addTo(self.map);
+    if (self.providers.length > 1) {
+      var clusterLegend = L.control({position: 'bottomleft'});
+
+      clusterLegend.onAdd = function (map) {
+          var div = L.DomUtil.create('div', 'clustersLegend');
+          self.providers.forEach(function(provider){
+            div.innerHTML += `<div class='clusterLegendContainer'>
+              <div id='${provider['key']}' class='clusterLegend hvr-bounce-in'>${provider['shortName']}</div>
+              <span class='clusterLegendTooltip'>${provider['name']}</span>
+            </div>`;
+          });
+          return div;
+      };
+      clusterLegend.addTo(self.map);
+    }
 
     var promises = [];
     self.providers.forEach(function(provider){
@@ -513,8 +520,8 @@ function OPP(providers, theme) {
 
     var promises = [];
     self.theme.layers.forEach(function(layerId){
-      let dataUrl = `data/${layerId}.geojson?v=${version}`;
-      let jsUrl = `layers/${layerId}.js?v=${version}`;
+      let dataUrl = `${baseurl}/data/${layerId}.geojson?v=${version}`;
+      let jsUrl = `${baseurl}/layers/${layerId}.js?v=${version}`;
       promises.push(
         $.getJSON(dataUrl, function(data){
           $.getScript(jsUrl, function() {
@@ -784,7 +791,15 @@ function OPP(providers, theme) {
     } else if (requestedViewMode == 'SPOT' && self.viewMode != 'SPOT'){
       toggleSpotView();
     } else if (init) {
-      toggleSingleView();
+      if (self.theme['viewmode'] == 'SPLIT') {
+        toggleSplitView();
+      } else if (self.theme['viewmode'] == 'SBS') {
+        toggleSbsView();
+      } else if (self.theme['viewmode'] == 'SPOT') {
+        toggleSpotView();
+      } else {
+        toggleSingleView();
+      }
     } else { //preserve the current view mode and just update the displayed photos
       updatePhotos();
     }
@@ -820,22 +835,21 @@ function OPP(providers, theme) {
     });
 
     //select the target date or the previous corresponding date or set to default
-    if (targetDate1){
-      $('#dropDownDate1').val(targetDate1);
-    } else if ($("#dropDownDate1 [value='"+selectedDate1+"']").length != 0){
-      $('#dropDownDate1').val(selectedDate1);
-    } else {
-      $('#dropDownDate1').val(getDateKey(photos[0])); //first date
-    }
+    if (targetDate1) {
+       $('#dropDownDate1').val(targetDate1);
+   } else if (self.theme['saveDates'] && ($("#dropDownDate1 [value='" + selectedDate1 + "']").length != 0)) {
+       $('#dropDownDate1').val(selectedDate1);
+   } else {
+       $('#dropDownDate1').val(getDateKey(photos[0])); //first date
+   }
 
-    if (targetDate1){
-      $('#dropDownDate2').val(targetDate2);
-    } else if ($("#dropDownDate2 [value='"+selectedDate2+"']").length != 0){
-      $('#dropDownDate2').val(selectedDate2);
-    } else {
-      $('#dropDownDate2').val(getDateKey(photos[photos.length-1])); //last
-    }
-
+   if (targetDate2) {
+       $('#dropDownDate2').val(targetDate2);
+   } else if (self.theme['saveDates'] && ($("#dropDownDate2 [value='" + selectedDate2 + "']").length != 0)) {
+       $('#dropDownDate2').val(selectedDate2);
+   } else {
+       $('#dropDownDate2').val(getDateKey(photos[photos.length - 1])); //last
+   }
     $('.dropDownDate').change();
 
     updateTimeline();
@@ -1746,6 +1760,14 @@ Main
 
 var opp; //global scope
 var version = 102;
+var baseurl = document.getElementById("oppjs").getAttribute('src').split('/').slice(0, -1).join('/');
+if (baseurl.length == 0) {
+  baseurl = ".";
+}
+
+if (typeof themeJsonUrl == 'undefined') {
+  var themeJsonUrl = baseurl + '/themes.json?v=' + version;
+}
 
 //make sure json MIME type exists because it sould be provided when loading local file
 $.ajaxSetup({beforeSend: function(xhr){
@@ -1790,10 +1812,11 @@ $(document).ready(function() {
 
   var providers, settings;
   $.when(
-    $.getJSON(`providers.json?v=${version}`, function (data) {
+    $.getJSON(`${baseurl}/providers.json?v=${version}`, function (data) {
       providers = data;
     }),
-    $.getJSON(`themes.json?v=${version}`, function (data) {
+    //$.getJSON(`${baseurl}/themes.json?v=${version}`, function (data) {
+    $.getJSON(`${themeJsonUrl}`, function (data) {
       if (themeKey){
         settings = data.find(theme => theme.key == themeKey);
       }
