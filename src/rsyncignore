@@ -1,0 +1,13 @@
+rsyncignore
+croquis
+photos
+data/org
+fonts
+icons/archive
+icons/toolbar/org
+lib/?eaflet*
+lib/L.*
+lib/jquery*
+lib/spin*
+lib/mustache*
+src/data/coms.geojson
