@@ -4,7 +4,7 @@
     <span class='field'>Numéro :</span>
     <span class='value'>{{NUM}}</span>
   </div><div class="entry">
-    <span class='field'>Thèmatique :</span>
+    <span class='field'>Thématique :</span>
     <span class='value'>{{THEME}}</span>
   </div><div class="entry">
     <span class='field'>Département :</span>

@@ -24,6 +24,11 @@ function OPP(providers, theme) {
   self.photoMap1; //Leaflet map object used for displaying the first photo
   self.photoMap2; //Leaflet map object used for displaying the second photo
 
+  //Map hardcoded parameters
+  self.phZoomSnap = 0.25;
+  self.mapVisco = 0.75;
+  self.phImageOverlayMaxZoom = 7;
+
   //Map controls
   self.tocLayers; //Leaflet control used as layers table of content
   var sbsCtrl; //side by side addon control
@@ -116,6 +121,10 @@ function OPP(providers, theme) {
     for (let k in self.theme['providers']){
       let options = self.theme['providers'][k];
       let provider = getProvider(k);
+      if (! provider) {
+        self.providers.push(self.theme['providers'][k]);
+        provider = getProvider(k);
+      }
       for (let opt in options){
         provider[opt] = options[opt];
       }
@@ -206,13 +215,13 @@ function OPP(providers, theme) {
     });
 
     //Create main map
-    self.map = L.map('map',{zoomControl:false, center:[46.2, 2.35], zoom:5, maxZoom:20});
+    self.map = L.map('map',{zoomControl:false, center:[46.65, 2.55], zoom:5, maxZoom:20, maxBoundsViscosity: self.mapVisco});
 
     self.tocLayers = L.control.layers(null, null, {position:'topright'});
     self.tocLayers.addTo(self.map);
 
     //Load basemaps tile layers
-    $.getJSON(`layers/basemaps.json?v=${version}`, function(basemaps){
+    $.getJSON(`${baseurl}/layers/basemaps.json?v=${version}`, function(basemaps){
       basemaps
         .filter(elem => self.theme.basemaps.includes(elem.key))
         .forEach( (basemap, i) => {
@@ -255,8 +264,15 @@ function OPP(providers, theme) {
 
     //Create photos maps
     var photoCRS = L.CRS.Simple
-    self.photoMap1 = L.map('photo1', {zoomControl:false, crs: photoCRS, center: [0, 0], zoom: 0, zoomSnap: 0.25});
-    self.photoMap2 = L.map('photo2', {zoomControl:false, crs: photoCRS, center: [0, 0], zoom: 0, zoomSnap: 0.25});
+    var photoMapOptions = {
+      zoomControl:false,
+      crs: photoCRS,
+      center: [0, 0], zoom: 0,
+      zoomSnap: self.phZoomSnap,
+      maxBoundsViscosity: self.mapVisco
+    }
+    self.photoMap1 = L.map('photo1', photoMapOptions);
+    self.photoMap2 = L.map('photo2', photoMapOptions);
     self.photoMap1.attributionControl.setPrefix('');
     self.photoMap2.attributionControl.setPrefix('');
 
@@ -320,6 +336,13 @@ function OPP(providers, theme) {
       self.map.flyToBounds(self.extent);
     });
 
+    //constrain map bounds at the end of the fly
+    if (self.theme.constrainMapExtent){
+      self.map.once("moveend zoomend", function(e){
+        self.map.setMaxBounds(self.extent.pad(0.5));
+      });
+    }
+
     return oppLayersPromise;
 
   }
@@ -337,20 +360,23 @@ function OPP(providers, theme) {
         }
     });
 
-    self.activeLocIcon = new BaseIcon({iconUrl: `icons/marker_active.svg?v=${version}`});
+    self.activeLocIcon = new BaseIcon({iconUrl: `${baseurl}/icons/marker_active.svg?v=${version}`});
 
-    var clusterLegend = L.control({position: 'bottomleft'});
-    clusterLegend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'clustersLegend');
-        self.providers.forEach(function(provider){
-          div.innerHTML += `<div class='clusterLegendContainer'>
-            <div id='${provider['key']}' class='clusterLegend hvr-bounce-in'>${provider['shortName']}</div>
-            <span class='clusterLegendTooltip'>${provider['name']}</span>
-          </div>`;
-        });
-        return div;
-    };
-    clusterLegend.addTo(self.map);
+    if (self.providers.length > 1) {
+      var clusterLegend = L.control({position: 'bottomleft'});
+
+      clusterLegend.onAdd = function (map) {
+          var div = L.DomUtil.create('div', 'clustersLegend');
+          self.providers.forEach(function(provider){
+            div.innerHTML += `<div class='clusterLegendContainer'>
+              <div id='${provider['key']}' class='clusterLegend hvr-bounce-in'>${provider['shortName']}</div>
+              <span class='clusterLegendTooltip'>${provider['name']}</span>
+            </div>`;
+          });
+          return div;
+      };
+      clusterLegend.addTo(self.map);
+    }
 
     var promises = [];
     self.providers.forEach(function(provider){
@@ -494,8 +520,8 @@ function OPP(providers, theme) {
 
     var promises = [];
     self.theme.layers.forEach(function(layerId){
-      let dataUrl = `data/${layerId}.geojson?v=${version}`;
-      let jsUrl = `layers/${layerId}.js?v=${version}`;
+      let dataUrl = `${baseurl}/data/${layerId}.geojson?v=${version}`;
+      let jsUrl = `${baseurl}/layers/${layerId}.js?v=${version}`;
       promises.push(
         $.getJSON(dataUrl, function(data){
           $.getScript(jsUrl, function() {
@@ -539,10 +565,12 @@ function OPP(providers, theme) {
     self.map.on('zoomend', function () {
       for (let layerId in self.bkgLayers){
         let layer = self.bkgLayers[layerId];
-        if (self.map.getZoom() > layer.maxZoom){
+        if (self.map.getZoom() > layer.maxZoom && self.map.hasLayer(layer.layer)){
           self.map.removeLayer(layer.layer);
-        } else if (!self.map.hasLayer(layer.layer)){
+          layer._hide = true;
+        } else if (self.map.getZoom() <= layer.maxZoom && layer._hide){
           self.map.addLayer(layer.layer);
+          layer._hide = false;
         }
       }
     });
@@ -763,7 +791,15 @@ function OPP(providers, theme) {
     } else if (requestedViewMode == 'SPOT' && self.viewMode != 'SPOT'){
       toggleSpotView();
     } else if (init) {
-      toggleSingleView();
+      if (self.theme['viewmode'] == 'SPLIT') {
+        toggleSplitView();
+      } else if (self.theme['viewmode'] == 'SBS') {
+        toggleSbsView();
+      } else if (self.theme['viewmode'] == 'SPOT') {
+        toggleSpotView();
+      } else {
+        toggleSingleView();
+      }
     } else { //preserve the current view mode and just update the displayed photos
       updatePhotos();
     }
@@ -799,22 +835,21 @@ function OPP(providers, theme) {
     });
 
     //select the target date or the previous corresponding date or set to default
-    if (targetDate1){
-      $('#dropDownDate1').val(targetDate1);
-    } else if ($("#dropDownDate1 [value='"+selectedDate1+"']").length != 0){
-      $('#dropDownDate1').val(selectedDate1);
-    } else {
-      $('#dropDownDate1').val(getDateKey(photos[0])); //first date
-    }
+    if (targetDate1) {
+       $('#dropDownDate1').val(targetDate1);
+   } else if (self.theme['saveDates'] && ($("#dropDownDate1 [value='" + selectedDate1 + "']").length != 0)) {
+       $('#dropDownDate1').val(selectedDate1);
+   } else {
+       $('#dropDownDate1').val(getDateKey(photos[0])); //first date
+   }
 
-    if (targetDate1){
-      $('#dropDownDate2').val(targetDate2);
-    } else if ($("#dropDownDate2 [value='"+selectedDate2+"']").length != 0){
-      $('#dropDownDate2').val(selectedDate2);
-    } else {
-      $('#dropDownDate2').val(getDateKey(photos[photos.length-1])); //last
-    }
-
+   if (targetDate2) {
+       $('#dropDownDate2').val(targetDate2);
+   } else if (self.theme['saveDates'] && ($("#dropDownDate2 [value='" + selectedDate2 + "']").length != 0)) {
+       $('#dropDownDate2').val(selectedDate2);
+   } else {
+       $('#dropDownDate2').val(getDateKey(photos[photos.length - 1])); //last
+   }
     $('.dropDownDate').change();
 
     updateTimeline();
@@ -998,6 +1033,10 @@ function OPP(providers, theme) {
     self.photoMap2.clearLayers();
     spinner.stop();
 
+    //Clear max zoom
+    self.photoMap1.setMaxZoom();
+    self.photoMap2.setMaxZoom();
+
     //clear custom controls
     if (sbsCtrl) {
       self.photoMap1.removeControl(sbsCtrl);
@@ -1053,6 +1092,19 @@ function OPP(providers, theme) {
       }).addTo(self.photoMap1);
     }
 
+    if (!self.activeProvider.tiled){
+      self.photoMap1.setMaxZoom(self.phImageOverlayMaxZoom);
+      if (self.viewMode == 'SPLIT'){
+        self.photoMap2.setMaxZoom(self.phImageOverlayMaxZoom);
+      }
+    }
+
+    if (self.theme.constrainMapExtent) {
+      self.photoMap1.setMaxBounds(photoLay1.getBounds());
+      if (self.viewMode == 'SPLIT'){
+        self.photoMap2.setMaxBounds(photoLay2.getBounds());
+      }
+    }
 
     if (hasActiveSketch1 && hasBkgPhoto1){
       var refPhotoDate = self.selectedFeatProps['SKETCH']['PHOTOREF'];
@@ -1708,6 +1760,14 @@ Main
 
 var opp; //global scope
 var version = 102;
+var baseurl = document.getElementById("oppjs").getAttribute('src').split('/').slice(0, -1).join('/');
+if (baseurl.length == 0) {
+  baseurl = ".";
+}
+
+if (typeof themeJsonUrl == 'undefined') {
+  var themeJsonUrl = baseurl + '/themes.json?v=' + version;
+}
 
 //make sure json MIME type exists because it sould be provided when loading local file
 $.ajaxSetup({beforeSend: function(xhr){
@@ -1752,10 +1812,11 @@ $(document).ready(function() {
 
   var providers, settings;
   $.when(
-    $.getJSON(`providers.json?v=${version}`, function (data) {
+    $.getJSON(`${baseurl}/providers.json?v=${version}`, function (data) {
       providers = data;
     }),
-    $.getJSON(`themes.json?v=${version}`, function (data) {
+    //$.getJSON(`${baseurl}/themes.json?v=${version}`, function (data) {
+    $.getJSON(`${themeJsonUrl}`, function (data) {
       if (themeKey){
         settings = data.find(theme => theme.key == themeKey);
       }

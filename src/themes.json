@@ -2,11 +2,10 @@
 
   {
     "key" : "cc",
-    "default" : true,
     "domains" : ["observatoire.causses-et-cevennes.fr"],
     "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
     "description" : "Remontez le temps en explorant et comparant les clichés de l'observatoire photographique du paysage culturel des Causses et des Cévennes, inscrit sur la liste Patrimoine Mondial de l'UNESCO ! Au travers de séries photographiques reconduites régulièrement, découvrez un témoignage exceptionnel de la culture agro-pastorale méditerranéenne et suivez ses évolutions récentes.",
-    "headerLogo" : "icons/logos/cc_logo.png",
+    "headerLogo" : "https://observatoire.causses-et-cevennes.fr/opp/icons/logos/cc_logo.png",
     "headerTextColor" : "#404040",
     "headerBkgColor" : "linear-gradient(to left, #618BCD, white)",
     "toolbarColor" : "linear-gradient(to top, white, #778bad)",
@@ -15,8 +14,11 @@
     "providers" : {"CC":{}, "PNC":{}, "34":{"enable":false}},
     "layers": ["limits_cc", "up_cc"],
     "basemaps": ["osm", "ignOrtho"],
-    "about" : "templates/about.html",
-    "browserHistory": false
+    "about" : "https://observatoire.causses-et-cevennes.fr/opp/templates/about.html",
+    "browserHistory": false,
+    "constrainMapExtent":true,
+    "viewmode": "SINGLE",
+    "saveDates": true
   },
 
   {
@@ -34,7 +36,9 @@
     "layers": ["up_34"],
     "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about_sample.html",
-    "browserHistory": false
+    "browserHistory": false,
+    "viewmode": "SINGLE",
+    "saveDates": true
   },
 
   {
@@ -51,7 +55,9 @@
     "layers": ["pnc"],
     "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about_sample.html",
-    "browserHistory": false
+    "browserHistory": false,
+    "viewmode": "SINGLE",
+    "saveDates": true
   },
 
   {
@@ -81,7 +87,54 @@
     "layers": ["limits_cc", "up_cc"],
     "basemaps": ["osm", "ignOrtho"],
     "about" : "templates/about.html",
-    "browserHistory": false
+    "browserHistory": false,
+    "viewmode": "SINGLE",
+    "saveDates": true
+  },
+
+  {
+    "key": "wordpress",
+    "default": true,
+    "domains": [],
+    "title": "Observatoire Photographique de l'Hérault",
+    "description": "",
+    "headerLogo": "/wp-content/plugins/vopp/VOPP/src/icons/logos/caue34_logo.png",
+    "headerTextColor": "black",
+    "headerBkgColor": "white",
+    "toolbarColor": "lightslategrey",
+    "toolbarIconBaseColor": "white",
+    "toolbarIconSelectColor": "#aa0000ff",
+    "providers": {
+      "WP": {
+        "key": "WP",
+        "enable": true,
+        "name": "OPP CAUE Hérault",
+        "shortName": "WP",
+        "datafile": "/vopp-json/",
+        "_photoUrl": "{{{URL}}}",
+        "photoUrl": "{{{FILENAME}}}",
+        "thumbUrl": "{{{THUMB}}}",
+        "infosPanel": "/wp-content/plugins/vopp/VOPP/src/templates/infospanel_34.mst",
+        "sketch": "",
+        "tiled": false,
+        "svgMarker": "/wp-content/plugins/vopp/VOPP/src/icons/marker_green.svg",
+        "clusterColor": "#04ab8ac8",
+        "popup": "{{NUM}} - {{COMMUNE}}",
+        "photoAttrib": "© {{YEAR}} {{AUTEUR}}",
+        "filters": {
+          "THEME": "Thématique",
+          "COMMUNE": "Commune"
+        },
+        "searchKeys": ["NOM", "COMMUNE", "THEME", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
+        "searchResultsTemplate": ["{{NOM}}", "Commune de {{COMMUNE}}", "{{YEARMIN}} > {{YEARMAX}}"]
+      }
+    },
+    "layers": ["dept_34"],
+    "basemaps": ["osm", "ignOrtho"],
+    "about": "/wp-content/plugins/vopp/templates/about.html",
+    "browserHistory": false,
+    "viewmode": "SBS",
+    "saveDates": false
   }
 
 ]

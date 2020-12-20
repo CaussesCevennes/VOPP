@@ -151,7 +151,7 @@ Il est préférable de maintenir les photos dans leur résolution initiale pour 
 
 L'application d'une compression jpeg est la meilleurs solution pour réduire le poids d'une image et accélérer son temps de transfert. Néanmoins, il peut être difficile de déterminer le meilleur compromis entre poids et qualité de l'image. De façon conventionnelle, un facteur de compression de **75%** (pourcentage de qualité) est un bon point de départ pour un usage web, il ne serait pas raisonnable de viser un taux plus élevé. En revanche une compression plus forte (60 à 70%) peut s'envisager.
 
-Par ailleurs, pour offrir la meilleur expérience utilisateur possible, il est souhaitable de générer des jpeg dits **progressifs**. En effet, ce format intègre des versions en basse résolution de la photo qui seront chargées en priorité par le navigateur web. Ainsi, le navigateur peut afficher rapidement une image qui sera ensuite progressivement affiner au fur et à mesure que le téléchargement progresse. Les jpeg non progressifs se chargent quand à eux par bandes horizontales du haut vers le bas ce qui peut imposer un délai important avant affichage de l'image complète. L'unique contrepartie des jpeg progressifs est que le poids des fichiers augmentent sensiblement.
+Par ailleurs, pour offrir la meilleur expérience utilisateur possible, il est souhaitable de générer des jpeg dits **progressifs**. En effet, ce format intègre des versions en basse résolution de la photo qui seront chargées en priorité par le navigateur web. Ainsi, le navigateur peut afficher rapidement une image qui sera ensuite progressivement affinée au fur et à mesure que le téléchargement progresse. Les jpeg non progressifs se chargent quand à eux par bandes horizontales du haut vers le bas ce qui peut imposer un délai important avant affichage de l'image complète. L'unique contrepartie des jpeg progressifs est que le poids des fichiers augmentent sensiblement.
 
 L'utilitaire [Imagemagick](https://imagemagick.org/script/convert.php) peut être utilisé pour convertir toutes vos photos en jpeg progressif en un seule commande.
 
@@ -279,7 +279,7 @@ Windows Powershell:
 foreach ($f in Get-ChildItem "." -filter *.jpg) { magick $f -thumbnail 512x512 ./THUMBS/$f }
 ```
 
-Autre exemple Powershell permettant de traiter un ensemble de sous dossier en créant automatiquement le dossier de destination
+Autre exemple Powershell permettant de traiter un ensemble de sous dossiers en créant automatiquement le dossier de destination
 
 ```shell
 foreach ($d in Get-ChildItem -Directory) { 
@@ -498,7 +498,7 @@ Notes:
 
 - n'intégrez que les colonnes dont vous aurez utilité pour ne pas augmenter inutilement le poids du fichier de sortie
 
-- utilisez dans un premier temps le paramètre -i pour indenté le fichier de sortie, cela facilitera sa lecture et donc le contrôle du résultat produit. Si la sortie est valide, générez à nouveau le fichier mais cette fois sans indentation de façon à réduire considérablement le poids du fichier.
+- utilisez dans un premier temps le paramètre -i pour indenter le fichier de sortie, cela facilitera sa lecture et donc le contrôle du résultat produit. Si la sortie est valide, générez à nouveau le fichier mais cette fois sans indentation de façon à réduire considérablement le poids du fichier.
 
 ### Modèle pour l'intégration de croquis
 
@@ -587,7 +587,10 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
   "layers": ["limits_cc", "up_cc"],
   "basemaps": ["osm", "ignOrtho"],
   "about" : "templates/about.html",
-  "browserHistory": false
+  "browserHistory": false,
+  "constrainMapExtent": true,
+  "viewmode": "SINGLE",
+  "saveDates": true
 }
 ```
 
@@ -621,6 +624,18 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 
 - **browserHistory** : indique si lorsque l'on change de point de vue il faut ajouter l'url à l'historique de navigation.
 
+- **constrainMapExtent** : restreindre les déplacements dans la vue carto et dans les photos de façon à rester centré sur la zone d'intérêt
+
+- **viewmode** : le mode de visualisation par défaut :
+    - 'SINGLE' : Vue simple avec une seule photo
+    - 'SPLIT' : Vue comparée de deux photos synchronisées
+    - 'SBS' : vue comparée avec séparateur glissant
+    - 'SPOT' : Vue comparée avec une loupe
+
+- **saveDates** : Mémoriser les dates (années plus ancienne et plus récente) entre deux points de vue
+
+
+
 ## Configuration des fournisseurs d'OPP
 
 L'application permet d'afficher plusieurs OPP que ce soit des itinéraires différents ou bien des OPP gérés par vos partenaires. Un fournisseur d'OPP est donc une source de données à part entière définie par un fichier GeoJSON distinct et un ensemble de fichiers images correspondant aux photos. La façon dont ces données doivent être intégrées dans l'application est décrite dans le fichier de configuration ***providers.json***.
@@ -644,7 +659,7 @@ Comme précédemment il s'agit d'un simple fichier JSON présentant les différe
     "infosPanel" : "templates/infospanel_cc.mst",
     "popup" : "{{NUM}} - {{NOM}}",
     "photoAttrib" : "© {{YEAR}} {{AUTEUR}}",
-    "filters" : {"THEME":"Thèmatique", "COMMUNE":"Commune"},
+    "filters" : {"THEME":"Thématique", "COMMUNE":"Commune"},
     "searchKeys": ["NUM", "NOM", "COMMUNE", "THEME", "UP", "SECTEUR", "PHOTOS.AUTEUR", "PHOTOS.DATE"],
     "searchResultsTemplate": ["{{NOM}} ({{SECTEUR}})", "n°{{NUM}} {{YEARMIN}} > {{YEARMAX}}"]
   }
@@ -663,7 +678,7 @@ Comme précédemment il s'agit d'un simple fichier JSON présentant les différe
 
 - **clusterColor** : style CSS renseignant la couleur de fond des clusters. Les clusters désignent les symboles générés par le regroupement sur la carte de plusieurs points, lorsque l'échelle ne permet pas de les distinguer clairement.
 
-- **photoUrl** : url template permettant de construire le chemin d'accès aux photos, les variables sont recherchées dans les propriétés du point de vue et dans les propriétés de la photo concernée. Si les couches sont tuilées il faut également le renseigner le template permettant d'accéder aux tuiles via leurs coordonnées, par exemple `{z}_{x}_{y}`.
+- **photoUrl** : url template permettant de construire le chemin d'accès aux photos, les variables sont recherchées dans les propriétés du point de vue et dans les propriétés de la photo concernée. Si les couches sont tuilées il faut également renseigner le template permettant d'accéder aux tuiles via leurs coordonnées, par exemple `{z}_{x}_{y}`.
 
 - **thumbUrl** : url template permettant de construire le chemin d'accès aux thumbnails (vignettes) qui seront affichées dans la ligne de temps.
 
@@ -703,7 +718,7 @@ Ci-dessous un exemple de template :
       <span class='field'>Nom :</span>
       <span class='value'>{{NOM}}</span>
   </div><div class="entry">
-    <span class='field'>Thèmatique :</span>
+    <span class='field'>Thématique :</span>
     <span class='value'>{{THEME}}</span>
   </div><div class="entry">
     <span class='field'>Département :</span>
