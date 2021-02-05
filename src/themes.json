@@ -2,10 +2,11 @@
 
   {
     "key" : "cc",
+    "default" : true,
     "domains" : ["observatoire.causses-et-cevennes.fr"],
     "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
     "description" : "Remontez le temps en explorant et comparant les clichés de l'observatoire photographique du paysage culturel des Causses et des Cévennes, inscrit sur la liste Patrimoine Mondial de l'UNESCO ! Au travers de séries photographiques reconduites régulièrement, découvrez un témoignage exceptionnel de la culture agro-pastorale méditerranéenne et suivez ses évolutions récentes.",
-    "headerLogo" : "https://observatoire.causses-et-cevennes.fr/opp/icons/logos/cc_logo.png",
+    "headerLogo" : "icons/logos/cc_logo.png",
     "headerTextColor" : "#404040",
     "headerBkgColor" : "linear-gradient(to left, #618BCD, white)",
     "toolbarColor" : "linear-gradient(to top, white, #778bad)",
@@ -14,7 +15,7 @@
     "providers" : {"CC":{}, "PNC":{}, "34":{"enable":false}},
     "layers": ["limits_cc", "up_cc"],
     "basemaps": ["osm", "ignOrtho"],
-    "about" : "https://observatoire.causses-et-cevennes.fr/opp/templates/about.html",
+    "about" : "templates/about.html",
     "browserHistory": false,
     "constrainMapExtent":true,
     "viewmode": "SINGLE",
@@ -23,7 +24,8 @@
 
   {
     "key" : "caue34",
-    "domains" : ["opp.causses-et-cevennes.fr"],
+    "default" : false,
+    "domains" : [],
     "title" : "Observatoire Photographique de l'Hérault",
     "description" : "",
     "headerLogo" : "icons/logos/caue34_logo.png",
@@ -43,6 +45,8 @@
 
   {
     "key" : "pnc",
+    "default" : false,
+    "domains" : [],
     "title" : "Observatoire Photographique du Parc National des Cévennes",
     "description" : "",
     "headerLogo" : "icons/logos/pnc_logo.png",
@@ -63,6 +67,7 @@
   {
     "key" : "notile",
     "default" : false,
+    "domains" : [],
     "title" : "Observatoire Photographique du Paysage des Causses et Cévennes",
     "description" : "",
     "headerLogo" : "icons/logos/cc_logo.png",
@@ -93,8 +98,8 @@
   },
 
   {
-    "key": "wordpress",
-    "default": true,
+    "key": "caue34_wp",
+    "default": false,
     "domains": [],
     "title": "Observatoire Photographique de l'Hérault",
     "description": "",
