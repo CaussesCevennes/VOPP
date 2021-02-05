@@ -22,6 +22,7 @@ Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCeve
 - [Configuration de l'application](#configuration-de-lapplication)
   - [Structure des dossiers](#structure-des-dossiers)
   - [Configuration du thème](#configuration-du-thème)
+  - [Indexation par les moteurs de recherche](#indexation-par-les-moteurs-de-recherche-(SEO))
   - [Configuration des fournisseurs d'OPP](#configuration-des-fournisseurs-dOPP)
   - [Préparation-des-templates](#préparation-des-templates)
     - [Panneau d'information](#panneau-dinformation)
@@ -634,6 +635,18 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
   - 'SPOT' : Vue comparée avec une loupe
 
 - **saveDates** : Mémoriser les dates (années plus ancienne et plus récente) entre deux points de vue
+
+
+
+## Indexation par les moteurs de recherche (SEO)
+
+La configuration du thème permet de renseigner un titre et une description spécifique à chaque thème. Ces données sont injectées via javascript dans le code html respectivement dans les balises `title` et `meta`.  Ces balises sont ensuite utilisées par les robots d'indexation des moteurs de recherche, leur contenu conditionne donc la façon dont le site apparaît dans la liste des résultats. En théorie les moteurs de recherches sont capables d'indexer des pages dont le contenu dépend de code javascript. Néanmoins ce processus est complexe et coûteux ce qui ralentit l'indexation de plus, le rendu peut échouer pour différentes raisons (erreur js, timeout...). C'est pourquoi, en pratique, il vaut mieux éviter de générer dynamiquement les métadonnées afin d'éviter le risque d'une indexation peu qualitative et, pour ce faire, il est préférable de renseigner en dur les balises `title` et `meta` dans le fichier *opp.html* :
+
+    <title>Observatoire Photographique du Paysage des Causses et Cévennes</title>
+    <meta name="description" content="Remontez le temps en explorant et comparant les clichés de l'observatoire photographique 
+    du paysage culturel des Causses et des Cévennes, inscrit sur la liste Patrimoine Mondial de l'UNESCO ! Au travers de séries 
+    photographiques reconduites régulièrement, découvrez un témoignage exceptionnel de la culture agro-pastorale méditerranéenne 
+    et suivez ses évolutions récentes."/>
 
 ## Configuration des fournisseurs d'OPP
 
