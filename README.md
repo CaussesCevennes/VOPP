@@ -197,7 +197,7 @@ Traiter un grand nombre de photos implique de choisir un taux de compression com
 
 - D'autres méthodes s'appuie également sur une approche itérative mais cette fois un mesurant un indicateur de la qualité visuelle d'une image, comme par exemple l'indicateur [SSIM](https://fr.wikipedia.org/wiki/Structural_Similarity). L'idée est de déterminer le taux compression le plus fort permettant de maintenir l'indicateur de qualité visuelle au dessus d'un seuil donné. Cette approche est bien plus précise que la méthode précédente car la qualité est cette fois mesurée et non présagée. L'utilitaire [jpeg-recompress](https://github.com/danielgtaylor/jpeg-archive#jpeg-recompress) peut être utilisé pour ce travail. Pour autant cette approche automatique n'apporte pas nécessaire une grande plus-value. Par exemple avec un jeu de donnée test, en visant une qualité dite *moyenne* on obtient des taux de compression optimum majoritairement entre 70 et 75%, ce qui correspond au taux généralement préconisés. Néanmoins pour certaines photos l'optimum est significativement plus haut ou plus bas, aussi il peut être intéressant d'exécuter l'outil pour identifier ces fichiers.
 
-La questions des débits de connexion devrait aussi être prise en compte dans la réflexion. Plus les temps de téléchargement des photos seront courts et plus l'application sera agréable à utiliser. Or le débit de téléchargement est très variable d'un utilisateur à l'autre pouvant aller de 1Mbit/s pour les cas les plus défavorables à 30Mbit/s avec la fibre. Prenons par exemple une connexion plutôt faible de 2Mbit/s, un bit valant 8 octets le débit est de 0.25Mo/s. Pour télécharger une photo de 4Mo il faudra donc 16 secondes ce qui est considérable. Bien entendu il s'agit d'un exemple défavorable mais ces débits se rencontrent encore fréquemment. Par ailleurs l'utilisateur lambda affichera en peu de temps plusieurs points de vue ou bien naviguera rapidement entre les différentes photos d'un point de vue, générant ainsi de nombreuses requêtes. Il faut savoir qu'une requête lancée ne sera pas stoppée par le navigateur web même si la photo n'a plus besoin d'être affichée à l'écran. C'est une stratégie des navigateurs web qui consiste à toujours préférer aller au bout du téléchargement d'une ressource de façon à pouvoir la mettre en cache pour la suite. Or l'utilisateur doit partager son débit entre les différentes ressources en cours de téléchargement, donc si deux photos sont affichées simultanément cela double leur durée de téléchargement et plus l'utilisateur aura de requêtes en cours, plus les temps de téléchargement augmenteront. On a donc tout intérêt à ce qu'un téléchargement se termine le plus rapidement possible de façon à ne pas encombrer la bande passante et permettre aux dernières photos demandées de s'afficher rapidement. En revanche côté serveur, peu de chance de saturer la bande passante à moins d'avoir des milliers d'utilisateurs connectés simultanément.
+La questions des débits de connexion devrait aussi être prise en compte dans la réflexion. Plus les temps de téléchargement des photos seront courts et plus l'application sera agréable à utiliser. Or le débit de téléchargement est très variable d'un utilisateur à l'autre pouvant aller de 1Mbit/s pour les cas les plus défavorables à 30Mbit/s avec la fibre. Prenons par exemple une connexion plutôt faible de 2Mbit/s, un octet valant 8 bits le débit est de 0.25Mo/s. Pour télécharger une photo de 4Mo il faudra donc 16 secondes ce qui est considérable. Bien entendu il s'agit d'un exemple défavorable mais ces débits se rencontrent encore fréquemment. Par ailleurs l'utilisateur lambda affichera en peu de temps plusieurs points de vue ou bien naviguera rapidement entre les différentes photos d'un point de vue, générant ainsi de nombreuses requêtes. Il faut savoir qu'une requête lancée ne sera pas stoppée par le navigateur web même si la photo n'a plus besoin d'être affichée à l'écran. C'est une stratégie des navigateurs web qui consiste à toujours préférer aller au bout du téléchargement d'une ressource de façon à pouvoir la mettre en cache pour la suite. Or l'utilisateur doit partager son débit entre les différentes ressources en cours de téléchargement, donc si deux photos sont affichées simultanément cela double leur durée de téléchargement et plus l'utilisateur aura de requêtes en cours, plus les temps de téléchargement augmenteront. On a donc tout intérêt à ce qu'un téléchargement se termine le plus rapidement possible de façon à ne pas encombrer la bande passante et permettre aux dernières photos demandées de s'afficher rapidement. En revanche côté serveur, peu de chance de saturer la bande passante à moins d'avoir des milliers d'utilisateurs connectés simultanément.
 
 ### Approche par tuilage
 
@@ -627,14 +627,13 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 - **constrainMapExtent** : restreindre les déplacements dans la vue carto et dans les photos de façon à rester centré sur la zone d'intérêt
 
 - **viewmode** : le mode de visualisation par défaut :
-    - 'SINGLE' : Vue simple avec une seule photo
-    - 'SPLIT' : Vue comparée de deux photos synchronisées
-    - 'SBS' : vue comparée avec séparateur glissant
-    - 'SPOT' : Vue comparée avec une loupe
+  
+  - 'SINGLE' : Vue simple avec une seule photo
+  - 'SPLIT' : Vue comparée de deux photos synchronisées
+  - 'SBS' : vue comparée avec séparateur glissant
+  - 'SPOT' : Vue comparée avec une loupe
 
 - **saveDates** : Mémoriser les dates (années plus ancienne et plus récente) entre deux points de vue
-
-
 
 ## Configuration des fournisseurs d'OPP
 
