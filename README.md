@@ -22,7 +22,7 @@ Découvrez <img title="" src="https://raw.githubusercontent.com/wiki/CaussesCeve
 - [Configuration de l'application](#configuration-de-lapplication)
   - [Structure des dossiers](#structure-des-dossiers)
   - [Configuration du thème](#configuration-du-thème)
-  - [Indexation par les moteurs de recherche](#indexation-par-les-moteurs-de-recherche-(SEO))
+  - [Indexation par les moteurs de recherche](#indexation-par-les-moteurs-de-recherche-SEO)
   - [Configuration des fournisseurs d'OPP](#configuration-des-fournisseurs-dOPP)
   - [Préparation-des-templates](#préparation-des-templates)
     - [Panneau d'information](#panneau-dinformation)
