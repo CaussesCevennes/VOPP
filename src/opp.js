@@ -1765,8 +1765,11 @@ if (baseurl.length == 0) {
   baseurl = ".";
 }
 
-if (typeof themeJsonUrl == 'undefined') {
-  var themeJsonUrl = baseurl + '/themes.json?v=' + version;
+if (typeof themesJsonUrl == 'undefined') {
+  var themesJsonUrl = `${baseurl}/themes.json?v=${version}`;
+}
+if (typeof providersJsonUrl == 'undefined') {
+  var providersJsonUrl = `${baseurl}/providers.json?v=${version}`;
 }
 
 //make sure json MIME type exists because it sould be provided when loading local file
@@ -1812,11 +1815,10 @@ $(document).ready(function() {
 
   var providers, settings;
   $.when(
-    $.getJSON(`${baseurl}/providers.json?v=${version}`, function (data) {
+    $.getJSON(providersJsonUrl, function (data) {
       providers = data;
     }),
-    //$.getJSON(`${baseurl}/themes.json?v=${version}`, function (data) {
-    $.getJSON(`${themeJsonUrl}`, function (data) {
+    $.getJSON(themesJsonUrl, function (data) {
       if (themeKey){
         settings = data.find(theme => theme.key == themeKey);
       }
