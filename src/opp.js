@@ -124,9 +124,10 @@ function OPP(providers, theme) {
       if (! provider) {
         self.providers.push(self.theme['providers'][k]);
         provider = getProvider(k);
-      }
-      for (let opt in options){
-        provider[opt] = options[opt];
+      } else {
+        for (let opt in options){
+          provider[opt] = options[opt];
+        }
       }
     }
 
