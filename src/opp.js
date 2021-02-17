@@ -960,6 +960,7 @@ function OPP(providers, theme) {
       */
       var photoLay = L.imageOverlay(url, bounds, {attribution:auteur});
       setLoadingEvents(photoLay);
+      photoLay.photo = photo;//assign photo props
       return photoLay;
     } else {
       var photoLay = L.tileLayer.voppTiles(url, {
@@ -972,6 +973,7 @@ function OPP(providers, theme) {
         tileSize:256,
         overlap:0
       });
+      photoLay.photo = photo;
       return photoLay;
     }
   }
@@ -1066,6 +1068,33 @@ function OPP(providers, theme) {
     } else {
       var photoLay2 = getPhotoLay($('#dropDownDate2').val());
     }
+
+    //Handle alignement : assign ccs matrix
+    if ($("#alignBt").hasClass('active')){
+      let refYear = self.selectedFeatProps['PHOTOREF'];
+      //let p1 = photoLay1.photo;
+      let p1 = getPhoto($('#dropDownDate1').val());
+      if (p1['YEAR'] != refYear){
+        let k1 = Object.keys(p1['MATRIX']).find(k => k.startsWith(refYear));
+        let m1 = p1['MATRIX'][k1];
+        if (m1) {
+          photoLay1.matrix = m1;
+        } else {
+          console.log(`No transformation matrix from ${p1['YEAR']} to ${refYear}`);
+        }
+      }
+      let p2 = getPhoto($('#dropDownDate2').val());
+      if (p2['YEAR'] != refYear){
+        let k2 = Object.keys(p2['MATRIX']).find(k => k.startsWith(refYear));
+        let m2 = p2['MATRIX'][k2];
+        if (m2) {
+          photoLay2.matrix = m2;
+        } else {
+          console.log(`No transformation matrix from ${p2['YEAR']} to ${refYear}`);
+        }
+      }
+    }
+
 
     //###############
     //Add layers to maps
@@ -1519,6 +1548,10 @@ function OPP(providers, theme) {
       // clicked on descendant div
       e.stopPropagation();
     });
+    $("#alignBt").on('click', function () {
+      $('#alignBt').toggleClass('active');
+      updatePhotos(false);
+    });
     /* Widgets */
     $("#sketchButton1").on('click', function () {
       toggleSketchView(1);
@@ -1784,17 +1817,6 @@ $.ajaxSetup({beforeSend: function(xhr){
 
 
 $(document).ready(function() {
-
-  //fix white lines gap https://github.com/Leaflet/Leaflet/issues/3575
-  var originalInitTile = L.GridLayer.prototype._initTile;
-  L.GridLayer.include({
-    _initTile: function (tile) {
-      originalInitTile.call(this, tile);
-      var tileSize = this.getTileSize();
-      tile.style.width = tileSize.x + 1 + 'px';
-      tile.style.height = tileSize.y + 1 + 'px';
-    }
-  });
 
   //Search if the target theme is identified in the url
   let params = new URL(window.location).searchParams;

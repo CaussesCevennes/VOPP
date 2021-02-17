@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.1.0/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.6.1/fuse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/7.3.0/math.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css" />
@@ -31,6 +32,8 @@
     <script src="lib/svg-inject.min.js"></script>
 
     <script src="js/L.VoppTilesLayer.js?102"></script>
+    <script src="js/L.override.js?102"></script>
+
     <script id="oppjs" src="opp.js?102"></script>
     <link rel="stylesheet" href="opp.css?102" />
 
@@ -142,6 +145,7 @@
         <button id="toggleTimelineBt" class="toolbarBt"><img src="icons/toolbar/timeline.svg" onload="SVGInject(this)"/><span class="tooltip">Afficher la ligne de temps</span></button>
         <button id="shareBt" class="toolbarBt"><img src="icons/toolbar/share.svg" onload="SVGInject(this)"/><span class="tooltip">Générer un lien partageable</span><div class='sharePanel'>Lien permanent vers la vue actuelle :<div id='urlTxt'></div></div></button>
         <button id="aboutBt" class="toolbarBt panelSwitch"><img src="icons/toolbar/about.svg" onload="SVGInject(this)"/><span class="tooltip"><div>A propos</div></span></button>
+        <button id="alignBt" class="toolbarBt"><img src="icons/toolbar/about.svg" onload="SVGInject(this)"/><span class="tooltip"><div>A propos</div></span></button>
       </div>
 
     </div>
