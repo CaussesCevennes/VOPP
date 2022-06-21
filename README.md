@@ -591,7 +591,8 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
   "browserHistory": false,
   "constrainMapExtent": true,
   "viewmode": "SINGLE",
-  "saveDates": true
+  "saveDates": true,
+  "initPOVnumber": "1"
 }
 ```
 
