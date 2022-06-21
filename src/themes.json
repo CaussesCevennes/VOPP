@@ -18,8 +18,9 @@
     "about" : "templates/about.html",
     "browserHistory": false,
     "constrainMapExtent":true,
-    "viewmode": "SINGLE",
-    "saveDates": true
+    "viewmode": "SPLIT",
+    "saveDates": true,
+    "initPOVnumber": "1"
   },
 
   {

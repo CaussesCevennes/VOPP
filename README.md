@@ -74,12 +74,12 @@ Dans tous les cas, pour ces deux tables, certaines informations sont indispensab
 - **Date :** la date de la prise de vue sera utilisée comme identifiant unique de la photo au sein d'un même point de vue. Pour représenter vos dates utilisez le format anglo-saxon (`yyyy-mm-dd`) qui a l'avantage de permettre le tri par ordre chronologique. Il n'est pas nécessaire d'inclure des champs séparés pour l'année, le mois et le jour, ces valeurs seront automatiquement dérivées de la date.
 
 - **Fichier** : la table des photos doit absolument contenir des informations permettant de déterminer le chemin d'accès vers le fichier image correspondant. Calculer le chemin dépend de l'arborescence des dossiers que vous allez déployer pour le stockage des photos. Par exemple :
-  
+
   - `photos/{NUM}/{DATE}/{FILENAME}.jpg` : ici les variables requises pour construire le chemin sont `NUM`, `DATE` et `FILENAME`
   - `photos/{YEAR}/{FILENAME}.jpg` : ici une organisation sensiblement différente
   - `photos/{NUM}_{DATE}_{NOM}.jpg` : dans cet exemple il n'y a pas de sous dossier, c'est le nom du fichier en lui même qui est composé par des variables séparées par un underscore
   - `www.mastructure.fr/opp/{NUM}/{DATE}` : ici le chemin sera une url spécifique
-  
+
   A vous donc de déterminer et inclure les variables nécessaires au calcul des chemins ou url et de nommer vos fichiers photos en suivant des règles de formatage strictes permettant leur détermination de façon logique, par exemple : `{NUM}_{DATE}_{NOM}.jpg`
 
 Les noms de certains champs requis sont prédéfinis : `NUM`, `LON`, `LAT`, `RATIO` pour la table des points de vue et `DATE` pour les photos. <!--Vous pouvez éventuellement choisir d'autre noms si vous préférez, la correspondance sera préciser dans les fichiers de configuration de l'application.--> Ces champs doivent être présents dans vos données et nommés tel quel en respectant les majuscules.
@@ -89,49 +89,49 @@ Au delà de ces champs requis, vous aurez certainement besoin d'afficher d'autre
 **<u>Table des points de vue</u>**
 
 - Des informations de localisation :
-  
+
   - **nom / lieu-dit** : un nom d'usage pour le point de vue, il s'agit souvent du lieu-dit
-  
+
   - **commune** : le nom de la commune où se trouve le point
-  
+
   - **unité paysagère** : le secteur paysager d'appartenance du point de vue
 
 - Des données relatives à la prise de vue :
-  
+
   - **azimut** : angle de visée en degré. Si le champs `AZIMUTH` est présent alors il sera automatiquement utilisé pour l'affichage d'une rose des vents indiquant l'orientation du point de vue.
-  
+
   - **hauteur** : hauteur du pieds en cm
-  
+
   - **champ de vision** (Field Of View) : largeur du champs horizontal en degrés
-  
+
   - **focal 35mm :** la focale équivalente pour un capteur de 35mm
 
 - Des éléments d'analyse :
-  
+
   - **thème(s)** : la ou les thématiques suivies par cette vue
-  
+
   - **descriptif** : descriptif de la photo
-  
+
   - **enjeux** : listing des enjeux identifiés
 
 **<u>Table des photos</u>**
 
 - Des informations sur l'auteur :
-  
+
   - **nom / prénom** : permet de pouvoir renseigner les mentions de droit d'auteur
-  
+
   - **organisme** : structure d'appartenance du photographe
 
 - Des données relatives à la prise de vue :
-  
+
   - **ouverture** : Valeur d'ouverture du diaphragme exprimée par le dénominateur de la fraction simplifiée focale / diamètre d'ouverture
-  
+
   - **exposition / vitesse** : Temps d'exposition en fraction de seconde (valeur du dénominateur)
-  
+
   - **focale** : Valeur de la distance focale utilisée en mm (cette donnée n'a de sens que si l'on connait la taille du capteur utilisé)
-  
+
   - **appareil** : la référence de l'appareil photo utilisé dont dépend notamment la taille du capteur et le crop factor
-  
+
   - **largeur / hauteur :** la résolution en pixels de la photo
 
 L'utilitaire [exiftool](https://exiftool.org/) peut vous aider à dresser la liste des photos en extrayant automatiquement les métadonnées qu'elles contiennent (date, coordonnées GPS, focale ...). Ci dessous un exemple de commande :
@@ -183,7 +183,7 @@ Options :
 D'autres options sont à considérer pour optimiser le poids des images :
 
 - `-gaussian-blur 0.05` : ajoute un très léger flou à l'image ce qui permet d'écrêter les hautes fréquences de l'image et ainsi d'améliorer fortement les performances de l'algorithme de compression. La réduction de la taille du fichier est de l'ordre de 20 à 30% ce qui est considérable. La décision d'appliquer ou non un flou doit donc être mûrement réfléchie, ci-dessous une comparaison illustre, à titre indicatif, l'impact d'un flou de 0.05 sur une image ici zoomée à 125%. Dans un contexte web ce niveau d'altération semble raisonnable et le gain de poids améliorera considérablement la réactivité de l'application, encore une fois il s'agit de trouver un juste milieu.
-  
+
   ![](https://raw.githubusercontent.com/wiki/CaussesCevennes/OPP/img/blur.jpg)
 
 - `-sampling-factor 4:2:0` : réduit le résolution chromatique de moitié ce qui permet un gain sensible de poids pour un impact très peu perceptible par l'oeil humain. Voir [Wikipedia](https://fr.wikipedia.org/wiki/Sous-%C3%A9chantillonnage_de_la_chrominance) pour plus d'explication sur ce paramètre. A noter qu'il semble que `4:2:0` soit déjà la valeur par défaut utilisée par ImageMagick (la documentation n'est pas explicite à ce sujet). Cette option peut être combinée avec l'option `-define jpeg:dct-method=float` qui permet un calcul plus précis mais sensiblement plus lent ([source](https://stackoverflow.com/a/7262050/8440810)).
@@ -191,9 +191,9 @@ D'autres options sont à considérer pour optimiser le poids des images :
 Traiter un grand nombre de photos implique de choisir un taux de compression commun et donc de décider d'un compromis.  Des images comportant beaucoup de détails supportent plus facilement une forte compression (50 à 60%) alors qu'un gradient de bleu dans un ciel nécessitera une très faible compression (85 - 90%), la vision humaine étant très sensible aux variations de teinte dans les zones homogènes. L'efficacité d'une compression jpeg est en réalité très dépendante de la composition de l'image et ce qui rend le résultat final difficilement prédictible. Certaines stratégies peuvent être mise en place pour essayer de déterminer le facteur de compression optimal pour une image donnée :
 
 - La comparaison des courbes représentant respectivement l'évolution du poids du fichier et l'évolution de la qualité visuelle de l'image en fonction du taux de compression permet de mieux comprendre l'effet de la compression.
-  
+
   ![](https://raw.githubusercontent.com/wiki/CaussesCevennes/OPP/img/jpeg_qualityVSsize_chart.gif)
-  
+
   On observe que le poids du fichier diminue très rapidement pour des pourcentages de compression faible (10 à 20% ou 80 à 100% si on exprime la valeur en pourcentage de qualité) alors que l'impact sur la qualité de l'image est très faible. Par la suite le gain de poids est beaucoup plus modéré alors que la qualité de l'image se dégrade rapidement. On peut donc rechercher la valeur de compression optimale en appliquant successivement des taux de compression de plus en plus fort. L'optimum est atteint quand le gain de poids par rapport l'itération précédente tombe en dessous d'un seuil donné, c'est à dire quand la nouvelle compression se conclue par réduction mineure du poids du fichier mais un impact probablement significatif sur la qualité de l'image. Ce genre de procédure peut facilement être automatisée.
 
 - D'autres méthodes s'appuie également sur une approche itérative mais cette fois un mesurant un indicateur de la qualité visuelle d'une image, comme par exemple l'indicateur [SSIM](https://fr.wikipedia.org/wiki/Structural_Similarity). L'idée est de déterminer le taux compression le plus fort permettant de maintenir l'indicateur de qualité visuelle au dessus d'un seuil donné. Cette approche est bien plus précise que la méthode précédente car la qualité est cette fois mesurée et non présagée. L'utilitaire [jpeg-recompress](https://github.com/danielgtaylor/jpeg-archive#jpeg-recompress) peut être utilisé pour ce travail. Pour autant cette approche automatique n'apporte pas nécessaire une grande plus-value. Par exemple avec un jeu de donnée test, en visant une qualité dite *moyenne* on obtient des taux de compression optimum majoritairement entre 70 et 75%, ce qui correspond au taux généralement préconisés. Néanmoins pour certaines photos l'optimum est significativement plus haut ou plus bas, aussi il peut être intéressant d'exécuter l'outil pour identifier ces fichiers.
@@ -241,9 +241,9 @@ Pour référence, l'ensemble des paramètres disponibles sont décrit ci-dessous
 - `-o` : nombre de pixels de recouvrement entre 2 tuiles, par défaut 0. Cette option étend la taille des tuiles de la valeur spécifiée sur la droite et vers le bas. Peut être utile pour résoudre des problèmes d'affichage où les tuiles n'apparaissent pas parfaitement jointive (cf. [rapport de bug Leaflet](https://github.com/Leaflet/Leaflet/issues/3575)), dans ce cas un pixel de recouvrement sera suffisant. Doit être constant pour toutes les photos.
 
 - `-i` : taille initiale utilisée comme référence pour calculer le tuilage. Deux valeurs sont possibles :
-  
+
   - `TILESIZE` : (valeur par défaut) au niveau de zoom minimum, l'image est représentée par une unique tuile de 256px. Le plus grand des côtés de l'image couvre l'intégralité des 256px. Les niveaux de zoom suivant sont calculés en respectant cette règle ainsi, quelque soit la résolution originale de l'image son plus grand côté couvre toujours l'intégralité de la grille. La pyramide de zoom est constante : 256, 512, 1024, 2048, 4096,  8192 ... Cette méthode facilite la comparaison d'images de résolution différentes mais en contrepartie la photo n'est jamais présentée directement dans sa résolution originale. Par exemple une image de 5616 pixels de large sera représentée au niveau de zoom 5 par 4096 pixels (sous-échantillonnage) puis 8192 pixels au niveau suivant (sur-échantillonnage). Du fait du sur-échantillonnage, le poids total des tuiles excède toujours le poids initial de l'image. Le sur-échantillonnage pourrait être réduit en choisissant un meilleur candidat pour la taille des tuiles, mais il ne sera pas possible d'aligner correctement 2 images dont le tuilage diffère ce qui limite la comparaison.
-  
+
   - `IMAGESIZE`: le niveau de zoom maximum est déterminé en fonction du nombre minimum de tuiles nécessaire pour couvrir la résolution originale de l'image, les niveaux de zoom précédant sont calculés en fonction de cette référence. Par exemple pour une image de 5616 pixels de large il faut 22 tuiles de 256px ce qui donne alors la pyramide suivante : 5632, 2816, 1536, 768, 512, 256. Cette méthode permet de respecter la résolution originale de l'image mais en contrepartie chaque niveau de zoom impose une marge dans les deux directions. Dans notre exemple les largeurs effectives de l'image seront : 5616, 2808, 1404, 702, 351, 175,5. Cette méthode ne peut pas être utilisée pour comparer des photos de résolutions différentes.
 
 - `-t `: template utilisé pour construire l'arborescence des fichiers, par défaut `{z}_{x}_{y}`, cela signifie que toutes les tuiles seront dans le même dossier et nommées par les composantes de leur coordonnée séparées par un underscore (ex: `0_0_0.jpg`). Pour les tuilages générant énormément de fichiers il peut être préférable de les ventiler dans des sous-dossiers, par exemple `{z}/{x}_{y}` pour 2 niveaux ou bien `{z}/{x}/{y}` pour 3 niveaux.
@@ -283,7 +283,7 @@ foreach ($f in Get-ChildItem "." -filter *.jpg) { magick $f -thumbnail 512x512 .
 Autre exemple Powershell permettant de traiter un ensemble de sous dossiers en créant automatiquement le dossier de destination
 
 ```shell
-foreach ($d in Get-ChildItem -Directory) { 
+foreach ($d in Get-ChildItem -Directory) {
     New-Item -path $d -name "thumbs" -ItemType "directory"
     foreach ($f in Get-ChildItem $d -filter *.jpg) {
         $name = $f.name
@@ -628,13 +628,15 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 - **constrainMapExtent** : restreindre les déplacements dans la vue carto et dans les photos de façon à rester centré sur la zone d'intérêt
 
 - **viewmode** : le mode de visualisation par défaut :
-  
+
   - 'SINGLE' : Vue simple avec une seule photo
   - 'SPLIT' : Vue comparée de deux photos synchronisées
   - 'SBS' : vue comparée avec séparateur glissant
   - 'SPOT' : Vue comparée avec une loupe
 
 - **saveDates** : Mémoriser les dates (années plus ancienne et plus récente) entre deux points de vue
+
+- **initPOVnumber** : l'identifiant du point de vue à afficher en premier (point de vue appartenant au premier fournisseur indiqué dans la liste des providers)
 
 
 
@@ -643,9 +645,9 @@ Le contenu du fichier est un simple objet JSON présentant les différents param
 La configuration du thème permet de renseigner un titre et une description spécifique à chaque thème. Ces données sont injectées via javascript dans le code html respectivement dans les balises `title` et `meta`.  Ces balises sont ensuite utilisées par les robots d'indexation des moteurs de recherche, leur contenu conditionne donc la façon dont le site apparaît dans la liste des résultats. En théorie les moteurs de recherches sont capables d'indexer des pages dont le contenu dépend de code javascript. Néanmoins ce processus est complexe et coûteux ce qui ralentit l'indexation de plus, le rendu peut échouer pour différentes raisons (erreur js, timeout...). C'est pourquoi, en pratique, il vaut mieux éviter de générer dynamiquement les métadonnées afin d'éviter le risque d'une indexation peu qualitative et, pour ce faire, il est préférable de renseigner en dur les balises `title` et `meta` dans le fichier *opp.html* :
 
     <title>Observatoire Photographique du Paysage des Causses et Cévennes</title>
-    <meta name="description" content="Remontez le temps en explorant et comparant les clichés de l'observatoire photographique 
-    du paysage culturel des Causses et des Cévennes, inscrit sur la liste Patrimoine Mondial de l'UNESCO ! Au travers de séries 
-    photographiques reconduites régulièrement, découvrez un témoignage exceptionnel de la culture agro-pastorale méditerranéenne 
+    <meta name="description" content="Remontez le temps en explorant et comparant les clichés de l'observatoire photographique
+    du paysage culturel des Causses et des Cévennes, inscrit sur la liste Patrimoine Mondial de l'UNESCO ! Au travers de séries
+    photographiques reconduites régulièrement, découvrez un témoignage exceptionnel de la culture agro-pastorale méditerranéenne
     et suivez ses évolutions récentes."/>
 
 ## Configuration des fournisseurs d'OPP
@@ -859,11 +861,11 @@ le code doit implémenter un objet javascript qui sera ajouté comme nouvelle pr
 - **enable** : indique si par défaut la couche doit être visible ou non
 
 - **load** : c'est la fonction principale qui se charge d'assigner des nouvelles propriétés à notre objet à partir des données GeoJSON. Trois nouvelles propriétés peuvent être définies :
-  
+
   - **layer** (requis) : la couche Leaflet représentant notre GeoJSON
-  
+
   - **legend** (optionnel) : un contrôle Leaflet contenant le code html à utiliser comme légende
-  
+
   - **info** (optionnel) : un contrôle Leaflet permettant d'afficher un label dans l'angle supérieur gauche lorsque le pointeur survole une entité de la couche
 
 Enfin, dans la configuration du thème, vous pouvez ajouter le nom de cette nouvelle couche dans la propriété `layers`, ce nom doit exactement correspondre au noms des fichiers GeoJSON et javascript correspondants.

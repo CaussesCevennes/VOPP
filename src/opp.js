@@ -663,6 +663,9 @@ function OPP(providers, theme) {
   ######################################## */
 
   var updateMarker = function(newMarker){
+    if (!newMarker){
+      return;
+    }
     let oldMarker = self.selectedMark;
     let oldProvider = self.activeProvider;
     //affect
@@ -773,7 +776,12 @@ function OPP(providers, theme) {
     //just select the first provider and the first marker
     if (!self.selectedMark) {
       let providerKey = self.providers[0]['key'];
-      self.selectedMark = self.oppLayers[providerKey].getLayers()[0];
+      if (self.theme['initPOVnumber']){
+        self.selectedMark = getMarker(providerKey, self.theme['initPOVnumber']);
+      }
+      if (!self.theme['initPOVnumber'] || !self.selectedMark) {
+        self.selectedMark = self.oppLayers[providerKey].getLayers()[0];
+      }
     }
 
     /* Fill years dropdown and select dates. The selected dates will be :
